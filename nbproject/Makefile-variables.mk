@@ -4,10 +4,10 @@
 # NOCDDL
 #
 CND_BASEDIR=`pwd`
-# xc8_pic18f26k20 configuration
-CND_ARTIFACT_DIR_xc8_pic18f26k20=dist/xc8_pic18f26k20/production
-CND_ARTIFACT_NAME_xc8_pic18f26k20=PIC_Sitcom_Generator.production.hex
-CND_ARTIFACT_PATH_xc8_pic18f26k20=dist/xc8_pic18f26k20/production/PIC_Sitcom_Generator.production.hex
-CND_PACKAGE_DIR_xc8_pic18f26k20=${CND_DISTDIR}/xc8_pic18f26k20/package
-CND_PACKAGE_NAME_xc8_pic18f26k20=picsitcomgenerator.tar
-CND_PACKAGE_PATH_xc8_pic18f26k20=${CND_DISTDIR}/xc8_pic18f26k20/package/picsitcomgenerator.tar
+# xc16_pic33FJ128gp802 configuration
+CND_ARTIFACT_DIR_xc16_pic33FJ128gp802=dist/xc16_pic33FJ128gp802/production
+CND_ARTIFACT_NAME_xc16_pic33FJ128gp802=PIC_Sitcom_Generator.production.hex
+CND_ARTIFACT_PATH_xc16_pic33FJ128gp802=dist/xc16_pic33FJ128gp802/production/PIC_Sitcom_Generator.production.hex
+CND_PACKAGE_DIR_xc16_pic33FJ128gp802=${CND_DISTDIR}/xc16_pic33FJ128gp802/package
+CND_PACKAGE_NAME_xc16_pic33FJ128gp802=picsitcomgenerator.tar
+CND_PACKAGE_PATH_xc16_pic33FJ128gp802=${CND_DISTDIR}/xc16_pic33FJ128gp802/package/picsitcomgenerator.tar

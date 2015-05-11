@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=PIC_Sitcom_Generator
 
 # Active Configuration
-DEFAULTCONF=xc8_pic18f26k20
+DEFAULTCONF=xc16_pic33FJ128gp802
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=xc8_pic18f26k20 
+ALLCONFS=xc16_pic33FJ128gp802 
 
 
 # build
@@ -45,13 +45,13 @@ ALLCONFS=xc8_pic18f26k20
 
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc8_pic18f26k20 clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc16_pic33FJ128gp802 clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc8_pic18f26k20 build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc16_pic33FJ128gp802 build
 
 
 
