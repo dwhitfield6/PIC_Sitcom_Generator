@@ -37,6 +37,59 @@
 /******************************************************************************/
 
 /******************************************************************************/
+/* Inline Functions
+/******************************************************************************/
+
+/******************************************************************************/
+/* SD_SPI_GetCD
+ *
+ * The function gets the status of the Card Detector.
+/******************************************************************************/
+#ifdef CardDetect
+inline bool SD_SPI_GetCD(void)
+{
+    if((PORTB & SD_CD) != SD_CD)
+    {
+        return ON;
+    }
+    return OFF;
+}
+#endif
+
+/******************************************************************************/
+/* SD_SPI_GetWP
+ *
+ * The function gets the status of the Card Detector.
+/******************************************************************************/
+#ifdef WriteProtect
+inline bool SD_SPI_GetWP(void)
+{
+    if((PORTB & SD_WP) != SD_WP)
+    {
+        return ON;
+    }
+    return OFF;
+}
+#endif
+
+/******************************************************************************/
+/* SD_SPI_SetCS
+ *
+ * The function sets the Chip Select
+/******************************************************************************/
+inline void SD_SPI_SetCS(uint8_t a)
+{
+    if(a)
+    {
+        SD_CS_INACTIVE();
+    }
+    else
+    {
+        SD_CS_ACTIVE();
+    }
+}
+
+/******************************************************************************/
 /* Functions
 /******************************************************************************/
 
@@ -50,9 +103,7 @@ void InitApp(void)
     LATA = 0;
     LATB = 0;
     
-    OrangeLEDTris       = OUTPUT;
-    AudioInputTris      = INPUT;
-    PotTris             = INPUT;
+    RedLEDTris          = OUTPUT;
     AudioAmpMuteTris    = OUTPUT;
     AudioAmpStandbyTris = OUTPUT;
 
@@ -66,9 +117,34 @@ void InitApp(void)
 /******************************************************************************/
 void Init_System (void)
 {
-    InitADC();
     InitDAC();
 }
+
+/******************************************************************************/
+/* SdSpiConfigurePins
+ *
+ * The function initializes the SPI pins used to communicate with the sd card.
+/******************************************************************************/
+void SdSpiConfigurePins (void)
+{
+    // Deassert the chip select pin
+    SD_CS_INACTIVE();
+    // Configure CS pin as an output
+    SPI_SD_CSTris = OUTPUT;
+#ifdef WriteProtect
+    // Configure WP pin as an input
+    SD_WPTris = INPUT;
+#endif
+
+#ifdef CardDetect
+    // Configure CD pin as an input
+    SD_CDTris = INPUT;
+#endif
+    RPINR20bits.SDI1R = 0x02; // SPI1 data input (MISO) is set to RP2
+    RPOR3bits.RP7R = 0x07;    // RP7 = SDO aka MOSI
+    RPOR4bits.RP8R = 0x08;    // RP8 = SDO aka SCK
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

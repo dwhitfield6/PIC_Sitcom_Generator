@@ -37,31 +37,14 @@
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-
 #define FCY             SYS_FREQ/4
 
-
-
 // Definition for system clock
-#define SYS_CLK_FrequencySystemGet()           32000000
+#define SYS_CLK_FrequencySystemGet()           SYS_FREQ
 // Definition for peripheral clock
 #define SYS_CLK_FrequencyPeripheralGet()           SYS_CLK_FrequencySystemGet()
 // Definition for instruction clock
 #define SYS_CLK_FrequencyInstructionGet()          (SYS_CLK_FrequencySystemGet() / 2)
-
-
-// System initialization function
-void SYSTEM_Initialize (void);
-
-// User-defined function to set the chip select for our example drive
-void USER_SdSpiSetCs_1 (uint8_t a);
-// User-defined function to get the card detection status for our example drive
-bool USER_SdSpiGetCd_1 (void);
-// User-defined function to get the write-protect status for our example drive
-bool USER_SdSpiGetWp_1 (void);
-// User-defined function to initialize tristate bits for CS, CD, and WP
-void USER_SdSpiConfigurePins_1 (void);
-
 
 /******************************************************************************/
 /* Function prototypes                                                        */

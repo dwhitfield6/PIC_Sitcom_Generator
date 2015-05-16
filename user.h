@@ -36,23 +36,25 @@
 /* PCB board
  *
  * This code is used with boards:
- * 1. IR_to_RF_w_bluetooth_revA
+ * 1. SitCom_Generator_PROTOBOARD
 /******************************************************************************/
+#define SitCom_Generator_PROTOBOARD
 
 /******************************************************************************/
-/* Important parameters.
+/* WriteProtect
  *
- * NominalVDD is the voltage of the ldo powering the MCU. This is ued for the
- *  ADC reference voltage.
- *
- * VoltageLow is the low voltage threshold. 
- *
- * VoltageHigh is the high voltage threshold.
- *
+ * Define this variable to tell the firmware that our sd card holder has a
+ *   write protect detector switch.
 /******************************************************************************/
-#define NominalVDD 3.3
-#define VoltageLow 6.3
-#define VoltageHigh 16.5
+//#define WriteProtect
+
+/******************************************************************************/
+/* CardDetect
+ *
+ * Define this variable to tell the firmware that our sd card holder has a
+ *   Card detector switch.
+/******************************************************************************/
+//#define CardDetect
 
 /******************************************************************************/
 /* BAUD
@@ -79,55 +81,93 @@
 /******************************************************************************/
 /* Pin Defines                                                                */
 /******************************************************************************/
-/* Connected to the Orange Led  */
-#define OrangeLEDTris	TRISBbits.TRISB6
-#define OrangeLED 0x40//RB6
-
-/* Connected to Potentiometer  */
-#define PotTris	TRISAbits.TRISA0
-#define Pot 0x01//RA0 used as AD0
-#define AN0 0x01//RA0 used as AD0
-
-/* Connected to the 3.5mm stereo jack for audio input  */
-#define AudioInputTris	TRISAbits.TRISA1
-#define AudioInput 0x02//RA1 used as AD1
-#define AN1 0x02//RA0 used as AD0
+/* Connected to the Red Led  */
+#define RedLEDTris	TRISBbits.TRISB10
+#define RedLED 0x0400//RB10
 
 /* Connected to Audio Amp mute */
 #define AudioAmpMuteTris	TRISBbits.TRISB5
-#define AudioAmpMute 0x20//RB5
+#define AudioAmpMute 0x0020//RB5
 
 /* Connected to Audio Amp Standby */
-#define AudioAmpStandbyTris	TRISAbits.TRISA4
-#define AudioAmpStandby 0x10//RA4
+#define AudioAmpStandbyTris	TRISBbits.TRISB6
+#define AudioAmpStandby 0x0040//RB6
 
+/* Connected to SPI MISO used for the SD card */
+#define SPI_SD_MISOTris	TRISBbits.TRISB2
+#define SPI_SD_MISO 0x0004//RB2 used as RP2
+
+/* Connected to SPI MOSI used for the SD card */
+#define SPI_SD_MOSITris	TRISBbits.TRISB7
+#define SPI_SD_MOSI 0x0080//RB14 used as RP7
+
+/* Connected to SPI SCK used for the SD card */
+#define SPI_SD_SCKTris	TRISBbits.TRISB8
+#define SPI_SD_SCK 0x0100//RB15 used as RP8
+
+/* Connected to SPI CS used for the SD card */
+#define SPI_SD_CSTris	TRISBbits.TRISB9
+#define SPI_SD_CS 0x0200//RB9 used as RP9
+
+#ifdef WriteProtect
+/* Connected to SD card holder Write Protect switch */
+#define SD_WPTris	TRISBbits.TRISB9
+#define SD_WP 0x0200//RB9 used as RP9
+#endif
+
+#ifdef CardDetect
+/* Connected to SD card holder Write Protect switch */
+#define SD_CDTris	TRISBbits.TRISB9
+#define SD_CD 0x0200//RB9 used as RP9
+#endif
+
+/* DAC1RP and DAC1RN are used to play the sound and connect to the op-amp */
 
 /******************************************************************************/
 /* Macro Functions                                                            */
 /******************************************************************************/
 
-/* OrangeLEDON()
+/* RedLEDON()
  *
- * The function turns on the Orange LED.
+ * The function turns on the Red LED.
 /******************************************************************************/
-#define OrangeLEDON()  (LATB |= OrangeLED)
+#define RedLEDON()  (LATB |= RedLED)
 
-/* OrangeLEDOFF()
+/* RedLEDOFF()
  *
- * The function turns off the Orange LED.
+ * The function turns off the Red LED.
 /******************************************************************************/
-#define OrangeLEDOFF()  (LATB &= ~OrangeLED)
+#define RedLEDOFF()  (LATB &= ~RedLED)
 
-/* OrangeLEDTOGGLE()
+/* RedLEDTOGGLE()
  *
- * The function toggles the Orange LED.
+ * The function toggles the Red LED.
 /******************************************************************************/
-#define OrangeLEDTOGGLE()  (LATB ^= OrangeLED)
+#define RedLEDTOGGLE()  (LATB ^= RedLED)
+
+/* SD_CS_ACTIVE()
+ *
+ * The function activates the cs pin to talk to the sd card.
+/******************************************************************************/
+#define SD_CS_ACTIVE()  (LATB &= ~SPI_SD_CS)
+
+/* SD_CS_INACTIVE()
+ *
+ * The function deactivates the cs pin to finish talking to the sd card.
+/******************************************************************************/
+#define SD_CS_INACTIVE()  (LATB |= SPI_SD_CS)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitApp(void);        
 void Init_System (void);
-
+#ifdef CardDetect
+inline bool SD_SPI_GetCD(void);
+#endif
+#ifdef WriteProtect
+inline bool SD_SPI_GetWP(void);
+#endif
+void SdSpiConfigurePins (void);
+inline void SD_SPI_SetCS(uint8_t a);
 #endif	/* USER_H */

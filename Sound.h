@@ -15,8 +15,8 @@
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef USER_H
-#define	USER_H
+#ifndef Sound_H
+#define	Sound_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -37,4 +37,4 @@ void MuteAmp(void);
 void UnMuteAmp(void);
 void DAC_Voltage(unsigned int counts);
 
-#endif	/* USER_H */
+#endif	/* Sound_H */

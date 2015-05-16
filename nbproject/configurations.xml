@@ -8,7 +8,6 @@
       <itemPath>user.h</itemPath>
       <itemPath>MISC.h</itemPath>
       <itemPath>Sound.h</itemPath>
-      <itemPath>ADC.h</itemPath>
       <itemPath>Sound_Laugh.h</itemPath>
       <itemPath>fileio.h</itemPath>
       <itemPath>fileio_config.h</itemPath>
@@ -33,7 +32,6 @@
       <itemPath>MISC.c</itemPath>
       <itemPath>configuration_bits.c</itemPath>
       <itemPath>Sound.c</itemPath>
-      <itemPath>ADC.c</itemPath>
       <itemPath>interrupts.c</itemPath>
       <itemPath>fileio.c</itemPath>
       <itemPath>drv_spi_16bit.c</itemPath>
@@ -232,6 +230,7 @@
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

@@ -38,6 +38,10 @@
 ********************************************************************/
 
 #include <xc.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "system_config.h"
 #include "fileio.h"
 #include "fileio_private.h"
@@ -45,9 +49,8 @@
 #include "sd_spi.h"
 #include "sd_spi_private.h"
 #include "drv_spi.h"
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include "user.h"
+
 
 /******************************************************************************
  * Global Variables
@@ -148,7 +151,8 @@ static inline __attribute__((always_inline)) unsigned char SPICalculateBRG(unsig
 bool FILEIO_SD_MediaDetect (FILEIO_SD_DRIVE_CONFIG * config)
 {
     #ifndef MEDIA_SOFT_DETECT
-        return (*config->cdFunc)();
+        //return (*config->cdFunc)();
+    return TRUE;
     #else
         FILEIO_SD_RESPONSE    response;
 
@@ -1565,7 +1569,9 @@ FILEIO_MEDIA_INFORMATION *  FILEIO_SD_MediaInitialize (FILEIO_SD_DRIVE_CONFIG * 
     {
         #ifdef __DEBUG_UART  
         PrintROMASCIIStringUART("Media successfully processed CMD0.\r\n");
-        #endif        
+
+        #endif
+                Nop();
     }       
     
 

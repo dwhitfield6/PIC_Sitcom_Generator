@@ -106,6 +106,7 @@ void DRV_SPI_Deinitialize (uint8_t channel)
 static inline __attribute__((__always_inline__)) void DRV_SPI_WaitForDataByte1 (void)
 {
     while (!DRV_SPI_STATbits(1).SPIRBF);
+    Nop();
 }
 
 /******************************************************************************/
@@ -157,6 +158,10 @@ uint8_t DRV_SPI_Get (uint8_t channel)
 {
     DRV_SPI_BUF(1) = 0xFF;
     DRV_SPI_WaitForDataByte1();
+    if(DRV_SPI_BUF(1) != 0)
+    {
+        Nop();
+    }
     return DRV_SPI_BUF(1);
 }
 

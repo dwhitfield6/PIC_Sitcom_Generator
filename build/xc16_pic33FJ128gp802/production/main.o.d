@@ -3,7 +3,6 @@ main.c  \
 system.h  \
 user.h  \
  MISC.h  \
-ADC.h  \
 Sound.h  \
 rtcc.h  \
 fileio.h  \

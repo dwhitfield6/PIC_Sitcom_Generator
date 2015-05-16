@@ -1,4 +1,4 @@
-build/xc16_pic33FJ128gp802/production/sd_spi.o:  \
+build/xc16_pic33FJ128gp802/debug/sd_spi.o:  \
 sd_spi.c  \
 system_config.h  \
  fileio_config.h  \

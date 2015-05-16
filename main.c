@@ -61,10 +61,18 @@ unsigned int Audio = 0;
 FILEIO_SD_DRIVE_CONFIG sdCardMediaParameters =
 {
     1,                                  // Use SPI module 1
-    USER_SdSpiSetCs_1,                  // User-specified function to set/clear the Chip Select pin.
-    USER_SdSpiGetCd_1,                  // User-specified function to get the status of the Card Detect pin.
-    USER_SdSpiGetWp_1,                  // User-specified function to get the status of the Write Protect pin.
-    USER_SdSpiConfigurePins_1           // User-specified function to configure the pins' TRIS bits.
+    SD_SPI_SetCS,                  // User-specified function to set/clear the Chip Select pin.
+    #ifdef CardDetect
+        SD_SPI_GetCD,                  // User-specified function to get the status of the Card Detect pin.
+    #else
+        NULL,
+    #endif
+    #ifdef WriteProtect
+        SD_SPI_GetWP,                  // User-specified function to get the status of the Card Detect pin.
+    #else
+        NULL,
+    #endif
+    SdSpiConfigurePins // User-specified function to configure the pins' TRIS bits.
 };
 
 // The gSDDrive structure allows the user to specify which set of driver functions should be used by the
@@ -103,8 +111,10 @@ int main (void)
     DEMO_STATE demoState = DEMO_STATE_NO_MEDIA;
     FILEIO_OBJECT file;
 
-    SYSTEM_Initialize();
+    InitApp();
+    Init_System();
 
+    RedLEDON();
     // Initialize the RTCC
     RTCCInit();
 

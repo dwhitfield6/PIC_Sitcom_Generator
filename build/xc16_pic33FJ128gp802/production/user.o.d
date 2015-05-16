@@ -3,5 +3,4 @@ user.c  \
 user.h  \
 MISC.h  \
  system.h  \
-ADC.h  \
 Sound.h 
