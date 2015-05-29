@@ -15,11 +15,10 @@
 /******************************************************************************/
 /* Contains ISR
  *
+ * Look here for the default vector names
+ * c:\Program Files (x86)\Microchip\xc16\v1.11\support\dsPIC33F\gld\ 
 /******************************************************************************/
-extern unsigned int AudioCounts;
-extern unsigned char Volume;
-extern unsigned int Audio;
-unsigned char array = 1;
+
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
@@ -30,45 +29,51 @@ unsigned char array = 1;
 #include <stdbool.h>       /* For true/false definition */
 
 #include "MISC.h"
-#include "Sound.h"
-#include "Sound_Laugh.h"
-
+#include "DAC.h"
+#include "user.h"
+#include "Start_sound.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
 /******************************************************************************/
 
-#define _ISR_PSV __attribute__((__interrupt__, __auto_psv__))
+#define _ISR_PSV __attribute__((interrupt, __auto_psv))
+#define _ISR_NOPSV __attribute__((interrupt, no_auto_psv))
+
 unsigned long place =0;
 
 /******************************************************************************/
 /* Interrupt Routines                                                         */
 /******************************************************************************/
-void _ISR_PSV _DAC1RInterrupt(void)
+void _ISR_NOPSV _DAC1RInterrupt(void)
 {
+    static unsigned long i = 0;
+
     IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
-    if(array == 1)
+    if(StartupSong)
     {
-        DAC1RDAT = (data[place] << Volume); /* User Code to Write to FIFO Goes Here */
-    }
-    else if(array == 2)
-    {
-        DAC1RDAT = (data2[place] << Volume); /* User Code to Write to FIFO Goes Here */
+        if(Start_Clip[i] != 0)
+        {
+            i++;
+            DAC1RDAT = (Start_Clip[i]) << 7;
+        }
+        else
+        {
+                    DAC1RDAT = 0x8000;
+            i = 0;
+            //StartupSong = FALSE;
+            //ClipDone = TRUE;
+        }
     }
     else
     {
-        DAC1RDAT = (data3[place] << Volume); /* User Code to Write to FIFO Goes Here */
+
     }
 
-    place++;
-    if(place > NUM_ELEMENTS)
+    if(ClipDone == TRUE)
     {
-        place =0;
-        array++;
-        if(array >= 4)
-        {
-            array = 1;
-        }
+
+        //AudioOff();
     }
 }
 /*-----------------------------------------------------------------------------/

@@ -6,70 +6,41 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 04/02/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
- * 04/09/15     1.0_DW0b    Fixed bugs.
- *                          Added features.
-/******************************************************************************/
-
-/******************************************************************************/
-/* Contains Functions for PIC initialization
- *
+ * 05/28/15     1.0_DW0a    Initial coding.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
+#ifndef SPI_H
+#define	SPI_H
+
 #include <xc.h>         /* XC8 General Include File */
 
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
-#include <stdio.h>         /* For sprintf definition */
-
-#include "user.h"
-#include "MISC.h"
-#include "DAC.h"
-#include "SPI.h"
 
 /******************************************************************************/
-/* User Global Variable Declaration                                           */
+/* Macro Functions                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/* Inline Functions
-/******************************************************************************/
-
-/******************************************************************************/
-/* Functions
-/******************************************************************************/
-
-/******************************************************************************/
-/* InitApp
+/* SPI_CS_ACTIVE
  *
- * The function initializes the application. It sets the pins and pull-ups.
+ * The pulls the SPI chip select low.
 /******************************************************************************/
-void InitApp(void)
-{
-    LATA = 0;
-    LATB = 0;
-    
-    RedLEDTris          = OUTPUT;
-    AudioAmpMuteTris    = OUTPUT;
-    AudioAmpStandbyTris = OUTPUT;
-
-}
+#define SPI_CS_ACTIVE()  (LATB &= ~SPI_SD_CS)
 
 /******************************************************************************/
-/* Init_System
+/* SPI_CS_DEACTIVE
  *
- * The function initializes the system
+ * The pulls the SPI chip select low.
 /******************************************************************************/
-void Init_System (void)
-{
-    InitDAC();
-    InitSPI();
-}
+#define SPI_CS_DEACTIVE()  (LATB |= SPI_SD_CS)
 
-/*-----------------------------------------------------------------------------/
- End of File
-/-----------------------------------------------------------------------------*/
+/******************************************************************************/
+/* Function prototypes                                                        */
+/******************************************************************************/
+void InitSPI(void);
+
+#endif	/* SPI_H */

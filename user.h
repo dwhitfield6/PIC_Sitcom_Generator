@@ -127,35 +127,26 @@
 /* Macro Functions                                                            */
 /******************************************************************************/
 
-/* RedLEDON()
+/******************************************************************************/
+/* RedLEDON
  *
  * The function turns on the Red LED.
 /******************************************************************************/
 #define RedLEDON()  (LATB |= RedLED)
 
-/* RedLEDOFF()
+/******************************************************************************/
+/* RedLEDOFF
  *
  * The function turns off the Red LED.
 /******************************************************************************/
 #define RedLEDOFF()  (LATB &= ~RedLED)
 
-/* RedLEDTOGGLE()
+/******************************************************************************/
+/* RedLEDTOGGLE
  *
  * The function toggles the Red LED.
 /******************************************************************************/
 #define RedLEDTOGGLE()  (LATB ^= RedLED)
-
-/* SD_CS_ACTIVE()
- *
- * The function activates the cs pin to talk to the sd card.
-/******************************************************************************/
-#define SD_CS_ACTIVE()  (LATB &= ~SPI_SD_CS)
-
-/* SD_CS_INACTIVE()
- *
- * The function deactivates the cs pin to finish talking to the sd card.
-/******************************************************************************/
-#define SD_CS_INACTIVE()  (LATB |= SPI_SD_CS)
 
 /******************************************************************************/
 /* Function prototypes                                                        */

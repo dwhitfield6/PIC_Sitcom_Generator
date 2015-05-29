@@ -46,8 +46,28 @@
 void delayUS(long US)
 {
     long i;
-    for(i=0; i<US; i += delayConst)
+
+    for(i=0; i<US; i++)
     {
+
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
         Nop();
     }
 }
