@@ -6,14 +6,11 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 04/02/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
- * 04/09/15     1.0_DW0b    Fixed bugs.
- *                          Added features.
-/******************************************************************************/
+ * 05/28/15     1.0_DW0a    Initial coding.
+ * /******************************************************************************/
 
 /******************************************************************************/
-/* Contains Functions for PIC initialization
+/* Contains Functions for the SD card.
  *
 /******************************************************************************/
 
@@ -27,11 +24,8 @@
 #include <stdio.h>         /* For sprintf definition */
 
 #include "user.h"
-#include "MISC.h"
-#include "DAC.h"
-#include "SPI.h"
-#include "RTCC.h"
 #include "SD.h"
+#include "SPI.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -46,33 +40,57 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* InitApp
+/* InitSD
  *
- * The function initializes the application. It sets the pins and pull-ups.
+ * The function initializes the SD card pins.
 /******************************************************************************/
-void InitApp(void)
+void InitSD(void)
 {
-    LATA = 0;
-    LATB = 0;
-    
-    RedLEDTris          = OUTPUT;
-    AudioAmpMuteTris    = OUTPUT;
-    AudioAmpStandbyTris = OUTPUT;
-    SOSCOTris           = INPUT;
-    SOSCITris           = INPUT;
+    SD_CS_INACTIVE(); /* Deassert the chip select pin */    
+    SPI_SD_CSTris = OUTPUT; /* Configure CS pin as an output */
+    InitCRC();
+    #ifdef WriteProtect
+        // Configure WP pin as an input
+        SD_WPTris = INPUT;
+    #endif
+
+    #ifdef CardDetect
+        // Configure CD pin as an input
+        SD_CDTris = INPUT;
+    #endif
 }
 
 /******************************************************************************/
-/* Init_System
+/* InitCRC
  *
- * The function initializes the system
+ * The function initializes the CRC module.
 /******************************************************************************/
-void Init_System (void)
+void InitCRC(void)
 {
-    InitDAC();
-    InitSPI();
-    InitSD();
-    InitRTCC();
+    /* SD crc is of the form: x7 + x3 + 1 */
+    CRCXOR=(0b10001001) << 1;
+}
+
+/******************************************************************************/
+/* SDintoSPI
+ *
+ * The function attemps to put the SD card into SPI mode. The function return
+ *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
+/******************************************************************************/
+unsigned char SDintoSPI(void)
+{
+
+}
+
+/******************************************************************************/
+/* SDintoSPI
+ *
+ * The function attemps to put the SD card into SPI mode. The function return
+ *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
+/******************************************************************************/
+unsigned char CalculateCRC(SDmessage Message)
+{
+    /* the crc message is 40 bits long */
 }
 
 /*-----------------------------------------------------------------------------/

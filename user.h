@@ -23,6 +23,15 @@
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
 
+/******************************************************************************/
+/* Info
+ *
+ * 1. Built-in functions here:
+ * http://ww1.microchip.com/downloads/en/DeviceDoc/50002071E.pdf
+ *
+ * 
+/******************************************************************************/
+
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /******************************************************************************/
 /* Pick Which System!!!
@@ -81,6 +90,13 @@
 /******************************************************************************/
 /* Pin Defines                                                                */
 /******************************************************************************/
+
+/* Connected to the secondary oscillator  */
+#define SOSCOTris	TRISBbits.TRISB4
+
+/* Connected to the secondary oscillator  */
+#define SOSCITris	TRISAbits.TRISA4
+
 /* Connected to the Red Led  */
 #define RedLEDTris	TRISBbits.TRISB10
 #define RedLED 0x0400//RB10
@@ -153,12 +169,5 @@
 /******************************************************************************/
 void InitApp(void);        
 void Init_System (void);
-#ifdef CardDetect
-inline bool SD_SPI_GetCD(void);
-#endif
-#ifdef WriteProtect
-inline bool SD_SPI_GetWP(void);
-#endif
-void SdSpiConfigurePins (void);
-inline void SD_SPI_SetCS(uint8_t a);
+
 #endif	/* USER_H */

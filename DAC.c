@@ -44,7 +44,6 @@ volatile unsigned char StartupSong = TRUE;
 /******************************************************************************/
 inline void DAC_Run(void)
 {
-    IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
     IEC4bits.DAC1RIE = 1; /* Right Channel Interrupt Enabled */
 }
 
@@ -55,7 +54,6 @@ inline void DAC_Run(void)
 /******************************************************************************/
 inline void DAC_Stop(void)
 {
-    IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
     IEC4bits.DAC1RIE = 0; /* Right Channel Interrupt disabled */
 }
 
@@ -70,6 +68,7 @@ inline void DAC_Stop(void)
 /******************************************************************************/
 void InitDAC(void)
 {
+    AudioOff();
     ACLKCONbits.APSTSCLR = 5; // Auxiliary Clock Output Divider is 4
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
@@ -77,6 +76,7 @@ void InitDAC(void)
     DAC1CONbits.DACFDIV = 7; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
     DAC1CONbits.FORM = 0; /* Data Format is Unsigned */
     DAC1DFLT = 0x8000; /* Default value set to Midpoint when FORM = 0 */
+    DAC_Run();
 }
 
 /******************************************************************************/
@@ -136,12 +136,9 @@ void DAC_Voltage(unsigned int counts)
 /******************************************************************************/
 void AudioOn(void)
 {
-    DAC_Stop();
     TurnOnAmp();
     delayUS(1000);
     //UnMuteAmp();
-    DAC_Run();
-    DAC_ON();
 }
 
 /******************************************************************************/
@@ -152,8 +149,6 @@ void AudioOn(void)
 void AudioOff(void)
 {
     MuteAmp();
-    DAC_Stop();
-    DAC_OFF();
     TurnOffAmp();
 }
 
@@ -164,11 +159,13 @@ void AudioOff(void)
 /******************************************************************************/
 void Play_Startup(void)
 {
-    DAC_Res = _8BIT;
-    ClipDone = FALSE;
     AudioOn();
     StartupSong = TRUE;
+    ClipDone = FALSE;
+    DAC_Res = _8BIT;
+    DAC_ON();   
     while(!ClipDone); /* wait till it stops playing */
+    AudioOff();
 }
 
 /*-----------------------------------------------------------------------------/

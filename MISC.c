@@ -895,8 +895,12 @@ unsigned char GetStringAfterComma(unsigned char* This, unsigned char CommaNumber
 /******************************************************************************/
 double DBround(double Input)
 {
-    long temp = (long) (Input + 0.5);
-    return (double) temp;
+    double temp1;
+    long temp;
+    
+    temp = (long) (Input + 0.5);
+    temp1 = (double) temp;
+    return temp1;
 }
 
 /******************************************************************************/
@@ -914,6 +918,55 @@ long Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputRange
     tempScale = (double)(DiffOutput) / (double)(DiffInput);
     return (long)(DBround( (double)(Input - InputRangeLow) * tempScale)) + OutputRangeLow;     
 }
+
+/******************************************************************************/
+/* HexToBCD
+ *
+ * This function converts from Hex to BCD.
+/******************************************************************************/
+unsigned int HEXtoBCD(unsigned int input)
+{
+    unsigned int temp0;
+    unsigned int temp1;
+    unsigned int temp2;
+    unsigned int temp3;
+    unsigned int Value = input;
+    
+    temp3 = Value/1000;
+    Value -= (temp3 * 1000);
+    temp2 = Value / 100;
+    Value -= (temp2 * 100);
+    temp1 = Value / 10;
+    Value -= (temp1 * 10);
+    temp0 = Value;
+    
+    return (temp0 + (temp1 << 4) + (temp2 << 8) + (temp3 << 12)); 
+}
+
+/******************************************************************************/
+/* BCDtoHex
+ *
+ * This function converts from BCD to Hex.
+/******************************************************************************/
+unsigned int BCDtoHEX(unsigned int input)
+{
+    unsigned int temp0;
+    unsigned int temp1;
+    unsigned int temp2;
+    unsigned int temp3;
+    unsigned int Value = input;
+    
+    temp3 = Value >> 12;
+    Value -= (temp3 << 12);
+    temp2 = Value >> 8;
+    Value -= (temp2 << 8);
+    temp1 = Value >> 4;
+    Value -= (temp1 << 4);
+    temp0 = Value;
+    
+    return (temp0 + (temp1 * 10) + (temp2 * 100) + (temp3 * 1000));
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

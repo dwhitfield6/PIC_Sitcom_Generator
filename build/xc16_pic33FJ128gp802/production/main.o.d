@@ -3,4 +3,6 @@ main.c  \
 system.h  \
 user.h  \
  MISC.h  \
-DAC.h 
+DAC.h  \
+RTCC.h  \
+SPI.h 

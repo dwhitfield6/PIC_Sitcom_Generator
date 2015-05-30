@@ -8,6 +8,12 @@
  * --------     ---------   ----------------------------------------------------
  * 05/09/15     1.0_DW0a    Initial project make.
  *                          Ported over fileio example from microchip.
+ *                          Removed the fileio example code. This code was
+ *                            garbage.
+ *                          Added RTCC functionality.
+ *                          Fixed DAC audio play bugs.
+ *                          Added SD card code.
+ *                          Added CRC code.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -30,6 +36,8 @@
 #include "user.h"
 #include "MISC.h"
 #include "DAC.h"
+#include "RTCC.h"
+#include "SPI.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -55,6 +63,18 @@ int main (void)
     InitApp();
     Init_System();
 
+    RTCread(&CurrentTime);
+    SetTime.Year = 2015;
+    SetTime.Month = May;
+    SetTime.Date = 29;
+    SetTime.Weekday = Friday;
+    SetTime.Hour = 17;
+    SetTime.Minute = 25;
+    SetTime.Second = 0;
+    RTCwrite(SetTime);
+
+    Play_Startup();
+    
     RedLEDOFF();
     for(i=0; i<20;i++)
     {
@@ -65,7 +85,8 @@ int main (void)
 
     while(1)
     {
-        Play_Startup();
+        //RTCread(&CurrentTime);
+        SPIwrite_read(0);
     }
 }
 /*-----------------------------------------------------------------------------/

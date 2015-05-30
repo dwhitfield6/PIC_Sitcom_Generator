@@ -12,8 +12,8 @@
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef SPI_H
-#define	SPI_H
+#ifndef SD_H
+#define	SD_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -21,28 +21,55 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
+/* Structures                                                                 */
+/******************************************************************************/
+typedef struct sd
+{
+    unsigned char Transmitter;
+    unsigned char Command;
+    unsigned long Argument;
+    unsigned char CRC;
+}SDmessage;
+
+/******************************************************************************/
+/* WriteProtect
+ * 
+ * Define this if the SD card holder has a Write protect switch.
+/******************************************************************************/
+//#define WriteProtect
+
+/******************************************************************************/
+/* CardDetect
+ * 
+ * Define this if the SD card holder has a Card insertion switch.
+/******************************************************************************/
+//#define CardDetect
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+
+/******************************************************************************/
 /* Macro Functions                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/* SPI_CS_ACTIVE
+/* SD_CS_INACTIVE
  *
- * The pulls the SPI chip select low.
+ * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SPI_CS_ACTIVE()  (LATB &= ~SPI_SD_CS)
+#define SD_CS_INACTIVE() (LATB |= SPI_SD_CS)
 
 /******************************************************************************/
-/* SPI_CS_DEACTIVE
+/* SD_CS_ACTIVE
  *
- * The pulls the SPI chip select low.
+ * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SPI_CS_DEACTIVE()  (LATB |= SPI_SD_CS)
+#define SD_CS_ACTIVE() (LATB &= ~SPI_SD_CS)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void InitSPI(void);
-void SetSPISpeed(double kHz);
-unsigned char SPIwrite_read(unsigned char write);
+void InitSD(void);
 
-#endif	/* SPI_H */
+#endif	/* SD_H */

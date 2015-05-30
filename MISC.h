@@ -71,5 +71,7 @@ unsigned char IsAlphaNumeric(unsigned char data);
 unsigned char IsNumber(unsigned char data);
 double DBround(double Input);
 long Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputRangeLow, long OutputRangeHigh);
+unsigned int BCDtoHEX(unsigned int input);
+unsigned int HEXtoBCD(unsigned int input);
 
 #endif	/* MISC_H */

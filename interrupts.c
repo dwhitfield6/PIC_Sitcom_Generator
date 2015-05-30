@@ -36,33 +36,35 @@
 /******************************************************************************/
 /* Global Variables                                                           */
 /******************************************************************************/
+unsigned long place = 0;
 
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
 #define _ISR_PSV __attribute__((interrupt, __auto_psv))
 #define _ISR_NOPSV __attribute__((interrupt, no_auto_psv))
-
-unsigned long place =0;
 
 /******************************************************************************/
 /* Interrupt Routines                                                         */
 /******************************************************************************/
 void _ISR_NOPSV _DAC1RInterrupt(void)
 {
-    static unsigned long i = 0;
-
+    unsigned int temp;
     IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
     if(StartupSong)
     {
-        if(Start_Clip[i] != 0)
+        temp = Start_Clip[place];
+        if(temp != 0)
         {
-            i++;
-            DAC1RDAT = (Start_Clip[i]) << 7;
+            place++;
+            DAC1RDAT = temp << 7;
         }
         else
         {
-                    DAC1RDAT = 0x8000;
-            i = 0;
-            //StartupSong = FALSE;
-            //ClipDone = TRUE;
+            place = 0;
+            StartupSong = FALSE;
+            ClipDone = TRUE;
+            DAC1RDAT = 0x8000;
         }
     }
     else
@@ -72,8 +74,7 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
 
     if(ClipDone == TRUE)
     {
-
-        //AudioOff();
+        DAC_OFF();
     }
 }
 /*-----------------------------------------------------------------------------/

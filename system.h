@@ -28,16 +28,16 @@
  *
  * This is the CPU clock frequency.
  *
- * For this system the clock is 32MHz and the internal PLL is used.
+ * For this system the clock is 80MHz and the internal PLL is used.
  *
 /******************************************************************************/
 
-#define SYS_FREQ        64000000L
+#define SYS_FREQ        32000000L
 
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define FCY             SYS_FREQ/4
+#define FCY             SYS_FREQ
 
 /******************************************************************************/
 /* Function prototypes                                                        */

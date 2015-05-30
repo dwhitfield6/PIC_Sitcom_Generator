@@ -4,4 +4,6 @@ user.h  \
 MISC.h  \
  system.h  \
 DAC.h  \
-SPI.h 
+SPI.h  \
+RTCC.h  \
+SD.h 

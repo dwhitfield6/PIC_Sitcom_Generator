@@ -11,6 +11,9 @@
       <itemPath>FAT.h</itemPath>
       <itemPath>DAC.h</itemPath>
       <itemPath>Start_sound.h</itemPath>
+      <itemPath>RTCC.h</itemPath>
+      <itemPath>Flash.h</itemPath>
+      <itemPath>SD.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -28,6 +31,9 @@
       <itemPath>SPI.c</itemPath>
       <itemPath>FAT.c</itemPath>
       <itemPath>DAC.c</itemPath>
+      <itemPath>RTCC.c</itemPath>
+      <itemPath>Flash.c</itemPath>
+      <itemPath>SD.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
