@@ -86,7 +86,9 @@ int main (void)
     while(1)
     {
         //RTCread(&CurrentTime);
-        SPIwrite_read(0);
+        //SPIwrite_read(0);
+        //RedLEDTOGGLE();
+        //delayUS(500);
     }
 }
 /*-----------------------------------------------------------------------------/

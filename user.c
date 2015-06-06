@@ -60,6 +60,9 @@ void InitApp(void)
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
     SOSCITris           = INPUT;
+    SPI_SD_MISOTris     = INPUT;
+    SPI_SD_MOSITris     = OUTPUT;
+
 }
 
 /******************************************************************************/

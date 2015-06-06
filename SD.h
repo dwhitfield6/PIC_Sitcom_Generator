@@ -29,7 +29,7 @@ typedef struct sd
     unsigned char Command;
     unsigned long Argument;
     unsigned char CRC;
-}SDmessage;
+}SDcommand;
 
 /******************************************************************************/
 /* WriteProtect
@@ -46,30 +46,52 @@ typedef struct sd
 //#define CardDetect
 
 /******************************************************************************/
-/* Defines                                                                    */
+/* CRCMASK_7
+ * 
+ * Mask for the sd crc polyomial. x^7 + x^3 + 1
 /******************************************************************************/
+#define CRCMASK_7 0x89
 
 /******************************************************************************/
-/* Macro Functions                                                            */
+/* SD_INIT_MAXATTEMPTS
+ * 
+ * This is the maximum attempts that we try to put the sd card into SPI mode.
 /******************************************************************************/
+#define SD_INIT_MAXATTEMPTS 20
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+#define CMD0 0
+
+/******************************************************************************/
+/* User Global Variable Declaration                                           */
+/******************************************************************************/
+extern unsigned char SD_Initialized;
 
 /******************************************************************************/
 /* SD_CS_INACTIVE
  *
  * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SD_CS_INACTIVE() (LATB |= SPI_SD_CS)
+#define SD_CS_INACTIVE() (LATB &= ~SPI_SD_CS)
 
 /******************************************************************************/
 /* SD_CS_ACTIVE
  *
  * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SD_CS_ACTIVE() (LATB &= ~SPI_SD_CS)
+#define SD_CS_ACTIVE() (LATB |= SPI_SD_CS)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitSD(void);
+void TestCRC(void);
+unsigned char SDtoSPI(void);
+unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned int* read);
+void SDaddCRC(SDcommand* message);
+unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
+
 
 #endif	/* SD_H */

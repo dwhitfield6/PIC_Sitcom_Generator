@@ -21,6 +21,17 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
+/* User Global Variable Declaration                                           */
+/******************************************************************************/
+extern volatile unsigned char SPI_State;
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+#define FINISHED    10
+#define GOING       9
+#define NOTFINISHED 9
+/******************************************************************************/
 /* Macro Functions                                                            */
 /******************************************************************************/
 
@@ -43,6 +54,9 @@
 /******************************************************************************/
 void InitSPI(void);
 void SetSPISpeed(double kHz);
-unsigned char SPIwrite_read(unsigned char write);
+unsigned char SPIwrite_read(unsigned int write, unsigned int* read);
+void SPIwrite(unsigned int write);
+inline void SPI_Enable(void);
+inline void SPI_Disable(void);
 
 #endif	/* SPI_H */

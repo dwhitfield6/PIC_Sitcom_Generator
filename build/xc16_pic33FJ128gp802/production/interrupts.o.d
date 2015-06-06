@@ -4,4 +4,5 @@ MISC.h  \
  system.h  \
 DAC.h  \
 user.h  \
-Start_sound.h 
+Start_sound.h  \
+SPI.h 

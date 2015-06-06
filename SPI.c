@@ -34,9 +34,35 @@
 unsigned char SPIprescale[22] = {1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 28,
 32, 40, 48, 56, 64, 80, 96, 112, 128};
 
+volatile unsigned char SPI_State = FINISHED;
+
 /******************************************************************************/
-/* Inline Functions
+/* Inline Functions                                                           */
 /******************************************************************************/
+
+/******************************************************************************/
+/* SPI_Enable
+ *
+ * Turns on SPI module.
+/******************************************************************************/
+inline void SPI_Enable(void)
+{
+    SPI1STATbits.SPIEN = 1; // Turn on SPI module
+    IFS0bits.SPI1IF = 0;    // Clear the Interrupt flag
+    IEC0bits.SPI1IE = 1;    // Disable the interrupt
+}
+
+/******************************************************************************/
+/* SPI_Disable
+ *
+ * Turns off SPI module.
+/******************************************************************************/
+inline void SPI_Disable(void)
+{
+    SPI1STATbits.SPIEN = 0; // Turn off module
+    IFS0bits.SPI1IF = 0; // Clear the Interrupt flag
+    IEC0bits.SPI1IE = 0; // Disable the interrupt
+}
 
 /******************************************************************************/
 /* Functions
@@ -49,11 +75,11 @@ unsigned char SPIprescale[22] = {1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 28,
 /******************************************************************************/
 void InitSPI(void)
 {
+    SPI_Disable();
     RPINR20bits.SDI1R = 0x02; // SPI1 data input (MISO) is set to RP2
     RPOR3bits.RP7R = 0x07;    // RP7 = SDO aka MOSI
     RPOR4bits.RP8R = 0x08;    // RP8 = SDO aka SCK
-    SPI1CON1bits.MODE16 = FALSE;
-    SetSPISpeed(400.0); /* set speed to 400kHz */
+    SPI1CON1bits.MODE16 = TRUE;
     /* set to SPI mode 0 */
     SPI1CON1bits.CKE = 0;
     SPI1CON1bits.CKP = 0;
@@ -61,10 +87,10 @@ void InitSPI(void)
 
     SPI1CON1bits.MSTEN = TRUE; /* Master mode */
 
-    SPI1STATbits.SPIEN = TRUE; /* module is enabled and configures the
-                                * pins as serial port pins
-                                */
+    SetSPISpeed(400.0); /* set speed to 400kHz */
 
+    SPI_Enable();
+    delayUS(1000); /* needed for SPI clock to stabalize */
 }
 
 /******************************************************************************/
@@ -104,6 +130,7 @@ void SetSPISpeed(double kHz)
     {
         prescale = 2; /* the SPI bus can not operate this fast */
     }
+    SPI_Disable();
     switch (prescale)
     {
         case 1:
@@ -201,14 +228,40 @@ void SetSPISpeed(double kHz)
 /******************************************************************************/
 /* SPIwrite_read
  *
- * The function initializes the SPI bus.
+ * The function writes 2 bytes over the SPI and listens for a response.
 /******************************************************************************/
-unsigned char SPIwrite_read(unsigned char write)
+unsigned char SPIwrite_read(unsigned int write, unsigned int* read)
 {
+    unsigned int dummy;
+    /* dummy reads */
+    dummy = SPI1BUF;
+    dummy = SPI1BUF;
+    dummy = SPI1BUF;
+
+    /* Errata workaround */
     SPI1BUF = write;
-    while(SPI1STATbits.SPITBF); /* wait for the send to finish */
-    //while(SPI1STATbits.SPIRBF); /* wait for the receive to finish */
-    return SPI1BUF;
+    SPI_State = NOTFINISHED;
+    while(!SPI1STATbits.SPITBF);
+    while(SPI1STATbits.SPITBF);    
+    while(SPI_State != FINISHED);
+    
+    if(SPI1STATbits.SPIRBF || SPI1STATbits.SPIROV)
+    {
+        SPI1STATbits.SPIROV = FALSE;
+        *read = SPI1BUF;
+        return 1;
+    }
+    return 0;
+}
+
+/******************************************************************************/
+/* SPIwrite
+ *
+ * The function writes 2 bytes over the SPI bus without listening.
+/******************************************************************************/
+void SPIwrite(unsigned int write)
+{
+    SPIwrite_read(write,NULL);
 }
 /*-----------------------------------------------------------------------------/
  End of File
