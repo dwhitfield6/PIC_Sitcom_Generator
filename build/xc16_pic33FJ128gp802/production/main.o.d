@@ -5,4 +5,5 @@ user.h  \
  MISC.h  \
 DAC.h  \
 RTCC.h  \
-SPI.h 
+SPI.h  \
+SD.h 

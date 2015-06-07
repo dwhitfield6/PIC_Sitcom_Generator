@@ -60,9 +60,25 @@ typedef struct sd
 #define SD_INIT_MAXATTEMPTS 20
 
 /******************************************************************************/
-/* Defines                                                                    */
+/* Commands                                                                   */
 /******************************************************************************/
 #define CMD0 0
+#define CMD1 1
+#define CMD8 1
+#define CMD55 1
+#define CMD41 1
+
+/******************************************************************************/
+/* R1 Responses                                                               */
+/******************************************************************************/
+#define GOOD_NOT_IDLE   0x00
+#define IDLE_STATE      0x01
+#define ERASE_RESET     0x02
+#define ILLEGAL_COMMAND 0x04
+#define CRC_ERROR       0x08
+#define ERASE_SEQ_ERROR 0x10
+#define ADDRESS_ERROR   0x20
+#define PARAMETER_ERROR 0x40
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -74,14 +90,14 @@ extern unsigned char SD_Initialized;
  *
  * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SD_CS_INACTIVE() (LATB &= ~SPI_SD_CS)
+#define SD_CS_ACTIVE() (LATB &= ~SPI_SD_CS)
 
 /******************************************************************************/
 /* SD_CS_ACTIVE
  *
  * The function Asserts the chip select pin.
 /******************************************************************************/
-#define SD_CS_ACTIVE() (LATB |= SPI_SD_CS)
+#define SD_CS_INACTIVE() (LATB |= SPI_SD_CS)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
@@ -89,9 +105,9 @@ extern unsigned char SD_Initialized;
 void InitSD(void);
 void TestCRC(void);
 unsigned char SDtoSPI(void);
-unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned int* read);
+unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned char* read);
 void SDaddCRC(SDcommand* message);
 unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
-
+void SD_RESET(void);
 
 #endif	/* SD_H */

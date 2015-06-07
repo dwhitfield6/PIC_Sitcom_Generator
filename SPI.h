@@ -54,8 +54,8 @@ extern volatile unsigned char SPI_State;
 /******************************************************************************/
 void InitSPI(void);
 void SetSPISpeed(double kHz);
-unsigned char SPIwrite_read(unsigned int write, unsigned int* read);
-void SPIwrite(unsigned int write);
+unsigned char SPIwrite_read(unsigned char write, unsigned char* read);
+void SPIwrite(unsigned char write);
 inline void SPI_Enable(void);
 inline void SPI_Disable(void);
 

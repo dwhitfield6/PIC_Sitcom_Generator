@@ -86,9 +86,18 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
 /******************************************************************************/
 /* DAC interrupt
 /******************************************************************************/
-void _ISR_NOPSV _SPI1Interrupt(void)
+void _ISR_NOPSV _SPI2Interrupt(void)
 {
-    IFS0bits.SPI1IF = 0;    // Clear the Interrupt flag
+    IFS2bits.SPI2IF = 0;    // Clear the Interrupt flag
+    SPI_State = FINISHED;
+}
+
+/******************************************************************************/
+/* DAC interrupt
+/******************************************************************************/
+void _ISR_NOPSV _INT1Interrupt(void)
+{
+    IFS1bits.INT1IF = 0;    // Clear the Interrupt flag
     SPI_State = FINISHED;
 }
 /*-----------------------------------------------------------------------------/

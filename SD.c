@@ -92,7 +92,7 @@ unsigned char SDtoSPI(void)
     SDcommand message, *Pmessage;
     unsigned char i;
     unsigned int Acknowledge = FALSE;
-    unsigned int response;
+    unsigned char response = 0;
 
     Pmessage = &message;
 
@@ -102,43 +102,44 @@ unsigned char SDtoSPI(void)
     message.Argument = 0;
     SDaddCRC(Pmessage);
 
-    SetSPISpeed(200.0); /* set speed to 400kHz */
+    SetSPISpeed(20.0); /* set speed to 400kHz */
     SPI_Enable();
     delayUS(1000);/* needed for SPI clock to stabalize */
 
-    //for(i=0;i<SD_INIT_MAXATTEMPTS;i++)
-    while(1)
-    {
-        /* Write 12 bytes aka 96 cycles */
-        SD_CS_ACTIVE();
-        SPIwrite(0xFFFF);
-        SPIwrite(0xFFFF);
-        SPIwrite(0xFFFF);
-        SPIwrite(0xFFFF);
-        SPIwrite(0xFFFF);
-        SPIwrite(0xFFFF);
-        SD_CS_INACTIVE();
-        Cmd0:
-        delayUS(2000);
-        SD_CS_INACTIVE();
-        delayUS(100);
-        SD_CS_ACTIVE();
+    for(i=0;i<SD_INIT_MAXATTEMPTS;i++)
+    {        
+        SD_RESET();
 
+        delayUS(1000);
         Acknowledge = SDsendCMDSPI(Pmessage,20,&response);
-        SD_CS_INACTIVE();
         if(Acknowledge == TRUE)
         {
-            if(response == 1)
+            if(response == IDLE_STATE)
             {
-                Nop();
-                return TRUE;
-            }
-            else
-            {
-                //goto Cmd0;
+                message.Transmitter = 1;
+                message.Command = CMD1;
+                message.Argument = 0;
+                SDaddCRC(Pmessage);
+                i=0;
+                while(1)
+                {
+                    Acknowledge = SDsendCMDSPI(Pmessage,0,&response);
+                    if(Acknowledge == TRUE)
+                    {
+                        if(response == GOOD_NOT_IDLE)
+                        {
+                            return TRUE;
+                        }
+                    }
+                    i++;
+                    if(i > SD_INIT_MAXATTEMPTS)
+                    {
+                        return FALSE;
+                    }
+                }
             }
         }
-        delayUS(2000);
+        delayUS(200);
     }
     return FALSE;
 }
@@ -149,9 +150,10 @@ unsigned char SDtoSPI(void)
  * The function attemps to put the SD card into SPI mode. The function return
  *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
 /******************************************************************************/
-unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned int* read)
+unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned char* read)
 {
     unsigned char first,second,third,forth,fifth,sixth;
+    unsigned response = FALSE;
 
     first = message->Transmitter;
     first <<= 6;
@@ -162,13 +164,24 @@ unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigne
     fifth = (unsigned char)      (message->Argument & 0x000000FF);
     sixth = (message->CRC << 1) + 1;
 
-    SPIwrite((first << 8) + second);
-    SPIwrite((third << 8) + forth);
-    SPIwrite((fifth << 8) + sixth);
-    SD_CS_INACTIVE();
-    delayUS(100);
+
     SD_CS_ACTIVE();
-    if(SPIwrite_read(0xFFFF,read))
+    SPIwrite(first);
+    SPIwrite(second);
+    SPIwrite(third);
+    SPIwrite(forth);
+    SPIwrite(fifth);
+    SPIwrite(sixth);
+
+    SPIwrite(0xFF);
+    if(SPIwrite_read(0xFF,read))
+    {
+        response = TRUE;
+    }
+    SD_CS_INACTIVE();
+
+    delayUS(100);
+    if(response)
     {
         return TRUE;
     }
@@ -241,6 +254,29 @@ unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, un
         }
     }
     return (data);
+}
+
+/******************************************************************************/
+/* SD_RESET
+ *
+ * The function resets the SD card by sending clock pulses with cs high.
+/******************************************************************************/
+void SD_RESET(void)
+{
+    /* Write 12 bytes aka 96 cycles */
+    SD_CS_INACTIVE();
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
+    SPIwrite(0xFF);
 }
 
 /*-----------------------------------------------------------------------------/

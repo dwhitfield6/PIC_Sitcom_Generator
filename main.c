@@ -14,6 +14,8 @@
  *                          Fixed DAC audio play bugs.
  *                          Added SD card code.
  *                          Added CRC code.
+ *                          Fixed SPI communication.
+ *                          Added idle state check for SD card.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -38,6 +40,7 @@
 #include "DAC.h"
 #include "RTCC.h"
 #include "SPI.h"
+#include "SD.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -86,9 +89,18 @@ int main (void)
     while(1)
     {
         //RTCread(&CurrentTime);
-        //SPIwrite_read(0);
-        //RedLEDTOGGLE();
-        //delayUS(500);
+        if(SD_Initialized)
+        {
+            RedLEDON();
+        }
+        else
+        {
+            RedLEDOFF();
+            if(SDtoSPI())
+            {
+                SD_Initialized = TRUE;
+            }
+        }
     }
 }
 /*-----------------------------------------------------------------------------/
