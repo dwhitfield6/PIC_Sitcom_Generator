@@ -94,5 +94,6 @@ void ClearTime(TIMETYPE* Time);
 void RTCaccess(unsigned char Yes_No);
 void RTCread(TIMETYPE* Time);
 void RTCwrite(TIMETYPE Time);
+void RTCSetTime(void);
 
 #endif	/* RTCC_H */

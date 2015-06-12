@@ -8,9 +8,9 @@
  * --------     ---------   ----------------------------------------------------
  * 04/02/15     1.0_DW0a    Initial project make.
  *                          Derived from project 'PIC_PS2_to_UART'.
- * 04/09/15     1.0_DW0b    Fixed bugs.
+ *                          Fixed bugs.
  *                          Added features.
- * 04/18/15     1.0_DW0d    Add new function to check for alphanumeric and
+ *                          Add new function to check for alphanumeric and
  *                            number.
 /******************************************************************************/
 

@@ -16,6 +16,7 @@
  *                          Added CRC code.
  *                          Fixed SPI communication.
  *                          Added idle state check for SD card.
+ *                          Changed start-up sound to say "Sitcom Generator".
 /******************************************************************************/
 
 /******************************************************************************/
@@ -65,17 +66,7 @@ int main (void)
     ConfigureOscillator();
     InitApp();
     Init_System();
-
-    RTCread(&CurrentTime);
-    SetTime.Year = 2015;
-    SetTime.Month = May;
-    SetTime.Date = 29;
-    SetTime.Weekday = Friday;
-    SetTime.Hour = 17;
-    SetTime.Minute = 25;
-    SetTime.Second = 0;
-    RTCwrite(SetTime);
-
+    RTCSetTime();
     Play_Startup();
     
     RedLEDOFF();

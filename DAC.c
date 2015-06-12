@@ -6,7 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 05/09/15     1.0_DW0     Initial project make.
+ * 05/09/15     1.0_DW0a    Initial project make.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -69,11 +69,11 @@ inline void DAC_Stop(void)
 void InitDAC(void)
 {
     AudioOff();
-    ACLKCONbits.APSTSCLR = 5; // Auxiliary Clock Output Divider is 4
+    ACLKCONbits.APSTSCLR = 7; // Auxiliary Clock Output Divider is 1
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
     DAC1CONbits.AMPON = 0; /* Amplifier Disabled During Sleep and Idle Modes */
-    DAC1CONbits.DACFDIV = 7; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
+    DAC1CONbits.DACFDIV = 61; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
     DAC1CONbits.FORM = 0; /* Data Format is Unsigned */
     DAC1DFLT = 0x8000; /* Default value set to Midpoint when FORM = 0 */
     DAC_Run();
@@ -136,9 +136,10 @@ void DAC_Voltage(unsigned int counts)
 /******************************************************************************/
 void AudioOn(void)
 {
-    TurnOnAmp();
+    //TurnOnAmp();
+    delayUS(10000);
+    UnMuteAmp();
     delayUS(1000);
-    //UnMuteAmp();
 }
 
 /******************************************************************************/

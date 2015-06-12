@@ -64,7 +64,7 @@ void InitRTCC(void)
 /******************************************************************************/
 /* ClearTime
  *
- * The function clears teh struct TIMETYPE.
+ * The function clears the struct TIMETYPE.
 /******************************************************************************/
 void ClearTime(TIMETYPE* Time)
 {
@@ -75,6 +75,23 @@ void ClearTime(TIMETYPE* Time)
     Time->Hour = 0;
     Time->Minute = 0;
     Time->Second = 0;
+}
+
+/******************************************************************************/
+/* SetTime
+ *
+ * The function sets the time to the current time.
+/******************************************************************************/
+void RTCSetTime(void)
+{
+    SetTime.Year = 2015;
+    SetTime.Month = May;
+    SetTime.Date = 29;
+    SetTime.Weekday = Friday;
+    SetTime.Hour = 17;
+    SetTime.Minute = 25;
+    SetTime.Second = 0;
+    RTCwrite(SetTime);
 }
 
 /******************************************************************************/
