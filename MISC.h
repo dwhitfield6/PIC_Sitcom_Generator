@@ -47,8 +47,8 @@
 /******************************************************************************/
 void delayUS(long US);
 unsigned char IsCharacter(unsigned char data);
-void cleanBuffer(unsigned char* data, int count);
-void cleanBuffer16bit(unsigned int* data, int count);
+void cleanBuffer(unsigned char* data, unsigned int count);
+void cleanBuffer16bit(unsigned int* data, unsigned int count);
 double Round(double input);
 void BufferCopy(unsigned char* from,unsigned char* to, unsigned char count, unsigned char shift);
 unsigned char StringMatch(const unsigned char* This, const unsigned char* That);
@@ -73,5 +73,6 @@ double DBround(double Input);
 long Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputRangeLow, long OutputRangeHigh);
 unsigned int BCDtoHEX(unsigned int input);
 unsigned int HEXtoBCD(unsigned int input);
+unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int size);
 
 #endif	/* MISC_H */

@@ -81,12 +81,11 @@ void InitSPI(void)
     RPOR3bits.RP7R = 0x0A;    // RP7 = SDO aka MOSI
     RPOR4bits.RP8R = 0x0B;    // RP8 = SCK
     SPI2CON1bits.MODE16 = FALSE;
+    SPI2CON1bits.MSTEN = TRUE; /* Master mode */
     /* set to SPI mode 0 */
     SPI2CON1bits.CKE = 0;
     SPI2CON1bits.CKP = 1;
-    SPI2CON1bits.SMP = 0;
-
-    SPI2CON1bits.MSTEN = TRUE; /* Master mode */
+    SPI2CON1bits.SMP = 1;
 
     SetSPISpeed(400.0); /* set speed to 400kHz */
 
@@ -227,6 +226,22 @@ void SetSPISpeed(double kHz)
 }
 
 /******************************************************************************/
+/* ReadActivityMISO
+ *
+ * Reads the MISO line to check for activity.
+/******************************************************************************/
+void ReadActivityMISO(unsigned char* event)
+{
+    if(*event == FALSE)
+    {
+        if((PORTB & SPI_SD_MISO2) == 0)
+        {
+            *event = TRUE;
+        }
+    }
+}
+
+/******************************************************************************/
 /* SPIwrite_read
  *
  * The function writes 2 bytes over the SPI and listens for a response.
@@ -234,27 +249,29 @@ void SetSPISpeed(double kHz)
 unsigned char SPIwrite_read(unsigned char write, unsigned char* read)
 {
     unsigned int dummy;
+    unsigned char MISO_event = FALSE;
     /* dummy read */
     dummy = SPI2BUF;
     dummy = SPI2BUF;
     dummy = SPI2BUF;
 
     /* Errata workaround */
-    SPI2BUF = write;
     SPI_State = NOTFINISHED;
+    SPI2BUF = write;
     while(!SPI2STATbits.SPITBF);
     while(SPI2STATbits.SPITBF);
-    while(SPI_State != FINISHED);
-
-    if(SPI2STATbits.SPIRBF)
+    while(SPI_State != FINISHED)
     {
-        SPI2STATbits.SPIROV = FALSE;
-        dummy = SPI2BUF;
-        if(dummy != 0xFF)
-        {
-            *read = dummy;
-            return 1;
-        }
+        ReadActivityMISO(&MISO_event);
+    }
+
+    dummy = SPI2BUF;
+    SPI2STATbits.SPIROV = FALSE;
+
+    if(MISO_event)
+    {             
+        *read = dummy;
+        return 1;
     }
     return 0;
 }

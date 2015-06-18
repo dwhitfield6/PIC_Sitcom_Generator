@@ -58,5 +58,6 @@ unsigned char SPIwrite_read(unsigned char write, unsigned char* read);
 void SPIwrite(unsigned char write);
 inline void SPI_Enable(void);
 inline void SPI_Disable(void);
+void ReadActivityMISO(unsigned char* event);
 
 #endif	/* SPI_H */

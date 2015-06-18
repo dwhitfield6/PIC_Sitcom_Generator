@@ -17,6 +17,7 @@
  *                          Fixed SPI communication.
  *                          Added idle state check for SD card.
  *                          Changed start-up sound to say "Sitcom Generator".
+ *                          Added SD block and register reads.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -87,10 +88,7 @@ int main (void)
         else
         {
             RedLEDOFF();
-            if(SDtoSPI())
-            {
-                SD_Initialized = TRUE;
-            }
+            InitSD();
         }
     }
 }

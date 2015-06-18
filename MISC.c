@@ -168,9 +168,9 @@ unsigned char IsAlphaNumericString(unsigned char* data)
  *
  * This function sets an amount of data in the array as 0.
 /******************************************************************************/
-void cleanBuffer(unsigned char* data, int count)
+void cleanBuffer(unsigned char* data, unsigned int count)
 {
-    unsigned char i=0;
+    unsigned int i=0;
     for(i=0; i<count;i++)
     {
         data[i]= 0;
@@ -182,9 +182,9 @@ void cleanBuffer(unsigned char* data, int count)
  *
  * This function sets an amount of data in the array as 0.
 /******************************************************************************/
-void cleanBuffer16bit(unsigned int* data, int count)
+void cleanBuffer16bit(unsigned int* data, unsigned int count)
 {
-    unsigned char i=0;
+    unsigned int i=0;
     for(i=0; i<count;i++)
     {
         data[i]= 0;
@@ -966,6 +966,24 @@ unsigned int BCDtoHEX(unsigned int input)
     temp0 = Value;
     
     return (temp0 + (temp1 * 10) + (temp2 * 100) + (temp3 * 1000));
+}
+
+/******************************************************************************/
+/* BufferMatch
+ *
+ * This function checks to see if wach array match.
+/******************************************************************************/
+unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int size)
+{
+    unsigned int i;
+    for (i=0; i < size; i++)
+    {
+        if(This[i] != That[i])
+        {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------------/

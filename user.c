@@ -61,6 +61,7 @@ void InitApp(void)
     SOSCOTris           = INPUT;
     SOSCITris           = INPUT;
     SPI_SD_MISOTris     = INPUT;
+    SPI_SD_MISO2Tris     = INPUT;
     SPI_SD_MOSITris     = OUTPUT;
     ADPCFG              = 0xFFFF; /* All pins are digital */
 

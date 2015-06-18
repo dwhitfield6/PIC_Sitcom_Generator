@@ -32,6 +32,13 @@ typedef struct sd
 }SDcommand;
 
 /******************************************************************************/
+/* SDbufSize
+ *
+ * This is the size of a block of memory in the sd card.
+/******************************************************************************/
+# define SDblockSize 512
+
+/******************************************************************************/
 /* WriteProtect
  * 
  * Define this if the SD card holder has a Write protect switch.
@@ -57,33 +64,55 @@ typedef struct sd
  * 
  * This is the maximum attempts that we try to put the sd card into SPI mode.
 /******************************************************************************/
-#define SD_INIT_MAXATTEMPTS 20
+#define SD_INIT_MAX 255
+
+/******************************************************************************/
+/* SD_TIMEOUT
+ *
+ * This is the maximum attempts that we attempt to get a response from the card
+/******************************************************************************/
+#define SD_TIMEOUT_MAX 255
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+#define R1 1
+#define R2 2
+#define R3 3
+#define R6 6
+#define R16 16
+#define R512 512
 
 /******************************************************************************/
 /* Commands                                                                   */
 /******************************************************************************/
-#define CMD0 0
+#define CMD0 0      // resets the SD card
 #define CMD1 1
-#define CMD8 1
-#define CMD55 1
-#define CMD41 1
+#define CMD8 8
+#define CMD9 9      // sends card-specific data
+#define CMD10 10    // sends card identification
+#define CMD17 17    // reads a block at byte address
+#define CMD24 24    // writes a block at byte address
+#define CMD55 55    // application command
+#define CMD41 41    // starts card initialization
 
 /******************************************************************************/
 /* R1 Responses                                                               */
 /******************************************************************************/
-#define GOOD_NOT_IDLE   0x00
-#define IDLE_STATE      0x01
-#define ERASE_RESET     0x02
-#define ILLEGAL_COMMAND 0x04
-#define CRC_ERROR       0x08
-#define ERASE_SEQ_ERROR 0x10
-#define ADDRESS_ERROR   0x20
-#define PARAMETER_ERROR 0x40
+#define R1_GOOD_NOT_IDLE   0x00
+#define R1_IDLE_STATE      0x01
+#define R1_ERASE_RESET     0x02
+#define R1_ILLEGAL_COMMAND 0x04
+#define R1_CRC_ERROR       0x08
+#define R1_ERASE_SEQ_ERROR 0x10
+#define R1_ADDRESS_ERROR   0x20
+#define R1_PARAMETER_ERROR 0x40
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 extern unsigned char SD_Initialized;
+extern unsigned char ReceiveBuffer;
 
 /******************************************************************************/
 /* SD_CS_INACTIVE
@@ -105,9 +134,13 @@ extern unsigned char SD_Initialized;
 void InitSD(void);
 void TestCRC(void);
 unsigned char SDtoSPI(void);
-unsigned char SDsendCMDSPI(SDcommand* message, unsigned char ReadCycles, unsigned char* read);
+unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType, unsigned char* read);
+void SD_CMDSPI_send(SDcommand* message);
 void SDaddCRC(SDcommand* message);
 unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
 void SD_RESET(void);
+void Clear_Receive_Buffer(void);
+unsigned char SD_readRegister(SDcommand* pmessage);
+unsigned char SD_readBlock(long blockIndex);
 
 #endif	/* SD_H */

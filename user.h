@@ -117,6 +117,10 @@
 #define SPI_SD_MISOTris	TRISBbits.TRISB2
 #define SPI_SD_MISO 0x0004//RB2 used as RP2
 
+/* Connected to SPI MISO used for the SD card */
+#define SPI_SD_MISO2Tris	TRISBbits.TRISB3
+#define SPI_SD_MISO2 0x0008//RB3
+
 /* Connected to SPI MOSI used for the SD card */
 #define SPI_SD_MOSITris	TRISBbits.TRISB7
 #define SPI_SD_MOSI 0x0080//RB14 used as RP7
