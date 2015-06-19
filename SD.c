@@ -7,6 +7,8 @@
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
  * 05/28/15     1.0_DW0a    Initial coding.
+ *                          Add many SD card functions.
+ *                          Fix SD card initialization.
  * /******************************************************************************/
 
 /******************************************************************************/
@@ -39,7 +41,8 @@ unsigned char R2_Buffer[2];
 unsigned char R3_Buffer[5];
 unsigned char R6_Buffer[6];
 unsigned char SD_Timeout = 0;
-
+unsigned char SD_CardType = NOT_INITIALIZED;
+long SD_CardBlocks = 0;
 SDcommand Global_message, *PGlobal_message;
 
 /******************************************************************************/
@@ -55,16 +58,27 @@ SDcommand Global_message, *PGlobal_message;
  *
  * The function initializes the SD card pins.
  * MUST BE CALLED AFTER SPI IS INITIALIZED!!!
+ *
+ * Sequence:
+ * 1. send 80 bits with chip select high
+ * 2. send cmd0.
+ * 3. send cmd8.
+ * 4. send special Acmd41
+ * 5. Send md 58 to see if it is a high capacity card.
 /******************************************************************************/
 void InitSD(void)
 {
     unsigned char SD_Init_Tries = SD_INIT_MAX;
     unsigned int Acknowledge = FALSE;
+    unsigned long arguement;
+    long temp;
     cleanBuffer(R1_Buffer, 1);
     cleanBuffer(R2_Buffer, 2);
     cleanBuffer(R3_Buffer, 5);
     cleanBuffer(R6_Buffer, 6);
-    Clear_Receive_Buffer();
+    Clear_Receive_Buffer_Big();
+    Clear_Receive_Buffer_Small();
+    SD_CardBlocks = 0;
 
     PGlobal_message = &Global_message; // pointer to the message
     
@@ -98,16 +112,39 @@ void InitSD(void)
             Global_message.Command = CMD8;
             Global_message.Argument = 0x1AA;
             SDaddCRC(PGlobal_message);
-            Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
+            Clear_Receive_Buffer_Small();
+            Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R16,Receive_Buffer_Small,YES);
             if(Acknowledge == TRUE)
             {
+                if(Receive_Buffer_Small[0] & R1_ILLEGAL_COMMAND)
+                {
+                    SD_Set_CardType(SD_CARD_TYPE_SD1);
+                }
+                else
+                {
+                    if(Receive_Buffer_Small[4] != 0xAA)
+                    {
+                        /* CMD8 error */
+                        return;
+                    }
+                    SD_Set_CardType(SD_CARD_TYPE_SD2);
+                }
                 break;
             }
         }
 
+        if(SD_Get_CardType()== SD_CARD_TYPE_SD2)
+        {
+            arguement = 0x40000000;
+        }
+        else
+        {
+            arguement = 0;
+        }
+
         while(SD_Init_Tries > 0)
         {
-            /* send CMD55 */
+            /* send ACMD41 */
             SD_Timeout = 0;
             while(1)
             {
@@ -117,70 +154,113 @@ void InitSD(void)
                 }
                 SD_Timeout++;
 
-                /* send CMD55 */
+                /* send ACMD41 */
                 Global_message.Transmitter = 1;
-                Global_message.Command = CMD55;
-                Global_message.Argument = 0;
+                Global_message.Command = ACMD41;
+                Global_message.Argument = arguement;
                 SDaddCRC(PGlobal_message);
-                Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
-                if(Acknowledge == TRUE)
-                {
-                    break;
-                }
-            }
-
-            /* send CMD41 */
-            SD_Timeout = 0;
-            while(1)
-            {
-                if(SD_Timeout >= SD_TIMEOUT_MAX)
-                {
-                    return;
-                }
-                SD_Timeout++;
-
-                /* send CMD41 */
-                Global_message.Transmitter = 1;
-                Global_message.Command = CMD41;
-                Global_message.Argument = 0;
-                SDaddCRC(PGlobal_message);
-                Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
+                Acknowledge = SD_ACMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
                 if(Acknowledge == TRUE)
                 {
                     if(R1_Buffer[0] == R1_GOOD_NOT_IDLE)
                     {
-                                       /* send CMD41 */
-                        Global_message.Transmitter = 1;
-                        Global_message.Command = CMD55;
-                        Global_message.Argument = 0;
-                        SDaddCRC(PGlobal_message);
-                        SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
-                        SetSPISpeed(4000.0); /* set speed to 4MHz */
-                        SPI_Enable();
-                        delayUS(1000);/* needed for SPI clock to stabalize */
                         SD_Initialized = TRUE;
-                        return;
-                    }
-                    else
-                    {
                         break;
                     }
                 }
             }
+
+            /* check for SDHC card */
+            if(SD_Get_CardType()==SD_CARD_TYPE_SD2)
+            {
+                /* send CMD58 */
+                Global_message.Transmitter = 1;
+                Global_message.Command = CMD58;
+                Global_message.Argument = 0;
+                SDaddCRC(PGlobal_message);
+                Clear_Receive_Buffer_Small();
+                Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R16,Receive_Buffer_Small,YES);
+                if(Acknowledge == TRUE)
+                {
+                    if((Receive_Buffer_Small[1] & 0XC0) == 0XC0)
+                    {
+                        SD_Set_CardType(SD_CARD_TYPE_SDHC);
+                        break;
+                    }
+                }
+            }
+
+            /* Set block length. For SDHC Card, the block length is fixed at 512 */
+            if(SD_Get_CardType()!=SD_CARD_TYPE_SDHC)
+            {
+                /* send CMD58 */
+                Global_message.Transmitter = 1;
+                Global_message.Command = CMD16;
+                Global_message.Argument = 512;
+                SDaddCRC(PGlobal_message);
+                Clear_Receive_Buffer_Small();
+                Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer,YES);
+                if(Acknowledge == TRUE)
+                {
+                    if((Receive_Buffer_Small[1] & 0XC0) == 0XC0)
+                    {
+                        SD_Set_CardType(SD_CARD_TYPE_SDHC);
+                        break;
+                    }
+                }
+            }
+
             SD_Init_Tries--;
         }
+        SetSPISpeed(400.0); /* set speed to 4MHz */
+        SPI_Enable();
+        delayUS(1000);/* needed for SPI clock to stabalize */
     }
-    SD_readBlock(0);
+    temp = Total_Num_Blocks();
+    if( temp >0 )
+    {
+        SD_CardBlocks = temp;
+    }
 }
 
 /******************************************************************************/
-/* Clear_Receive_Buffer
+/* SD_Set_CardType
  *
- * The function clears the receive buffer.
+ * The function sets the SD card type.
 /******************************************************************************/
-void Clear_Receive_Buffer(void)
+void SD_Set_CardType(unsigned char type)
+{
+    SD_CardType = type;
+}
+
+/******************************************************************************/
+/* SD_Get_CardType
+ *
+ * The function gets the SD card type.
+/******************************************************************************/
+unsigned char SD_Get_CardType(void)
+{
+    return SD_CardType;
+}
+
+/******************************************************************************/
+/* Clear_Receive_Buffer_Big
+ *
+ * The function clears the large receive buffer.
+/******************************************************************************/
+void Clear_Receive_Buffer_Big(void)
 {
     cleanBuffer(Receive_Buffer_Big, SDblockSize);
+}
+
+/******************************************************************************/
+/* Clear_Receive_Buffer_Small
+ *
+ * The function clears the small receive buffer.
+/******************************************************************************/
+void Clear_Receive_Buffer_Small(void)
+{
+    cleanBuffer(Receive_Buffer_Small, R16);
 }
 
 /******************************************************************************/
@@ -220,7 +300,7 @@ unsigned char SD_readRegister(SDcommand* pmessage)
 
     R1_Buffer[0] = 0xFF;
 
-    SD_CMDSPI_send_read(pmessage,R1,R1_Buffer);
+    SD_CMDSPI_send_read(pmessage,R1,R1_Buffer, NO);
     while(R1_Buffer[0] != 0)
     {
         SD_Timeout = 0;
@@ -229,7 +309,9 @@ unsigned char SD_readRegister(SDcommand* pmessage)
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
+                delayUS(10);
                 SD_CS_INACTIVE();
+                delayUS(10);
                 return FAIL;
             }
         }
@@ -237,15 +319,17 @@ unsigned char SD_readRegister(SDcommand* pmessage)
 
      // wait for data token
     R1_Buffer[0] = 0xFF;
-    while(R1_Buffer[0] != 0xFE)
+    SD_Timeout = 0;
+    while(R1_Buffer[0] != DATA_START_BLOCK)
     {
-        SD_Timeout = 0;
         while(!SPIwrite_read(0xFF,R1_Buffer))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
+                delayUS(10);
                 SD_CS_INACTIVE();
+                delayUS(10);
                 return FAIL;
             }
         }
@@ -259,74 +343,113 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     // read CRC
     SPIwrite(0xFF); // LSB
     SPIwrite(0xFF); // MSB
+
+    SD_Clear();
+    delayUS(10);
     SD_CS_INACTIVE();
+    delayUS(10);
     return PASS;
 }
 
 /******************************************************************************/
 /* SD_readBlock
  *
- * Reads an SD block and stores it in Receive_Buffer_Small.
+ * Reads an SD block and stores it in Receive_Buffer_Big.
+ * Command Argument:
+ *
+ * SDHC and SDXC use the 32-bit argument of memory access commands as block
+ * address format. Block length is fixed to 512 bytes regardless CMD16,
+ * format. Block SDSC uses the 32-bit argument of memory access commands as
+ * byte address length is determined by CMD16,
+ * i.e.:
+ * (a) Argument 0001h is byte address 0001h in the SDSC and 0001h block in SDHC
+ *     and SDXC
+ * (b) Argument 0200h is byte address 0200h in the SDSC and 0200h block in SDHC
+ *     and SDXC
 /******************************************************************************/
 unsigned char SD_readBlock(long blockIndex)
 {
     unsigned int i;
-    unsigned char* Pbuf = Receive_Buffer_Small;
+    unsigned char* Pbuf = Receive_Buffer_Big;
+    unsigned long block;
+    unsigned int BytesRead;
 
     Global_message.Transmitter = 1;
     Global_message.Command = CMD17;
-    Global_message.Argument = blockIndex * SDblockSize;
-    SDaddCRC(PGlobal_message);
+    block = blockIndex;
     R1_Buffer[0] = 0xFF;
 
-    SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer);
-    while(R1_Buffer[0] != 0)
+    if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
     {
-        SD_Timeout = 0;
+        block <<= 9;
+    }
+    Global_message.Argument = block;
+    SDaddCRC(PGlobal_message);
+
+    SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer,NO);
+    SD_Timeout = 0;
+    while(R1_Buffer[0] != 0)
+    {        
         while(!SPIwrite_read(0xFF,R1_Buffer))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
+                delayUS(10);
                 SD_CS_INACTIVE();
+                delayUS(10);
                 return FAIL;
             }
         }
     }
 
      // wait for data token
+    SD_Timeout = 0;
     R1_Buffer[0] = 0xFF;
-    while(R1_Buffer[0] != 0xFE)
+    while(R1_Buffer[0] != DATA_START_BLOCK)
     {
-        SD_Timeout = 0;
         while(!SPIwrite_read(0xFF,R1_Buffer))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
+                delayUS(10);
                 SD_CS_INACTIVE();
+                delayUS(10);
                 return FAIL;
             }
         }
     }
 
     // read data
+    BytesRead = 0;
     for (i=0; i<SDblockSize; i++)
     {
-        SPIwrite_read(0xFF,Pbuf);
+        if(SPIwrite_read(0xFF,Pbuf))
+        {
+            BytesRead++;
+        }
         Pbuf++;
     }
     // read CRC
     SPIwrite(0xFF); // LSB
     SPIwrite(0xFF); // MSB
+
+    SD_Clear();
+    delayUS(10);
     SD_CS_INACTIVE();
-    return PASS;
+    delayUS(10);
+    if(BytesRead == SDblockSize)
+    {
+        return PASS;
+    }
+    return FAIL;
 }
 
 /******************************************************************************/
 /* TestCRC
  *
- * The function initializes the CRC module.
+ * The function initializes the CRC algorithm.
 /******************************************************************************/
 void TestCRC(void)
 {
@@ -356,7 +479,7 @@ unsigned char SDtoSPI(void)
     message.Argument = 0;
     SDaddCRC(Pmessage);
 
-    SetSPISpeed(200.0); /* set speed to 200kHz */
+    SetSPISpeed(400.0); /* set speed to 400kHz */
     SPI_Enable();
     delayUS(1000);/* needed for SPI clock to stabalize */
 
@@ -365,7 +488,7 @@ unsigned char SDtoSPI(void)
         SD_RESET();
 
         delayUS(1000);
-        Acknowledge = SD_CMDSPI_send_read(Pmessage,R1,R1_Buffer);
+        Acknowledge = SD_CMDSPI_send_read(Pmessage,R1,R1_Buffer,YES);
         if(Acknowledge == TRUE)
         {
             if(R1_Buffer[0] == R1_IDLE_STATE)
@@ -381,8 +504,7 @@ unsigned char SDtoSPI(void)
 /******************************************************************************/
 /* SD_CMDSPI_send
  *
- * The function attemps to put the SD card into SPI mode. The function return
- *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
+ * The function sends an SD card command.
 /******************************************************************************/
 void SD_CMDSPI_send(SDcommand* message)
 {
@@ -397,8 +519,10 @@ void SD_CMDSPI_send(SDcommand* message)
     fifth = (unsigned char)      (message->Argument & 0x000000FF);
     sixth = (message->CRC << 1) + 1;
 
-
     SD_CS_ACTIVE();
+    delayUS(10);
+    SD_Clear();
+    delayUS(10);
     SPIwrite(first);
     SPIwrite(second);
     SPIwrite(third);
@@ -408,12 +532,34 @@ void SD_CMDSPI_send(SDcommand* message)
 }
 
 /******************************************************************************/
+/* SD_ACMDSPI_send_read
+ *
+ * The function sends an SD card Application specific command and listens for
+ * a response.
+/******************************************************************************/
+unsigned char SD_ACMDSPI_send_read(SDcommand* pmessage, unsigned int ResponseType, unsigned char* read)
+{
+    SDcommand temp_message, *temp_Pmessage;
+    unsigned char Acknowledge;
+
+    temp_Pmessage = &temp_message; // pointer to the message
+    
+    temp_message.Transmitter = 1;
+    temp_message.Command = CMD55;
+    temp_message.Argument = 0;
+    SDaddCRC(temp_Pmessage);
+
+    SD_CMDSPI_send(temp_Pmessage);
+    SD_WaitResponse();
+    Acknowledge = SD_CMDSPI_send_read(pmessage,ResponseType,read,YES);
+    return (Acknowledge);
+}
+/******************************************************************************/
 /* SD_CMDSPI_send_read
  *
- * The function attemps to put the SD card into SPI mode. The function return
- *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
+ * The function sends an SD card command and listens for a response.
 /******************************************************************************/
-unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType, unsigned char* read)
+unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType, unsigned char* read, unsigned char CSonGood)
 {
     unsigned response = FALSE;
     unsigned int i;
@@ -428,9 +574,12 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
+                delayUS(10);
                 SD_CS_INACTIVE();
+                delayUS(10);
                 return FAIL;
             }
+            delayUS(10);
         }
         response = TRUE;
     }
@@ -443,16 +592,26 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType
                 SD_Timeout++;
                 if(SD_Timeout >= SD_TIMEOUT_MAX)
                 {
+                    delayUS(10);
                     SD_CS_INACTIVE();
-                    return FAIL;
+                    if(response)
+                    {
+                        return TRUE;
+                    }
+                    return FALSE;
                 }
+                delayUS(10);
             }
+            response = TRUE;
             read++;
         }
-        response = TRUE;
     }
 
-    SD_CS_INACTIVE();
+    if(CSonGood)
+    {
+        delayUS(10);
+        SD_CS_INACTIVE();
+    }
     if(response)
     {
         return TRUE;
@@ -461,10 +620,9 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType
 }
 
 /******************************************************************************/
-/* SDintoSPI
+/* SDaddCRC
  *
- * The function attemps to put the SD card into SPI mode. The function return
- *  TRUE if the SD card is in SPI mode and FALSE if it wont go into this mode.
+ * The function attaches the messages CRC.
 /******************************************************************************/
 void SDaddCRC(SDcommand* message)
 {
@@ -537,6 +695,7 @@ void SD_RESET(void)
 {
     /* Write 12 bytes aka 96 cycles */
     SD_CS_INACTIVE();
+    delayUS(10);
     SPIwrite(0xFF);
     SPIwrite(0xFF);
     SPIwrite(0xFF);
@@ -549,6 +708,36 @@ void SD_RESET(void)
     SPIwrite(0xFF);
     SPIwrite(0xFF);
     SPIwrite(0xFF);
+}
+
+/******************************************************************************/
+/* SD_Clear
+ *
+ * The function waits until the SD card is done talking.
+/******************************************************************************/
+void SD_Clear(void)
+{
+    /* Write data until there is no response */
+    while(SPIwrite_read(0xFF, NULL));
+}
+
+/******************************************************************************/
+/* SD_Clear
+ *
+ * The function waits until the SD card talks.
+/******************************************************************************/
+unsigned char SD_WaitResponse(void)
+{
+    SD_Timeout = 0;
+    while(!SPIwrite_read(0xFF, NULL))
+    {
+        SD_Timeout++;
+        if(SD_Timeout >= SD_TIMEOUT_MAX)
+        {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------------/

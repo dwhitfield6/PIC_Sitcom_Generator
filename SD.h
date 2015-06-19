@@ -86,15 +86,32 @@ typedef struct sd
 /******************************************************************************/
 /* Commands                                                                   */
 /******************************************************************************/
-#define CMD0 0      // resets the SD card
-#define CMD1 1
-#define CMD8 8
-#define CMD9 9      // sends card-specific data
-#define CMD10 10    // sends card identification
-#define CMD17 17    // reads a block at byte address
-#define CMD24 24    // writes a block at byte address
-#define CMD55 55    // application command
-#define CMD41 41    // starts card initialization
+// SD card commands
+
+#define CMD0   0x00; /* GO_IDLE_STATE - init card in spi mode if CS low */
+#define CMD8   0x08; /* SEND_IF_COND - verify SD Memory Card interface operating condition.*/
+#define CMD9   0x09; /* SEND_CSD - read the Card Specific Data (CSD register) */
+#define CMD10  0x0A; /* SEND_CID - read the card identification information (CID register) */
+#define CMD13  0x0D; /* SEND_STATUS - read the card status register */
+#define CMD16  0x10; /* SET BLOCK LENGTH - set the length of the block */
+#define CMD17  0x11; /* READ_BLOCK - read a single data block from the card */
+#define CMD24  0x18; /* WRITE_BLOCK - write a single data block to the card */
+#define CMD25  0x19; /* WRITE_MULTIPLE_BLOCK - write blocks of data until a STOP_TRANSMISSION */
+#define CMD32  0x20; /* ERASE_WR_BLK_START - sets the address of the first block to be erased */
+#define CMD33  0x21; /* ERASE_WR_BLK_END - sets the address of the last block of the continuous
+                      * range to be erased
+                      */
+
+#define CMD38  0x26; /* ERASE - erase all previously selected blocks */
+#define CMD55  0x37; /* APP_CMD - escape for application specific command */
+#define CMD58  0x3A; /* READ_OCR - read the OCR register of a card */
+#define ACMD23 0x17; /* SET_WR_BLK_ERASE_COUNT - Set the number of write blocks to be
+                      * pre-erased before writing
+                      */
+
+#define ACMD41 0x29; /* SD_SEND_OP_COMD - Sends host capacity support information and
+                      * activates the card's initialization process
+                      */
 
 /******************************************************************************/
 /* R1 Responses                                                               */
@@ -109,10 +126,29 @@ typedef struct sd
 #define R1_PARAMETER_ERROR 0x40
 
 /******************************************************************************/
+/* Status Codes                                                               */
+/******************************************************************************/
+#define DATA_START_BLOCK        0xFE  /* start data token for read or write single block*/
+#define STOP_TRAN_TOKEN         0XFD; /* stop token for write multiple blocks*/
+#define WRITE_MULTIPLE_TOKEN    0XFC; /* start data token for write multiple blocks*/
+#define DATA_RES_MASK           0X1F; /* mask for data response tokens after a write block operation */
+#define DATA_RES_ACCEPTED       0X05; /* write data accepted token */
+
+/******************************************************************************/
+/* SD card types                                                              */
+/******************************************************************************/
+#define NOT_INITIALIZED    0x00
+#define SD_CARD_TYPE_SD1   0x01 /* Standard capacity V1 SD card */
+#define SD_CARD_TYPE_SD2   0x02 /* Standard capacity V2 SD card */
+#define SD_CARD_TYPE_SDHC  0x03 /* High capacity SD card */
+#define NOT_SUPPORTED      0x04 /* High capacity SD card */
+
+/******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 extern unsigned char SD_Initialized;
 extern unsigned char ReceiveBuffer;
+extern long SD_CardBlocks;
 
 /******************************************************************************/
 /* SD_CS_INACTIVE
@@ -134,13 +170,20 @@ extern unsigned char ReceiveBuffer;
 void InitSD(void);
 void TestCRC(void);
 unsigned char SDtoSPI(void);
-unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned char ResponseType, unsigned char* read);
+unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType, unsigned char* read, unsigned char CSonGood);
+unsigned char SD_ACMDSPI_send_read(SDcommand* message, unsigned int ResponseType, unsigned char* read);
 void SD_CMDSPI_send(SDcommand* message);
 void SDaddCRC(SDcommand* message);
 unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
 void SD_RESET(void);
-void Clear_Receive_Buffer(void);
+void Clear_Receive_Buffer_Big(void);
+void Clear_Receive_Buffer_Small(void);
 unsigned char SD_readRegister(SDcommand* pmessage);
 unsigned char SD_readBlock(long blockIndex);
+void SD_Set_CardType(unsigned char type);
+unsigned char SD_Get_CardType(void);
+void SD_Clear(void);
+unsigned char SD_WaitResponse(void);
+long Total_Num_Blocks(void);
 
 #endif	/* SD_H */

@@ -104,6 +104,7 @@ void SetSPISpeed(double kHz)
     unsigned int prescale;
     unsigned long FCYtemp = FCY;
 
+    SPI_Disable();
     prescale = (unsigned int) DBround((double) FCYtemp / (kHz*1000.0));
 
     if(prescale < 1)
@@ -130,7 +131,9 @@ void SetSPISpeed(double kHz)
     {
         prescale = 2; /* the SPI bus can not operate this fast */
     }
+    
     SPI_Disable();
+    
     switch (prescale)
     {
         case 1:

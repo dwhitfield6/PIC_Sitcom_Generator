@@ -18,6 +18,7 @@
  *                          Added idle state check for SD card.
  *                          Changed start-up sound to say "Sitcom Generator".
  *                          Added SD block and register reads.
+ *                          Fixed SD card initialization.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -63,6 +64,7 @@
 int main (void)
 {
     unsigned char i;
+    long j;
 
     ConfigureOscillator();
     InitApp();
@@ -84,6 +86,11 @@ int main (void)
         if(SD_Initialized)
         {
             RedLEDON();
+            for(j=0;j<SD_CardBlocks;j++)
+            {
+                SD_readBlock(i);
+                Nop();
+            }
         }
         else
         {
