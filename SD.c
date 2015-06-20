@@ -33,17 +33,18 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned char SD_Initialized = FALSE;
+volatile unsigned char SD_Initialized = FALSE;
 unsigned char Receive_Buffer_Big[SDblockSize];
-unsigned char Receive_Buffer_Small[16];
+unsigned char Receive_Buffer_Small[20];
 unsigned char R1_Buffer[1];
 unsigned char R2_Buffer[2];
 unsigned char R3_Buffer[5];
 unsigned char R6_Buffer[6];
 unsigned char SD_Timeout = 0;
 unsigned char SD_CardType = NOT_INITIALIZED;
-long SD_CardBlocks = 0;
-SDcommand Global_message, *PGlobal_message;
+SDcommand Global_message;
+SDcommand* PGlobal_message;
+SDproperties SD;
 
 /******************************************************************************/
 /* Inline Functions
@@ -71,14 +72,12 @@ void InitSD(void)
     unsigned char SD_Init_Tries = SD_INIT_MAX;
     unsigned int Acknowledge = FALSE;
     unsigned long arguement;
-    long temp;
     cleanBuffer(R1_Buffer, 1);
     cleanBuffer(R2_Buffer, 2);
     cleanBuffer(R3_Buffer, 5);
     cleanBuffer(R6_Buffer, 6);
     Clear_Receive_Buffer_Big();
     Clear_Receive_Buffer_Small();
-    SD_CardBlocks = 0;
 
     PGlobal_message = &Global_message; // pointer to the message
     
@@ -164,7 +163,6 @@ void InitSD(void)
                 {
                     if(R1_Buffer[0] == R1_GOOD_NOT_IDLE)
                     {
-                        SD_Initialized = TRUE;
                         break;
                     }
                 }
@@ -215,11 +213,10 @@ void InitSD(void)
         SetSPISpeed(400.0); /* set speed to 4MHz */
         SPI_Enable();
         delayUS(1000);/* needed for SPI clock to stabalize */
-    }
-    temp = Total_Num_Blocks();
-    if( temp >0 )
-    {
-        SD_CardBlocks = temp;
+        if(SD_Properties())
+        {
+            SD_Initialized = TRUE;
+        }
     }
 }
 
@@ -264,30 +261,87 @@ void Clear_Receive_Buffer_Small(void)
 }
 
 /******************************************************************************/
-/* Total_Num_Blocks
+/* SD_Properties
  *
- * The function returns the total number of blocks on the SD memory card.
+ * The function reads the SD card for its properties.
 /******************************************************************************/
-long Total_Num_Blocks(void)
+unsigned char SD_Properties(void)
 {
-    long C_Size = 0;
-    long C_Mult = 0;
+    unsigned int C_Mult, C_Size_Mult;
+    unsigned long C_Size,temp;
 
     Global_message.Transmitter = 1;
     Global_message.Command = CMD9;
     Global_message.Argument = 0;
     SDaddCRC(PGlobal_message);
+
+    /* read the CSD register */
+
     if(!SD_readRegister(PGlobal_message))
     {
-        return -1;
+        return FAIL;
     }
 
-    // compute size
-    C_Size = ((Receive_Buffer_Small[0x08] & 0xC0) >> 6) | ((Receive_Buffer_Small[0x07] & 0xFF) << 2) | ((Receive_Buffer_Small[0x06] & 0x03) << 10);
-    C_Mult = ((Receive_Buffer_Small[0x08] & 0x80) >> 7) | ((Receive_Buffer_Small[0x08] & 0x03) << 2);
-    return ((C_Size+1) << (C_Mult+2));
+    SD.CSDVer = ((Receive_Buffer_Small[0] & 0b11000000) >> 6) + 1;
+
+    /* TRAN_SPEED */
+    if(Receive_Buffer_Small[3] == 0x32 )
+    {
+        SD.Speed = 25;
+    }
+    else if(Receive_Buffer_Small[3] == 0x5A )
+    {
+        SD.Speed = 50;
+    }
+    else if(Receive_Buffer_Small[3] == 0x0B )
+    {
+        SD.Speed = 100;
+    }
+    else // 2Bh
+    {
+        SD.Speed = 200;
+    }
+
+    /* Card Command Class */
+    SD.CCC          = ((unsigned int)Receive_Buffer_Small[4] << 4) + (((unsigned int) Receive_Buffer_Small[5] & 0b11110000) >> 4);
+
+    SD.ReadLength   = ( 0x1 << (Receive_Buffer_Small[5] &0b00001111));
+
+    if(SD.CSDVer == 2)
+    {
+        temp = Receive_Buffer_Small[7];
+        C_Size      = ((unsigned long)(temp & 0b00011111) << 17) + (Receive_Buffer_Small[8] << 8) + (Receive_Buffer_Small[9]);
+        SD.Size     = (C_Size + 1) * SDblockSize; // in Kbytes
+        SD.Blocks   =  (SD.Size >> 9) * 1000;
+    }
+    else
+    {
+        C_Size_Mult = ((Receive_Buffer_Small[10] & 0b100000000) >> 7) + ((Receive_Buffer_Small[9] & 0b000000011) << 1);
+        C_Mult      = (2 << (C_Size_Mult + 2)) * (C_Size_Mult << 8);
+        C_Size      = ((Receive_Buffer_Small[6] & 0b110000000) >> 6) + (Receive_Buffer_Small[7] << 2) + ((Receive_Buffer_Small[8] & 0b000000011) << 10);
+        SD.Blocks = ((C_Size + 1) * C_Mult);
+        SD.Size = SD.Blocks * SDblockSize;
+    }
+    SD.WP       = (Receive_Buffer_Small[14] & 0b00010000) >> 4;
+    SD.PERM_WP  = (Receive_Buffer_Small[14] & 0b00100000) >> 5;
+    SD.WriteLength = (0x1 << (((Receive_Buffer_Small[12] & 0b00000011) << 2) + ((Receive_Buffer_Small[13] & 0b11000000) >> 6)));
+    return TRUE;
 }
 
+/******************************************************************************/
+/* SD_readStatus
+ *
+ * Reads a the SD status Register.
+/******************************************************************************/
+unsigned char SD_readStatus(void)
+{
+    SD_SetCMD(CMD13, 0);
+    if(SD_CMDSPI_send_read(PGlobal_message,R2,R2_Buffer, YES))
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
 /******************************************************************************/
 /* SD_readRegister
  *
@@ -299,7 +353,8 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     unsigned char* Pbuf = Receive_Buffer_Small;
 
     R1_Buffer[0] = 0xFF;
-
+    Clear_Receive_Buffer_Small();
+    
     SD_CMDSPI_send_read(pmessage,R1,R1_Buffer, NO);
     while(R1_Buffer[0] != 0)
     {
@@ -378,7 +433,7 @@ unsigned char SD_readBlock(long blockIndex)
     Global_message.Command = CMD17;
     block = blockIndex;
     R1_Buffer[0] = 0xFF;
-
+    
     if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
     {
         block <<= 9;
@@ -439,7 +494,7 @@ unsigned char SD_readBlock(long blockIndex)
     delayUS(10);
     SD_CS_INACTIVE();
     delayUS(10);
-    if(BytesRead == SDblockSize)
+    if(BytesRead == SDblockSize || BytesRead == (SDblockSize - 1))
     {
         return PASS;
     }
@@ -529,6 +584,19 @@ void SD_CMDSPI_send(SDcommand* message)
     SPIwrite(forth);
     SPIwrite(fifth);
     SPIwrite(sixth);
+}
+
+/******************************************************************************/
+/* SD_CMDSPI_send
+ *
+ * The function sends an SD card command.
+/******************************************************************************/
+void SD_SetCMD(unsigned char CMD, unsigned long arguement)
+{
+    Global_message.Transmitter = 1;
+    Global_message.Command = CMD;
+    Global_message.Argument = arguement;
+    SDaddCRC(PGlobal_message);
 }
 
 /******************************************************************************/

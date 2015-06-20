@@ -85,10 +85,20 @@ int main (void)
         //RTCread(&CurrentTime);
         if(SD_Initialized)
         {
+            SD_readStatus();
             RedLEDON();
-            for(j=0;j<SD_CardBlocks;j++)
+            for(j=0;j<SD.Blocks;j++)
             {
-                SD_readBlock(i);
+                if(!SD_readBlock(i))
+                {
+                    SD_Initialized = FALSE;
+                    break;
+                }
+                if(Receive_Buffer_Big[0] != 0)
+                {
+                    Nop();
+                }
+                SD_readStatus();
                 Nop();
             }
         }
