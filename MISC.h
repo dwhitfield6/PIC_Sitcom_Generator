@@ -74,5 +74,6 @@ long Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputRange
 unsigned int BCDtoHEX(unsigned int input);
 unsigned int HEXtoBCD(unsigned int input);
 unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int size);
+long LGround(long Input,unsigned char places);
 
 #endif	/* MISC_H */

@@ -19,6 +19,7 @@
  *                          Changed start-up sound to say "Sitcom Generator".
  *                          Added SD block and register reads.
  *                          Fixed SD card initialization.
+ *                          Added/fixed SD card read and write.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -65,6 +66,7 @@ int main (void)
 {
     unsigned char i;
     long j;
+    unsigned char status;
 
     ConfigureOscillator();
     InitApp();
@@ -85,11 +87,24 @@ int main (void)
         //RTCread(&CurrentTime);
         if(SD_Initialized)
         {
-            SD_readStatus();
+            //SD_readRegister(SD_SetCMD(CMD56, READ));
+            for(j=1; j <513;j++)
+            {
+                Receive_Buffer_Big[j-1] = (unsigned char)(( j >> 3) + 1);
+            }
+            status = SD_writeBlock(0,Receive_Buffer_Big);
+            if(status)
+            {
+                 SD_readBlock(0);
+                 if(Receive_Buffer_Big[1] == 1)
+                 {
+                     Nop();
+                 }
+            }
             RedLEDON();
             for(j=0;j<SD.Blocks;j++)
             {
-                if(!SD_readBlock(i))
+                if(!SD_readBlock(j))
                 {
                     SD_Initialized = FALSE;
                     break;
@@ -98,7 +113,6 @@ int main (void)
                 {
                     Nop();
                 }
-                SD_readStatus();
                 Nop();
             }
         }

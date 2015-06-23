@@ -28,6 +28,7 @@
 
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
+#include <math.h>        /* For true/false definition */
 
 #include "MISC.h"
 #include "system.h"
@@ -902,6 +903,61 @@ double DBround(double Input)
     temp = (long) (Input + 0.5);
     temp1 = (double) temp;
     return temp1;
+}
+
+/******************************************************************************/
+/* round
+ *
+ * This function rounds a long to the specified number of places.
+ * round(11111,0) = 11111
+ * round(11111,1) = 11110
+ * round(11111,2) = 11100
+/******************************************************************************/
+long LGround(long Input,unsigned char places)
+{
+    long temp1,temp2,temp3,temp4, temp5, temp6, temp7;
+    unsigned char negative = FALSE;
+    long temp_Input;
+
+    if(Input < 0)
+    {
+        negative = TRUE;
+        temp_Input = Input * -1;
+    }
+    else
+    {
+        temp_Input = Input;
+    }
+
+    redo:
+    if(!places)
+    {
+        return Input;
+    }
+    temp1   = pow(10,places);
+    temp2   = temp_Input / temp1;
+    temp3   = temp2 * temp1;
+    temp4   = temp_Input - temp3;
+    temp5   = temp1 >> 1;
+    temp6   = temp1 - temp4;
+    if(temp1 > temp_Input)
+    {
+        places--;
+        goto redo;
+    }
+    if(temp5 >= temp6)
+    {
+        temp7 = temp_Input + temp6;
+    }
+    else
+    {
+        temp7 = temp3;
+    }
+    if(negative)
+    {
+        temp7 *= -1;
+    }
+    return temp7;
 }
 
 /******************************************************************************/

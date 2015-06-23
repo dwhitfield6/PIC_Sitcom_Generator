@@ -78,6 +78,7 @@ void InitSD(void)
     cleanBuffer(R6_Buffer, 6);
     Clear_Receive_Buffer_Big();
     Clear_Receive_Buffer_Small();
+    SD_DeleteCard();
 
     PGlobal_message = &Global_message; // pointer to the message
     
@@ -261,6 +262,25 @@ void Clear_Receive_Buffer_Small(void)
 }
 
 /******************************************************************************/
+/* SD_DeleteCard
+ *
+ * The function clears the SD card properties.
+/******************************************************************************/
+void SD_DeleteCard(void)
+{
+    SD.CSDVer = 0;
+    SD.Size = 0;
+    SD.RawSize = 0;
+    SD.ReadLength = 0;
+    SD.WriteLength = 0;
+    SD.Speed = 0;
+    SD.CCC = 0;
+    SD.PERM_WP = 0;
+    SD.WP = 0;
+    SD.Blocks = 0;
+}
+
+/******************************************************************************/
 /* SD_Properties
  *
  * The function reads the SD card for its properties.
@@ -311,8 +331,8 @@ unsigned char SD_Properties(void)
     {
         temp = Receive_Buffer_Small[7];
         C_Size      = ((unsigned long)(temp & 0b00011111) << 17) + (Receive_Buffer_Small[8] << 8) + (Receive_Buffer_Small[9]);
-        SD.Size     = (C_Size + 1) * SDblockSize; // in Kbytes
-        SD.Blocks   =  (SD.Size >> 9) * 1000;
+        SD.RawSize     = (C_Size + 1) * SDblockSize; // in Kbytes
+        SD.Blocks   =  (SD.RawSize >> 9) * 1000;
     }
     else
     {
@@ -320,8 +340,18 @@ unsigned char SD_Properties(void)
         C_Mult      = (2 << (C_Size_Mult + 2)) * (C_Size_Mult << 8);
         C_Size      = ((Receive_Buffer_Small[6] & 0b110000000) >> 6) + (Receive_Buffer_Small[7] << 2) + ((Receive_Buffer_Small[8] & 0b000000011) << 10);
         SD.Blocks = ((C_Size + 1) * C_Mult);
-        SD.Size = SD.Blocks * SDblockSize;
+        SD.RawSize = SD.Blocks * SDblockSize;        
     }
+
+    if(SD.RawSize < 1000000)
+    {
+        SD.Size = LGround(SD.RawSize,5);
+    }
+    else
+    {
+        SD.Size = LGround(SD.RawSize,6);
+    }
+
     SD.WP       = (Receive_Buffer_Small[14] & 0b00010000) >> 4;
     SD.PERM_WP  = (Receive_Buffer_Small[14] & 0b00100000) >> 5;
     SD.WriteLength = (0x1 << (((Receive_Buffer_Small[12] & 0b00000011) << 2) + ((Receive_Buffer_Small[13] & 0b11000000) >> 6)));
@@ -433,6 +463,7 @@ unsigned char SD_readBlock(long blockIndex)
     Global_message.Command = CMD17;
     block = blockIndex;
     R1_Buffer[0] = 0xFF;
+    Clear_Receive_Buffer_Big();
     
     if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
     {
@@ -494,11 +525,93 @@ unsigned char SD_readBlock(long blockIndex)
     delayUS(10);
     SD_CS_INACTIVE();
     delayUS(10);
-    if(BytesRead == SDblockSize || BytesRead == (SDblockSize - 1))
+    if(BytesRead == SDblockSize || BytesRead == (SDblockSize - 1) || BytesRead == (SDblockSize - 2))
     {
         return PASS;
     }
     return FAIL;
+}
+
+/******************************************************************************/
+/* SD_writeBlock
+ *
+ * Writes an SD block and stores it in Receive_Buffer_Big.
+ * Command Argument:
+ *
+ * SDHC and SDXC use the 32-bit argument of memory access commands as block
+ * address format. Block length is fixed to 512 bytes regardless CMD16,
+ * format. Block SDSC uses the 32-bit argument of memory access commands as
+ * byte address length is determined by CMD16,
+ * i.e.:
+ * (a) Argument 0001h is byte address 0001h in the SDSC and 0001h block in SDHC
+ *     and SDXC
+ * (b) Argument 0200h is byte address 0200h in the SDSC and 0200h block in SDHC
+ *     and SDXC
+/******************************************************************************/
+unsigned char SD_writeBlock(long blockIndex, unsigned char* data)
+{
+    unsigned int i;
+    unsigned long block;
+
+    Global_message.Transmitter = 1;
+    Global_message.Command = CMD24;
+    block = blockIndex;
+    R1_Buffer[0] = 0xFF;
+
+    if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
+    {
+        block <<= 9;
+    }
+    Global_message.Argument = block;
+    SDaddCRC(PGlobal_message);
+
+    SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer,NO);
+    SD_Timeout = 0;
+    while(R1_Buffer[0] != 0)
+    {
+        while(!SPIwrite_read(0xFF,R1_Buffer))
+        {
+            SD_Timeout++;
+            if(SD_Timeout >= SD_TIMEOUT_MAX)
+            {
+                delayUS(10);
+                SD_CS_INACTIVE();
+                delayUS(10);
+                return FAIL;
+            }
+        }
+    }
+
+    // send dummy
+    SPIwrite(0xFF);
+
+    // send data token
+    SPIwrite(0xFE);
+
+    // write data
+    for (i=0; i<SDblockSize; i++)
+    {
+        SPIwrite(data[i]);
+    }
+
+    SPIwrite(0xFF); // CRC high
+    SPIwrite(0xFF); // CRC low
+
+    SD_Timeout = 0;
+    while(SPIwrite_read(0xFF,R1_Buffer)) // wait for it to finish
+    {
+        SD_Timeout++;
+        if(SD_Timeout >= SD_TIMEOUT_MAX)
+        {
+            delayUS(10);
+            SD_CS_INACTIVE();
+            delayUS(10);
+            return FAIL;
+        }
+    }
+
+    SD_CS_INACTIVE();
+    return PASS;
 }
 
 /******************************************************************************/
@@ -591,12 +704,13 @@ void SD_CMDSPI_send(SDcommand* message)
  *
  * The function sends an SD card command.
 /******************************************************************************/
-void SD_SetCMD(unsigned char CMD, unsigned long arguement)
+SDcommand* SD_SetCMD(unsigned char CMD, unsigned long arguement)
 {
     Global_message.Transmitter = 1;
     Global_message.Command = CMD;
     Global_message.Argument = arguement;
     SDaddCRC(PGlobal_message);
+    return PGlobal_message;
 }
 
 /******************************************************************************/

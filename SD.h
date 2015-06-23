@@ -36,8 +36,9 @@ typedef struct sd
 /******************************************************************************/
 typedef struct sdproperties
 {
-    unsigned char CSDVer; // CSR version
-    unsigned long Size;
+    unsigned char CSDVer;   // CSR version
+    unsigned long Size;     // rounded size that is printed on card
+    unsigned long RawSize;  // The raw size that is avaiable to use
     unsigned int ReadLength;
     unsigned int WriteLength;
     unsigned int Speed;
@@ -99,6 +100,8 @@ typedef struct sdproperties
 #define R6 6
 #define R16 20
 #define R512 512
+#define READ 1
+#define WRITE 0
 
 /******************************************************************************/
 /* Commands                                                                   */
@@ -121,6 +124,7 @@ typedef struct sdproperties
 
 #define CMD38  0x26 /* ERASE - erase all previously selected blocks */
 #define CMD55  0x37 /* APP_CMD - escape for application specific command */
+#define CMD56  0x38 /* GEN_CMD - escape for generic command  */
 #define CMD58  0x3A /* READ_OCR - read the OCR register of a card */
 #define ACMD23 0x17 /* SET_WR_BLK_ERASE_COUNT - Set the number of write blocks to be
                       * pre-erased before writing
@@ -200,12 +204,14 @@ void Clear_Receive_Buffer_Big(void);
 void Clear_Receive_Buffer_Small(void);
 unsigned char SD_readRegister(SDcommand* pmessage);
 unsigned char SD_readBlock(long blockIndex);
+unsigned char SD_writeBlock(long blockIndex, unsigned char* data);
 void SD_Set_CardType(unsigned char type);
 unsigned char SD_Get_CardType(void);
 void SD_Clear(void);
 unsigned char SD_WaitResponse(void);
 unsigned char SD_Properties(void);
-void SD_SetCMD(unsigned char CMD, unsigned long arguement);
+SDcommand* SD_SetCMD(unsigned char CMD, unsigned long arguement);
 unsigned char SD_readStatus(void);
+void SD_DeleteCard(void);
 
 #endif	/* SD_H */
