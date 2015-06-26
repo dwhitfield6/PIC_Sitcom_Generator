@@ -209,11 +209,11 @@ double Round(double input)
  *
  * This function copies the 'from' array to the 'to' array.
 /******************************************************************************/
-void BufferCopy(unsigned char* from,unsigned char* to, unsigned char count, unsigned char shift)
+void BufferCopy(unsigned char* from,unsigned char* to, unsigned int count, unsigned int shift)
 {
-    unsigned char i=0;
+    unsigned int i=0;
     cleanBuffer(to,count);
-    for(i = shift; i>0;i--)
+    for(i = shift; i>0; i--)
     {
         *to = ' ';
         to++;
@@ -1040,6 +1040,16 @@ unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int
         }
     }
     return TRUE;
+}
+
+/******************************************************************************/
+/* TestFunctionPointer
+ *
+ * This function checks to see if a function pointer it is called correctly.
+/******************************************************************************/
+void TestFunctionPointer(void)
+{
+    Nop();
 }
 
 /*-----------------------------------------------------------------------------/

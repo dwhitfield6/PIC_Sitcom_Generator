@@ -20,6 +20,8 @@
  *                          Added SD block and register reads.
  *                          Fixed SD card initialization.
  *                          Added/fixed SD card read and write.
+ *                          Added FAT32 functionality.
+ *                          Added directory search to discover all WAV files.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -45,6 +47,7 @@
 #include "RTCC.h"
 #include "SPI.h"
 #include "SD.h"
+#include "FAT.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -65,8 +68,6 @@
 int main (void)
 {
     unsigned char i;
-    long j;
-    unsigned char status;
 
     ConfigureOscillator();
     InitApp();
@@ -87,32 +88,9 @@ int main (void)
         //RTCread(&CurrentTime);
         if(SD_Initialized)
         {
-            //SD_readRegister(SD_SetCMD(CMD56, READ));
-            for(j=1; j <513;j++)
-            {
-                Receive_Buffer_Big[j-1] = (unsigned char)(( j >> 3) + 1);
-            }
-            status = SD_writeBlock(0,Receive_Buffer_Big);
-            if(status)
-            {
-                 SD_readBlock(0);
-                 if(Receive_Buffer_Big[1] == 1)
-                 {
-                     Nop();
-                 }
-            }
             RedLEDON();
-            for(j=0;j<SD.Blocks;j++)
+            if(InitFAT())
             {
-                if(!SD_readBlock(j))
-                {
-                    SD_Initialized = FALSE;
-                    break;
-                }
-                if(Receive_Buffer_Big[0] != 0)
-                {
-                    Nop();
-                }
                 Nop();
             }
         }

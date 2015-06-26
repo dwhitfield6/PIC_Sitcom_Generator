@@ -23,17 +23,6 @@
 /******************************************************************************/
 /* Structures                                                                 */
 /******************************************************************************/
-typedef struct sd
-{
-    unsigned char Transmitter;
-    unsigned char Command;
-    unsigned long Argument;
-    unsigned char CRC;
-}SDcommand;
-
-/******************************************************************************/
-/* Structures                                                                 */
-/******************************************************************************/
 typedef struct sdproperties
 {
     unsigned char CSDVer;   // CSR version
@@ -46,8 +35,15 @@ typedef struct sdproperties
     unsigned char PERM_WP;  // Permananent Write Protection
     unsigned char WP;       // Temporary write Protection
     unsigned long Blocks;       // Temporary write Protection
-
 }SDproperties;
+
+typedef struct sd
+{
+    unsigned char Transmitter;
+    unsigned char Command;
+    unsigned long Argument;
+    unsigned char CRC;
+}SDcommand;
 
 /******************************************************************************/
 /* SDbufSize
@@ -100,8 +96,6 @@ typedef struct sdproperties
 #define R6 6
 #define R16 20
 #define R512 512
-#define READ 1
-#define WRITE 0
 
 /******************************************************************************/
 /* Commands                                                                   */
@@ -112,9 +106,11 @@ typedef struct sdproperties
 #define CMD8   0x08 /* SEND_IF_COND - verify SD Memory Card interface operating condition.*/
 #define CMD9   0x09 /* SEND_CSD - read the Card Specific Data (CSD register) */
 #define CMD10  0x0A /* SEND_CID - read the card identification information (CID register) */
+#define CMD12  0x0C /* STOP_TRANSMISSION - Forces the card to stop transmission in Multiple Block Read Operation */
 #define CMD13  0x0D /* SEND_STATUS - read the card status register */
 #define CMD16  0x10 /* SET BLOCK LENGTH - set the length of the block */
 #define CMD17  0x11 /* READ_BLOCK - read a single data block from the card */
+#define CMD18  0x12 /* READ_MULT_BLOCK - Continuously reads SD blocks until CMD12 is sent */
 #define CMD24  0x18 /* WRITE_BLOCK - write a single data block to the card */
 #define CMD25  0x19 /* WRITE_MULTIPLE_BLOCK - write blocks of data until a STOP_TRANSMISSION */
 #define CMD32  0x20 /* ERASE_WR_BLK_START - sets the address of the first block to be erased */
@@ -213,5 +209,6 @@ unsigned char SD_Properties(void);
 SDcommand* SD_SetCMD(unsigned char CMD, unsigned long arguement);
 unsigned char SD_readStatus(void);
 void SD_DeleteCard(void);
+unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpointer)(void));
 
 #endif	/* SD_H */

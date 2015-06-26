@@ -87,7 +87,9 @@ c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(powf.eo)
                               build/xc16_pic33FJ128gp802/production/MISC.o (_powf)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
-                              c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo) (___udivsi3)
+                              build/xc16_pic33FJ128gp802/production/FAT.o (___udivsi3)
+c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(umodsi3.eo)
+                              build/xc16_pic33FJ128gp802/production/FAT.o (___umodsi3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(powf.eo) (__frexpf)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(errno.eo)
@@ -132,13 +134,13 @@ Program Memory  [Origin = 0x200, Length = 0x15600]
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x8f2           0xd6b  (3435)
-.const                       0xaf2              0x25f4          0x38ee  (14574)
-.text                       0x30e6              0x2c98          0x42e4  (17124)
-.dinit                      0x5d7e                0x3e            0x5d  (93)
-.text                       0x5dbc                0x62            0x93  (147)
+.text                        0x200               0x8f8           0xd74  (3444)
+.const                       0xaf8              0x25f4          0x38ee  (14574)
+.text                       0x30ec              0x35a8          0x507c  (20604)
+.dinit                      0x6694                0x44            0x66  (102)
+.text                       0x66d8                0x62            0x93  (147)
 
-                     Total program memory used (bytes):         0x8a2d  (35373) 26%
+                     Total program memory used (bytes):         0x97d7  (38871) 29%
 
 
 Data Memory  [Origin = 0x800, Length = 0x4000]
@@ -146,13 +148,13 @@ Data Memory  [Origin = 0x800, Length = 0x4000]
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
 .nbss                        0x800                   0             0x2  (2)
-.bss                         0x802                   0           0x248  (584)
-.data                        0xa4a                   0            0x18  (24)
-.bss                         0xa62                   0            0x14  (20)
-.data                        0xa76                   0             0x2  (2)
-.bss                         0xa78                   0             0x2  (2)
+.bss                         0x802                   0           0xb00  (2816)
+.data                       0x1302                   0            0x18  (24)
+.bss                        0x131a                   0            0x14  (20)
+.data                       0x132e                   0             0x2  (2)
+.bss                        0x1330                   0             0x2  (2)
 
-                        Total data memory used (bytes):          0x27a  (634) 3%
+                        Total data memory used (bytes):          0xb32  (2866) 17%
 
 
 Dynamic Memory Usage
@@ -160,63 +162,89 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0xa7a                              0x3d86  (15750)
+stack                       0x1332                              0x34ce  (13518)
 
-                        Maximum dynamic memory (bytes):         0x3d86  (15750)
+                        Maximum dynamic memory (bytes):         0x34ce  (13518)
 
 
 External Symbols in Data Memory (by address):
 
-                    0x0802                  _SD_Initialized
-                    0x0803                  _Receive_Buffer_Big
-                    0x0a03                  _Receive_Buffer_Small
-                    0x0a17                  _R1_Buffer
-                    0x0a18                  _R2_Buffer
-                    0x0a1a                  _R3_Buffer
-                    0x0a1f                  _R6_Buffer
-                    0x0a25                  _SD_Timeout
-                    0x0a26                  _SD_CardType
-                    0x0a28                  _Global_message
-                    0x0a30                  _PGlobal_message
-                    0x0a32                  _SD
-                    0x0a4a                  _SPIprescale
-                    0x0a60                  _SPI_State
-                    0x0a62                  _CurrentTime
-                    0x0a6a                  _SetTime
-                    0x0a72                  _place
-                    0x0a76                  _DAC_Res
-                    0x0a77                  _StartupSong
-                    0x0a78                  _ClipDone
+                    0x0802                  _FAT_STATUS
+                    0x0804                  _FAT_MBR
+                    0x0a04                  _PFAT_MBR
+                    0x0a06                  _FAT_BS
+                    0x0c06                  _PFAT_BS
+                    0x0c08                  _FAT_PART1
+                    0x0c18                  _PFAT_PART1
+                    0x0c1a                  _FAT_FS
+                    0x0e1a                  _PFAT_FS
+                    0x0e1c                  _firstDataSector
+                    0x0e20                  _freeClusterCountUpdated
+                    0x0e22                  _unusedSectors
+                    0x0e26                  _FileList
+                    0x10ba                  _SD_Initialized
+                    0x10bb                  _Receive_Buffer_Big
+                    0x12bb                  _Receive_Buffer_Small
+                    0x12cf                  _R1_Buffer
+                    0x12d0                  _R2_Buffer
+                    0x12d2                  _R3_Buffer
+                    0x12d7                  _R6_Buffer
+                    0x12dd                  _SD_Timeout
+                    0x12de                  _SD_CardType
+                    0x12e0                  _Global_message
+                    0x12e8                  _PGlobal_message
+                    0x12ea                  _SD
+                    0x1302                  _SPIprescale
+                    0x1318                  _SPI_State
+                    0x131a                  _CurrentTime
+                    0x1322                  _SetTime
+                    0x132a                  _place
+                    0x132e                  _DAC_Res
+                    0x132f                  _StartupSong
+                    0x1330                  _ClipDone
 
 External Symbols in Data Memory (by name):
 
-                    0x0a78                  _ClipDone
-                    0x0a62                  _CurrentTime
-                    0x0a76                  _DAC_Res
-                    0x0a28                  _Global_message
-                    0x0a30                  _PGlobal_message
-                    0x0a17                  _R1_Buffer
-                    0x0a18                  _R2_Buffer
-                    0x0a1a                  _R3_Buffer
-                    0x0a1f                  _R6_Buffer
-                    0x0803                  _Receive_Buffer_Big
-                    0x0a03                  _Receive_Buffer_Small
-                    0x0a32                  _SD
-                    0x0a26                  _SD_CardType
-                    0x0802                  _SD_Initialized
-                    0x0a25                  _SD_Timeout
-                    0x0a60                  _SPI_State
-                    0x0a4a                  _SPIprescale
-                    0x0a6a                  _SetTime
-                    0x0a77                  _StartupSong
-                    0x0a72                  _place
+                    0x1330                  _ClipDone
+                    0x131a                  _CurrentTime
+                    0x132e                  _DAC_Res
+                    0x0a06                  _FAT_BS
+                    0x0c1a                  _FAT_FS
+                    0x0804                  _FAT_MBR
+                    0x0c08                  _FAT_PART1
+                    0x0802                  _FAT_STATUS
+                    0x0e26                  _FileList
+                    0x12e0                  _Global_message
+                    0x0c06                  _PFAT_BS
+                    0x0e1a                  _PFAT_FS
+                    0x0a04                  _PFAT_MBR
+                    0x0c18                  _PFAT_PART1
+                    0x12e8                  _PGlobal_message
+                    0x12cf                  _R1_Buffer
+                    0x12d0                  _R2_Buffer
+                    0x12d2                  _R3_Buffer
+                    0x12d7                  _R6_Buffer
+                    0x10bb                  _Receive_Buffer_Big
+                    0x12bb                  _Receive_Buffer_Small
+                    0x12ea                  _SD
+                    0x12de                  _SD_CardType
+                    0x10ba                  _SD_Initialized
+                    0x12dd                  _SD_Timeout
+                    0x1318                  _SPI_State
+                    0x1302                  _SPIprescale
+                    0x1322                  _SetTime
+                    0x132f                  _StartupSong
+                    0x0e1c                  _firstDataSector
+                    0x0e20                  _freeClusterCountUpdated
+                    0x132a                  _place
+                    0x0e22                  _unusedSectors
 
 External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
-                  0x00023c                  __data_init
                   0x00023c                  __data_init_standard
+                  0x00023c                  __data_init
                   0x00029a                  __DAC1RInterrupt
                   0x00030c                  __SPI2Interrupt
                   0x000326                  __INT1Interrupt
@@ -238,180 +266,203 @@ External Symbols in Program Memory (by address):
                   0x0005ca                  ___mulsf3
                   0x000632                  _powf
                   0x0007f8                  ___udivsi3
-                  0x000818                  __frexpf
-                  0x000832                  _expf
-                  0x0008f6                  __fchop
-                  0x000944                  ___eqsf2
-                  0x000944                  ___lesf2
-                  0x000944                  ___ltsf2
-                  0x000948                  ___gesf2
-                  0x000948                  ___gtsf2
-                  0x00094c                  ___floatdisf
-                  0x00096c                  ___floatundisf
-                  0x0009ca                  _ldexpf
-                  0x000a0e                  _logf
-                  0x000abc                  __fcompare
-                  0x000af2                  _Start_Clip
-                  0x0030e6                  _delayUS
-                  0x003130                  _delayNOP
-                  0x00314a                  _IsLetter
-                  0x00317a                  _IsNumber
-                  0x00319a                  _IsCharacter
-                  0x0031b8                  _IsAlphaNumeric
-                  0x0031e4                  _IsAlphaNumericString
-                  0x00320e                  _cleanBuffer
-                  0x003234                  _cleanBuffer16bit
-                  0x00325e                  _Round
-                  0x00328a                  _BufferCopy
-                  0x0032fe                  _StringMatch
-                  0x003342                  _StringMatchCaseInsensitive
-                  0x0033a2                  _StringContains
-                  0x003458                  _StringContainsCaseInsensitive
-                  0x00351e                  _lowercaseString
-                  0x003558                  _lowercaseChar
-                  0x003580                  _Reverse_Byte
-                  0x0035e8                  _Reverse_2Byte
-                  0x003688                  _Reverse_4Byte
-                  0x003cb6                  _GetNumber
-                  0x003fc4                  _GetNumberUnsigned
-                  0x0042a8                  _StringAddEqual
-                  0x0043e6                  _GetStringAfterComma
-                  0x0044dc                  _DBround
-                  0x004510                  _LGround
-                  0x00462a                  _Scale
-                  0x0046b6                  _HEXtoBCD
-                  0x00471c                  _BCDtoHEX
-                  0x004770                  _BufferMatch
-                  0x0047a4                  _InitSD
-                  0x0049c4                  _SD_Set_CardType
-                  0x0049d0                  _SD_Get_CardType
-                  0x0049de                  _Clear_Receive_Buffer_Big
-                  0x0049ec                  _Clear_Receive_Buffer_Small
-                  0x0049fa                  _SD_DeleteCard
-                  0x004a38                  _SD_Properties
-                  0x004c60                  _SD_readStatus
-                  0x004c86                  _SD_readRegister
-                  0x004d9e                  _SD_readBlock
-                  0x004f2a                  _SD_writeBlock
-                  0x005068                  _TestCRC
-                  0x005082                  _SDtoSPI
-                  0x005100                  _SD_CMDSPI_send
-                  0x0051d4                  _SD_SetCMD
-                  0x005200                  _SD_ACMDSPI_send_read
-                  0x005238                  _SD_CMDSPI_send_read
-                  0x005348                  _SDaddCRC
-                  0x00538c                  _CRC7_40bits
-                  0x00548c                  _SD_RESET
-                  0x0054ea                  _SD_Clear
-                  0x0054fe                  _SD_WaitResponse
-                  0x005538                  _SPI_Enable
-                  0x005544                  _SPI_Disable
-                  0x005550                  _InitSPI
-                  0x005594                  _SetSPISpeed
-                  0x005916                  _ReadActivityMISO
-                  0x005934                  _SPIwrite_read
-                  0x00599a                  _SPIwrite
-                  0x0059a8                  _InitRTCC
-                  0x0059d6                  _ClearTime
-                  0x005a08                  _RTCSetTime
-                  0x005a40                  _RTCaccess
-                  0x005a5c                  _RTCread
-                  0x005b00                  _RTCwrite
-                  0x005b9a                  _main
-                  0x005cb4                  _DAC_Run
-                  0x005cbc                  _DAC_Stop
-                  0x005cc4                  _InitDAC
-                  0x005cf0                  _TurnOnAmp
-                  0x005cfe                  _TurnOffAmp
-                  0x005d0c                  _MuteAmp
-                  0x005d1a                  _UnMuteAmp
-                  0x005d28                  _DAC_Voltage
-                  0x005d34                  _AudioOn
-                  0x005d4c                  _AudioOff
-                  0x005d56                  _Play_Startup
-                  0x005dbc                  _InitApp
-                  0x005dde                  _Init_System
-                  0x005df4                  _ConfigureOscillator
+                  0x000818                  ___umodsi3
+                  0x00081e                  __frexpf
+                  0x000838                  _expf
+                  0x0008fc                  __fchop
+                  0x00094a                  ___lesf2
+                  0x00094a                  ___ltsf2
+                  0x00094a                  ___eqsf2
+                  0x00094e                  ___gesf2
+                  0x00094e                  ___gtsf2
+                  0x000952                  ___floatdisf
+                  0x000972                  ___floatundisf
+                  0x0009d0                  _ldexpf
+                  0x000a14                  _logf
+                  0x000ac2                  __fcompare
+                  0x000af8                  _Start_Clip
+                  0x0030ec                  _delayUS
+                  0x003136                  _delayNOP
+                  0x003150                  _IsLetter
+                  0x003180                  _IsNumber
+                  0x0031a0                  _IsCharacter
+                  0x0031be                  _IsAlphaNumeric
+                  0x0031ea                  _IsAlphaNumericString
+                  0x003214                  _cleanBuffer
+                  0x00323a                  _cleanBuffer16bit
+                  0x003264                  _Round
+                  0x003290                  _BufferCopy
+                  0x003302                  _StringMatch
+                  0x003346                  _StringMatchCaseInsensitive
+                  0x0033a6                  _StringContains
+                  0x00345c                  _StringContainsCaseInsensitive
+                  0x003522                  _lowercaseString
+                  0x00355c                  _lowercaseChar
+                  0x003584                  _Reverse_Byte
+                  0x0035ec                  _Reverse_2Byte
+                  0x00368c                  _Reverse_4Byte
+                  0x003cba                  _GetNumber
+                  0x003fc8                  _GetNumberUnsigned
+                  0x0042ac                  _StringAddEqual
+                  0x0043ec                  _GetStringAfterComma
+                  0x0044e2                  _DBround
+                  0x004516                  _LGround
+                  0x004630                  _Scale
+                  0x0046bc                  _HEXtoBCD
+                  0x004722                  _BCDtoHEX
+                  0x004776                  _BufferMatch
+                  0x0047aa                  _TestFunctionPointer
+                  0x0047b2                  _InitSD
+                  0x0049d2                  _SD_Set_CardType
+                  0x0049de                  _SD_Get_CardType
+                  0x0049ec                  _Clear_Receive_Buffer_Big
+                  0x0049fa                  _Clear_Receive_Buffer_Small
+                  0x004a08                  _SD_DeleteCard
+                  0x004a46                  _SD_Properties
+                  0x004c6e                  _SD_readStatus
+                  0x004c94                  _SD_readRegister
+                  0x004dba                  _SD_readBlock
+                  0x004f44                  _SD_readMultipleBlock
+                  0x00513a                  _SD_writeBlock
+                  0x00527c                  _TestCRC
+                  0x005296                  _SDtoSPI
+                  0x005314                  _SD_CMDSPI_send
+                  0x0053e8                  _SD_SetCMD
+                  0x005414                  _SD_ACMDSPI_send_read
+                  0x00544c                  _SD_CMDSPI_send_read
+                  0x005564                  _SDaddCRC
+                  0x0055a8                  _CRC7_40bits
+                  0x0056a8                  _SD_RESET
+                  0x005706                  _SD_Clear
+                  0x00571c                  _SD_WaitResponse
+                  0x005758                  _InitFAT
+                  0x005794                  _FAT_DiscoverFiles
+                  0x0057b0                  _FAT_FindFiles
+                  0x005bb6                  _FAT_ReadSector
+                  0x005bc8                  _FAT_GetBootSectorData
+                  0x005cf4                  _FAT_GetSetFreeCluster
+                  0x005d98                  _FAT_GetSetNextCluster
+                  0x005e6e                  _FAT_GetFirstSector
+                  0x005eac                  _SectorCopy
+                  0x005eda                  _SPI_Enable
+                  0x005ee6                  _SPI_Disable
+                  0x005ef2                  _InitSPI
+                  0x005f36                  _SetSPISpeed
+                  0x0062b8                  _ReadActivityMISO
+                  0x0062d6                  _SPIwrite_read
+                  0x006354                  _SPIwrite
+                  0x006364                  _InitRTCC
+                  0x006392                  _ClearTime
+                  0x0063c4                  _RTCSetTime
+                  0x0063fc                  _RTCaccess
+                  0x006418                  _RTCread
+                  0x0064bc                  _RTCwrite
+                  0x006556                  _DAC_Run
+                  0x00655e                  _DAC_Stop
+                  0x006566                  _InitDAC
+                  0x006592                  _TurnOnAmp
+                  0x0065a0                  _TurnOffAmp
+                  0x0065ae                  _MuteAmp
+                  0x0065bc                  _UnMuteAmp
+                  0x0065ca                  _DAC_Voltage
+                  0x0065d6                  _AudioOn
+                  0x0065ee                  _AudioOff
+                  0x0065f8                  _Play_Startup
+                  0x006620                  _main
+                  0x0066d8                  _InitApp
+                  0x0066fa                  _Init_System
+                  0x006710                  _ConfigureOscillator
                   0xf80000                  __FBS.sec
                   0xf80002                  __FSS.sec
                   0xf80004                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
-                  0x005d4c                  _AudioOff
-                  0x005d34                  _AudioOn
-                  0x00471c                  _BCDtoHEX
-                  0x00328a                  _BufferCopy
-                  0x004770                  _BufferMatch
-                  0x00538c                  _CRC7_40bits
-                  0x0059d6                  _ClearTime
-                  0x0049de                  _Clear_Receive_Buffer_Big
-                  0x0049ec                  _Clear_Receive_Buffer_Small
-                  0x005df4                  _ConfigureOscillator
-                  0x005cb4                  _DAC_Run
-                  0x005cbc                  _DAC_Stop
-                  0x005d28                  _DAC_Voltage
-                  0x0044dc                  _DBround
-                  0x003cb6                  _GetNumber
-                  0x003fc4                  _GetNumberUnsigned
-                  0x0043e6                  _GetStringAfterComma
-                  0x0046b6                  _HEXtoBCD
-                  0x005dbc                  _InitApp
-                  0x005cc4                  _InitDAC
-                  0x0059a8                  _InitRTCC
-                  0x0047a4                  _InitSD
-                  0x005550                  _InitSPI
-                  0x005dde                  _Init_System
-                  0x0031b8                  _IsAlphaNumeric
-                  0x0031e4                  _IsAlphaNumericString
-                  0x00319a                  _IsCharacter
-                  0x00314a                  _IsLetter
-                  0x00317a                  _IsNumber
-                  0x004510                  _LGround
-                  0x005d0c                  _MuteAmp
-                  0x005d56                  _Play_Startup
-                  0x005a08                  _RTCSetTime
-                  0x005a40                  _RTCaccess
-                  0x005a5c                  _RTCread
-                  0x005b00                  _RTCwrite
-                  0x005916                  _ReadActivityMISO
-                  0x0035e8                  _Reverse_2Byte
-                  0x003688                  _Reverse_4Byte
-                  0x003580                  _Reverse_Byte
-                  0x00325e                  _Round
-                  0x005200                  _SD_ACMDSPI_send_read
-                  0x005100                  _SD_CMDSPI_send
-                  0x005238                  _SD_CMDSPI_send_read
-                  0x0054ea                  _SD_Clear
-                  0x0049fa                  _SD_DeleteCard
-                  0x0049d0                  _SD_Get_CardType
-                  0x004a38                  _SD_Properties
-                  0x00548c                  _SD_RESET
-                  0x0051d4                  _SD_SetCMD
-                  0x0049c4                  _SD_Set_CardType
-                  0x0054fe                  _SD_WaitResponse
-                  0x004d9e                  _SD_readBlock
-                  0x004c86                  _SD_readRegister
-                  0x004c60                  _SD_readStatus
-                  0x004f2a                  _SD_writeBlock
-                  0x005348                  _SDaddCRC
-                  0x005082                  _SDtoSPI
-                  0x005544                  _SPI_Disable
-                  0x005538                  _SPI_Enable
-                  0x00599a                  _SPIwrite
-                  0x005934                  _SPIwrite_read
-                  0x00462a                  _Scale
-                  0x005594                  _SetSPISpeed
-                  0x000af2                  _Start_Clip
-                  0x0042a8                  _StringAddEqual
-                  0x0033a2                  _StringContains
-                  0x003458                  _StringContainsCaseInsensitive
-                  0x0032fe                  _StringMatch
-                  0x003342                  _StringMatchCaseInsensitive
-                  0x005068                  _TestCRC
-                  0x005cfe                  _TurnOffAmp
-                  0x005cf0                  _TurnOnAmp
-                  0x005d1a                  _UnMuteAmp
+                  0x0065ee                  _AudioOff
+                  0x0065d6                  _AudioOn
+                  0x004722                  _BCDtoHEX
+                  0x003290                  _BufferCopy
+                  0x004776                  _BufferMatch
+                  0x0055a8                  _CRC7_40bits
+                  0x006392                  _ClearTime
+                  0x0049ec                  _Clear_Receive_Buffer_Big
+                  0x0049fa                  _Clear_Receive_Buffer_Small
+                  0x006710                  _ConfigureOscillator
+                  0x006556                  _DAC_Run
+                  0x00655e                  _DAC_Stop
+                  0x0065ca                  _DAC_Voltage
+                  0x0044e2                  _DBround
+                  0x005794                  _FAT_DiscoverFiles
+                  0x0057b0                  _FAT_FindFiles
+                  0x005bc8                  _FAT_GetBootSectorData
+                  0x005e6e                  _FAT_GetFirstSector
+                  0x005cf4                  _FAT_GetSetFreeCluster
+                  0x005d98                  _FAT_GetSetNextCluster
+                  0x005bb6                  _FAT_ReadSector
+                  0x003cba                  _GetNumber
+                  0x003fc8                  _GetNumberUnsigned
+                  0x0043ec                  _GetStringAfterComma
+                  0x0046bc                  _HEXtoBCD
+                  0x0066d8                  _InitApp
+                  0x006566                  _InitDAC
+                  0x005758                  _InitFAT
+                  0x006364                  _InitRTCC
+                  0x0047b2                  _InitSD
+                  0x005ef2                  _InitSPI
+                  0x0066fa                  _Init_System
+                  0x0031be                  _IsAlphaNumeric
+                  0x0031ea                  _IsAlphaNumericString
+                  0x0031a0                  _IsCharacter
+                  0x003150                  _IsLetter
+                  0x003180                  _IsNumber
+                  0x004516                  _LGround
+                  0x0065ae                  _MuteAmp
+                  0x0065f8                  _Play_Startup
+                  0x0063c4                  _RTCSetTime
+                  0x0063fc                  _RTCaccess
+                  0x006418                  _RTCread
+                  0x0064bc                  _RTCwrite
+                  0x0062b8                  _ReadActivityMISO
+                  0x0035ec                  _Reverse_2Byte
+                  0x00368c                  _Reverse_4Byte
+                  0x003584                  _Reverse_Byte
+                  0x003264                  _Round
+                  0x005414                  _SD_ACMDSPI_send_read
+                  0x005314                  _SD_CMDSPI_send
+                  0x00544c                  _SD_CMDSPI_send_read
+                  0x005706                  _SD_Clear
+                  0x004a08                  _SD_DeleteCard
+                  0x0049de                  _SD_Get_CardType
+                  0x004a46                  _SD_Properties
+                  0x0056a8                  _SD_RESET
+                  0x0053e8                  _SD_SetCMD
+                  0x0049d2                  _SD_Set_CardType
+                  0x00571c                  _SD_WaitResponse
+                  0x004dba                  _SD_readBlock
+                  0x004f44                  _SD_readMultipleBlock
+                  0x004c94                  _SD_readRegister
+                  0x004c6e                  _SD_readStatus
+                  0x00513a                  _SD_writeBlock
+                  0x005564                  _SDaddCRC
+                  0x005296                  _SDtoSPI
+                  0x005ee6                  _SPI_Disable
+                  0x005eda                  _SPI_Enable
+                  0x006354                  _SPIwrite
+                  0x0062d6                  _SPIwrite_read
+                  0x004630                  _Scale
+                  0x005eac                  _SectorCopy
+                  0x005f36                  _SetSPISpeed
+                  0x000af8                  _Start_Clip
+                  0x0042ac                  _StringAddEqual
+                  0x0033a6                  _StringContains
+                  0x00345c                  _StringContainsCaseInsensitive
+                  0x003302                  _StringMatch
+                  0x003346                  _StringMatchCaseInsensitive
+                  0x00527c                  _TestCRC
+                  0x0047aa                  _TestFunctionPointer
+                  0x0065a0                  _TurnOffAmp
+                  0x006592                  _TurnOnAmp
+                  0x0065bc                  _UnMuteAmp
                   0x00029a                  __DAC1RInterrupt
                   0x000340                  __DefaultInterrupt
                   0xf80000                  __FBS.sec
@@ -422,43 +473,44 @@ External Symbols in Program Memory (by name):
                   0x000346                  ___addsf3
                   0x000400                  ___divsf3
                   0x000484                  ___divsi3
-                  0x000944                  ___eqsf2
+                  0x00094a                  ___eqsf2
                   0x0004a2                  ___fixsfsi
                   0x0004e4                  ___fixunssfsi
-                  0x00094c                  ___floatdisf
+                  0x000952                  ___floatdisf
                   0x00051a                  ___floatsisf
-                  0x00096c                  ___floatundisf
+                  0x000972                  ___floatundisf
                   0x000520                  ___floatunsisf
-                  0x000948                  ___gesf2
-                  0x000948                  ___gtsf2
-                  0x000944                  ___lesf2
-                  0x000944                  ___ltsf2
+                  0x00094e                  ___gesf2
+                  0x00094e                  ___gtsf2
+                  0x00094a                  ___lesf2
+                  0x00094a                  ___ltsf2
                   0x0005ca                  ___mulsf3
                   0x000344                  ___subsf3
                   0x0007f8                  ___udivsi3
+                  0x000818                  ___umodsi3
                   0x00023c                  __data_init
                   0x00023c                  __data_init_standard
                   0x0005aa                  __fPropagateNaN
                   0x0005bc                  __fbopExit
                   0x0005c4                  __fbopReturnNaN
-                  0x0008f6                  __fchop
-                  0x000abc                  __fcompare
+                  0x0008fc                  __fchop
+                  0x000ac2                  __fcompare
                   0x000524                  __fpack
-                  0x000818                  __frexpf
+                  0x00081e                  __frexpf
                   0x000570                  __funpack
                   0x00059a                  __funpack2
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
-                  0x00320e                  _cleanBuffer
-                  0x003234                  _cleanBuffer16bit
-                  0x003130                  _delayNOP
-                  0x0030e6                  _delayUS
-                  0x000832                  _expf
-                  0x0009ca                  _ldexpf
-                  0x000a0e                  _logf
-                  0x003558                  _lowercaseChar
-                  0x00351e                  _lowercaseString
-                  0x005b9a                  _main
+                  0x003214                  _cleanBuffer
+                  0x00323a                  _cleanBuffer16bit
+                  0x003136                  _delayNOP
+                  0x0030ec                  _delayUS
+                  0x000838                  _expf
+                  0x0009d0                  _ldexpf
+                  0x000a14                  _logf
+                  0x00355c                  _lowercaseChar
+                  0x003522                  _lowercaseString
+                  0x006620                  _main
                   0x000632                  _powf
 
 Memory Configuration
@@ -529,7 +581,7 @@ LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libfx-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x8f2
+.text             0x000200        0x8f8
  *(.init)
  .init            0x000200         0x3c c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
                   0x000200                  __resetPRI
@@ -591,32 +643,34 @@ LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libfx-elf.a
                   0x000632                  _powf
  .libm.udivsi3    0x0007f8         0x20 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
                   0x0007f8                  ___udivsi3
- .libm.frexpf     0x000818         0x1a c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
-                  0x000818                  __frexpf
- .libm.expf       0x000832         0xc4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(expf.eo)
-                  0x000832                  _expf
- .libm.fchop      0x0008f6         0x4e c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fchop.eo)
-                  0x0008f6                  __fchop
- .libm.eqsf2      0x000944          0x4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(feqltle.eo)
-                  0x000944                  ___eqsf2
-                  0x000944                  ___ltsf2
-                  0x000944                  ___lesf2
- .libm.gtsf2      0x000948          0x4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fgtge.eo)
-                  0x000948                  ___gesf2
-                  0x000948                  ___gtsf2
+ .libm.umodsi3    0x000818          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(umodsi3.eo)
+                  0x000818                  ___umodsi3
+ .libm.frexpf     0x00081e         0x1a c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
+                  0x00081e                  __frexpf
+ .libm.expf       0x000838         0xc4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(expf.eo)
+                  0x000838                  _expf
+ .libm.fchop      0x0008fc         0x4e c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fchop.eo)
+                  0x0008fc                  __fchop
+ .libm.eqsf2      0x00094a          0x4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(feqltle.eo)
+                  0x00094a                  ___eqsf2
+                  0x00094a                  ___ltsf2
+                  0x00094a                  ___lesf2
+ .libm.gtsf2      0x00094e          0x4 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fgtge.eo)
+                  0x00094e                  ___gesf2
+                  0x00094e                  ___gtsf2
  .libm.floatdisf
-                  0x00094c         0x20 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
-                  0x00094c                  ___floatdisf
+                  0x000952         0x20 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
+                  0x000952                  ___floatdisf
  .libm.floatundisf
-                  0x00096c         0x5e c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
-                  0x00096c                  ___floatundisf
- .libm.ldexpf     0x0009ca         0x44 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
-                  0x0009ca                  _ldexpf
- .libm.logf       0x000a0e         0xae c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(logf.eo)
-                  0x000a0e                  _logf
+                  0x000972         0x5e c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x000972                  ___floatundisf
+ .libm.ldexpf     0x0009d0         0x44 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
+                  0x0009d0                  _ldexpf
+ .libm.logf       0x000a14         0xae c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(logf.eo)
+                  0x000a14                  _logf
  .libm.fcompare
-                  0x000abc         0x36 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fcompare.eo)
-                  0x000abc                  __fcompare
+                  0x000ac2         0x36 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fcompare.eo)
+                  0x000ac2                  __fcompare
 
 usercode
  *(usercode)
@@ -666,75 +720,77 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x4aec
+.debug_info       0x000000       0x5792
  *(.debug_info)
- .debug_info      0x000000        0x2e9 build/xc16_pic33FJ128gp802/production/main.o
- .debug_info      0x0002e9        0x63c build/xc16_pic33FJ128gp802/production/system.o
- .debug_info      0x000925        0x431 build/xc16_pic33FJ128gp802/production/user.o
- .debug_info      0x000d56        0xd01 build/xc16_pic33FJ128gp802/production/MISC.o
- .debug_info      0x001a57         0xb9 build/xc16_pic33FJ128gp802/production/configuration_bits.o
- .debug_info      0x001b10        0x778 build/xc16_pic33FJ128gp802/production/interrupts.o
- .debug_info      0x002288        0xbc6 build/xc16_pic33FJ128gp802/production/SPI.o
- .debug_info      0x002e4e        0x148 build/xc16_pic33FJ128gp802/production/FAT.o
- .debug_info      0x002f96        0x80d build/xc16_pic33FJ128gp802/production/DAC.o
- .debug_info      0x0037a3        0x521 build/xc16_pic33FJ128gp802/production/RTCC.o
- .debug_info      0x003cc4        0x14a build/xc16_pic33FJ128gp802/production/Flash.o
- .debug_info      0x003e0e        0xcde build/xc16_pic33FJ128gp802/production/SD.o
+ .debug_info      0x000000        0x1b4 build/xc16_pic33FJ128gp802/production/main.o
+ .debug_info      0x0001b4        0x63c build/xc16_pic33FJ128gp802/production/system.o
+ .debug_info      0x0007f0        0x431 build/xc16_pic33FJ128gp802/production/user.o
+ .debug_info      0x000c21        0xd29 build/xc16_pic33FJ128gp802/production/MISC.o
+ .debug_info      0x00194a         0xb9 build/xc16_pic33FJ128gp802/production/configuration_bits.o
+ .debug_info      0x001a03        0x778 build/xc16_pic33FJ128gp802/production/interrupts.o
+ .debug_info      0x00217b        0xbde build/xc16_pic33FJ128gp802/production/SPI.o
+ .debug_info      0x002d59        0xdd4 build/xc16_pic33FJ128gp802/production/FAT.o
+ .debug_info      0x003b2d        0x80d build/xc16_pic33FJ128gp802/production/DAC.o
+ .debug_info      0x00433a        0x521 build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_info      0x00485b        0x14a build/xc16_pic33FJ128gp802/production/Flash.o
+ .debug_info      0x0049a5        0xded build/xc16_pic33FJ128gp802/production/SD.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0xabb
+.debug_abbrev     0x000000        0xbeb
  *(.debug_abbrev)
- .debug_abbrev    0x000000         0xbe build/xc16_pic33FJ128gp802/production/main.o
- .debug_abbrev    0x0000be         0xa7 build/xc16_pic33FJ128gp802/production/system.o
- .debug_abbrev    0x000165         0x8e build/xc16_pic33FJ128gp802/production/user.o
- .debug_abbrev    0x0001f3        0x13d build/xc16_pic33FJ128gp802/production/MISC.o
- .debug_abbrev    0x000330         0x1f build/xc16_pic33FJ128gp802/production/configuration_bits.o
- .debug_abbrev    0x00034f        0x12a build/xc16_pic33FJ128gp802/production/interrupts.o
- .debug_abbrev    0x000479        0x169 build/xc16_pic33FJ128gp802/production/SPI.o
- .debug_abbrev    0x0005e2         0x1f build/xc16_pic33FJ128gp802/production/FAT.o
- .debug_abbrev    0x000601        0x122 build/xc16_pic33FJ128gp802/production/DAC.o
- .debug_abbrev    0x000723        0x165 build/xc16_pic33FJ128gp802/production/RTCC.o
- .debug_abbrev    0x000888         0x1f build/xc16_pic33FJ128gp802/production/Flash.o
- .debug_abbrev    0x0008a7        0x214 build/xc16_pic33FJ128gp802/production/SD.o
+ .debug_abbrev    0x000000         0x70 build/xc16_pic33FJ128gp802/production/main.o
+ .debug_abbrev    0x000070         0xa7 build/xc16_pic33FJ128gp802/production/system.o
+ .debug_abbrev    0x000117         0x8e build/xc16_pic33FJ128gp802/production/user.o
+ .debug_abbrev    0x0001a5        0x13b build/xc16_pic33FJ128gp802/production/MISC.o
+ .debug_abbrev    0x0002e0         0x1f build/xc16_pic33FJ128gp802/production/configuration_bits.o
+ .debug_abbrev    0x0002ff        0x12a build/xc16_pic33FJ128gp802/production/interrupts.o
+ .debug_abbrev    0x000429        0x169 build/xc16_pic33FJ128gp802/production/SPI.o
+ .debug_abbrev    0x000592        0x198 build/xc16_pic33FJ128gp802/production/FAT.o
+ .debug_abbrev    0x00072a        0x122 build/xc16_pic33FJ128gp802/production/DAC.o
+ .debug_abbrev    0x00084c        0x165 build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_abbrev    0x0009b1         0x1f build/xc16_pic33FJ128gp802/production/Flash.o
+ .debug_abbrev    0x0009d0        0x21b build/xc16_pic33FJ128gp802/production/SD.o
 
-.debug_line       0x000000       0x4f20
+.debug_line       0x000000       0x5b93
  *(.debug_line)
- .debug_line      0x000000        0x224 build/xc16_pic33FJ128gp802/production/main.o
- .debug_line      0x000224         0xda build/xc16_pic33FJ128gp802/production/system.o
- .debug_line      0x0002fe        0x152 build/xc16_pic33FJ128gp802/production/user.o
- .debug_line      0x000450       0x244d build/xc16_pic33FJ128gp802/production/MISC.o
- .debug_line      0x00289d         0x24 build/xc16_pic33FJ128gp802/production/configuration_bits.o
- .debug_line      0x0028c1        0x1d5 build/xc16_pic33FJ128gp802/production/interrupts.o
- .debug_line      0x002a96        0x5ad build/xc16_pic33FJ128gp802/production/SPI.o
- .debug_line      0x003043         0x24 build/xc16_pic33FJ128gp802/production/FAT.o
- .debug_line      0x003067        0x2dc build/xc16_pic33FJ128gp802/production/DAC.o
- .debug_line      0x003343        0x46c build/xc16_pic33FJ128gp802/production/RTCC.o
- .debug_line      0x0037af         0x24 build/xc16_pic33FJ128gp802/production/Flash.o
- .debug_line      0x0037d3       0x174d build/xc16_pic33FJ128gp802/production/SD.o
+ .debug_line      0x000000        0x170 build/xc16_pic33FJ128gp802/production/main.o
+ .debug_line      0x000170         0xda build/xc16_pic33FJ128gp802/production/system.o
+ .debug_line      0x00024a        0x152 build/xc16_pic33FJ128gp802/production/user.o
+ .debug_line      0x00039c       0x247a build/xc16_pic33FJ128gp802/production/MISC.o
+ .debug_line      0x002816         0x24 build/xc16_pic33FJ128gp802/production/configuration_bits.o
+ .debug_line      0x00283a        0x1d5 build/xc16_pic33FJ128gp802/production/interrupts.o
+ .debug_line      0x002a0f        0x5dd build/xc16_pic33FJ128gp802/production/SPI.o
+ .debug_line      0x002fec        0x9ad build/xc16_pic33FJ128gp802/production/FAT.o
+ .debug_line      0x003999        0x2dc build/xc16_pic33FJ128gp802/production/DAC.o
+ .debug_line      0x003c75        0x46c build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_line      0x0040e1         0x24 build/xc16_pic33FJ128gp802/production/Flash.o
+ .debug_line      0x004105       0x1a8e build/xc16_pic33FJ128gp802/production/SD.o
 
-.debug_frame      0x000000        0x5e4
+.debug_frame      0x000000        0x6a8
  *(.debug_frame)
  .debug_frame     0x000000         0x24 build/xc16_pic33FJ128gp802/production/main.o
  .debug_frame     0x000024         0x24 build/xc16_pic33FJ128gp802/production/system.o
  .debug_frame     0x000048         0x34 build/xc16_pic33FJ128gp802/production/user.o
- .debug_frame     0x00007c        0x1f4 build/xc16_pic33FJ128gp802/production/MISC.o
- .debug_frame     0x000270         0x44 build/xc16_pic33FJ128gp802/production/interrupts.o
- .debug_frame     0x0002b4         0x84 build/xc16_pic33FJ128gp802/production/SPI.o
- .debug_frame     0x000338         0xc4 build/xc16_pic33FJ128gp802/production/DAC.o
- .debug_frame     0x0003fc         0x74 build/xc16_pic33FJ128gp802/production/RTCC.o
- .debug_frame     0x000470        0x174 build/xc16_pic33FJ128gp802/production/SD.o
+ .debug_frame     0x00007c        0x204 build/xc16_pic33FJ128gp802/production/MISC.o
+ .debug_frame     0x000280         0x44 build/xc16_pic33FJ128gp802/production/interrupts.o
+ .debug_frame     0x0002c4         0x84 build/xc16_pic33FJ128gp802/production/SPI.o
+ .debug_frame     0x000348         0xa4 build/xc16_pic33FJ128gp802/production/FAT.o
+ .debug_frame     0x0003ec         0xc4 build/xc16_pic33FJ128gp802/production/DAC.o
+ .debug_frame     0x0004b0         0x74 build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_frame     0x000524        0x184 build/xc16_pic33FJ128gp802/production/SD.o
 
-.debug_str        0x000000        0x2ea
+.debug_str        0x000000        0x394
  *(.debug_str)
- .debug_str       0x000000         0x22 build/xc16_pic33FJ128gp802/production/main.o
- .debug_str       0x000022         0x21 build/xc16_pic33FJ128gp802/production/system.o
- .debug_str       0x000043         0x14 build/xc16_pic33FJ128gp802/production/user.o
- .debug_str       0x000057         0x76 build/xc16_pic33FJ128gp802/production/MISC.o
- .debug_str       0x0000cd         0x5a build/xc16_pic33FJ128gp802/production/interrupts.o
- .debug_str       0x000127         0x62 build/xc16_pic33FJ128gp802/production/SPI.o
- .debug_str       0x000189         0x55 build/xc16_pic33FJ128gp802/production/DAC.o
- .debug_str       0x0001de         0x18 build/xc16_pic33FJ128gp802/production/RTCC.o
- .debug_str       0x0001f6         0xf4 build/xc16_pic33FJ128gp802/production/SD.o
+ .debug_str       0x000000          0xf build/xc16_pic33FJ128gp802/production/main.o
+ .debug_str       0x00000f         0x21 build/xc16_pic33FJ128gp802/production/system.o
+ .debug_str       0x000030         0x14 build/xc16_pic33FJ128gp802/production/user.o
+ .debug_str       0x000044         0x76 build/xc16_pic33FJ128gp802/production/MISC.o
+ .debug_str       0x0000ba         0x5a build/xc16_pic33FJ128gp802/production/interrupts.o
+ .debug_str       0x000114         0x62 build/xc16_pic33FJ128gp802/production/SPI.o
+ .debug_str       0x000176         0xa9 build/xc16_pic33FJ128gp802/production/FAT.o
+ .debug_str       0x00021f         0x55 build/xc16_pic33FJ128gp802/production/DAC.o
+ .debug_str       0x000274         0x18 build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_str       0x00028c        0x108 build/xc16_pic33FJ128gp802/production/SD.o
 
 .debug_loc
  *(.debug_loc)
@@ -743,7 +799,7 @@ __FUID3
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x74b
+                  0x000000        0x90b
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x1b build/xc16_pic33FJ128gp802/production/main.o
@@ -752,22 +808,24 @@ __FUID3
  .debug_pubnames
                   0x000045         0x2e build/xc16_pic33FJ128gp802/production/user.o
  .debug_pubnames
-                  0x000073        0x219 build/xc16_pic33FJ128gp802/production/MISC.o
+                  0x000073        0x231 build/xc16_pic33FJ128gp802/production/MISC.o
  .debug_pubnames
-                  0x00028c         0x65 build/xc16_pic33FJ128gp802/production/interrupts.o
+                  0x0002a4         0x65 build/xc16_pic33FJ128gp802/production/interrupts.o
  .debug_pubnames
-                  0x0002f1         0x9f build/xc16_pic33FJ128gp802/production/SPI.o
+                  0x000309         0x9f build/xc16_pic33FJ128gp802/production/SPI.o
  .debug_pubnames
-                  0x000390         0xd1 build/xc16_pic33FJ128gp802/production/DAC.o
+                  0x0003a8        0x18f build/xc16_pic33FJ128gp802/production/FAT.o
  .debug_pubnames
-                  0x000461         0x7f build/xc16_pic33FJ128gp802/production/RTCC.o
+                  0x000537         0xd1 build/xc16_pic33FJ128gp802/production/DAC.o
  .debug_pubnames
-                  0x0004e0        0x26b build/xc16_pic33FJ128gp802/production/SD.o
+                  0x000608         0x7f build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_pubnames
+                  0x000687        0x284 build/xc16_pic33FJ128gp802/production/SD.o
 
 .debug_ranges
  *(.debug_ranges)
 
-.debug_aranges    0x000000         0xd8
+.debug_aranges    0x000000         0xf0
  *(.debug_aranges)
  .debug_aranges
                   0x000000         0x18 build/xc16_pic33FJ128gp802/production/main.o
@@ -782,11 +840,13 @@ __FUID3
  .debug_aranges
                   0x000078         0x18 build/xc16_pic33FJ128gp802/production/SPI.o
  .debug_aranges
-                  0x000090         0x18 build/xc16_pic33FJ128gp802/production/DAC.o
+                  0x000090         0x18 build/xc16_pic33FJ128gp802/production/FAT.o
  .debug_aranges
-                  0x0000a8         0x18 build/xc16_pic33FJ128gp802/production/RTCC.o
+                  0x0000a8         0x18 build/xc16_pic33FJ128gp802/production/DAC.o
  .debug_aranges
-                  0x0000c0         0x18 build/xc16_pic33FJ128gp802/production/SD.o
+                  0x0000c0         0x18 build/xc16_pic33FJ128gp802/production/RTCC.o
+ .debug_aranges
+                  0x0000d8         0x18 build/xc16_pic33FJ128gp802/production/SD.o
 
 .ivt              0x000004         0xfc
                   0x000004          0x4 LONG 0x340 DEFINED (__ReservedTrap0)?ABSOLUTE (__ReservedTrap0):ABSOLUTE (__DefaultInterrupt)
@@ -2021,152 +2081,168 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x0000d8        0x411
+                  0x0000f0        0x490
  .debug_pubtypes
-                  0x0000d8         0x34 build/xc16_pic33FJ128gp802/production/main.o
+                  0x0000f0         0x12 build/xc16_pic33FJ128gp802/production/main.o
  .debug_pubtypes
-                  0x00010c         0x75 build/xc16_pic33FJ128gp802/production/system.o
+                  0x000102         0x75 build/xc16_pic33FJ128gp802/production/system.o
  .debug_pubtypes
-                  0x000181         0x50 build/xc16_pic33FJ128gp802/production/user.o
+                  0x000177         0x50 build/xc16_pic33FJ128gp802/production/user.o
  .debug_pubtypes
-                  0x0001d1         0x12 build/xc16_pic33FJ128gp802/production/MISC.o
+                  0x0001c7         0x12 build/xc16_pic33FJ128gp802/production/MISC.o
  .debug_pubtypes
-                  0x0001e3         0x12 build/xc16_pic33FJ128gp802/production/configuration_bits.o
+                  0x0001d9         0x12 build/xc16_pic33FJ128gp802/production/configuration_bits.o
  .debug_pubtypes
-                  0x0001f5         0x8c build/xc16_pic33FJ128gp802/production/interrupts.o
+                  0x0001eb         0x8c build/xc16_pic33FJ128gp802/production/interrupts.o
  .debug_pubtypes
-                  0x000281         0xf7 build/xc16_pic33FJ128gp802/production/SPI.o
+                  0x000277         0xf7 build/xc16_pic33FJ128gp802/production/SPI.o
  .debug_pubtypes
-                  0x000378         0x12 build/xc16_pic33FJ128gp802/production/FAT.o
+                  0x00036e         0xb3 build/xc16_pic33FJ128gp802/production/FAT.o
  .debug_pubtypes
-                  0x00038a         0x9a build/xc16_pic33FJ128gp802/production/DAC.o
+                  0x000421         0x9a build/xc16_pic33FJ128gp802/production/DAC.o
  .debug_pubtypes
-                  0x000424         0x4b build/xc16_pic33FJ128gp802/production/RTCC.o
+                  0x0004bb         0x4b build/xc16_pic33FJ128gp802/production/RTCC.o
  .debug_pubtypes
-                  0x00046f         0x12 build/xc16_pic33FJ128gp802/production/Flash.o
+                  0x000506         0x12 build/xc16_pic33FJ128gp802/production/Flash.o
  .debug_pubtypes
-                  0x000481         0x68 build/xc16_pic33FJ128gp802/production/SD.o
+                  0x000518         0x68 build/xc16_pic33FJ128gp802/production/SD.o
 
 __c30_signature
-                  0x0004e9         0xea
+                  0x000580         0xf0
  __c30_signature
-                  0x0004e9          0x6 build/xc16_pic33FJ128gp802/production/main.o
+                  0x000580          0x6 build/xc16_pic33FJ128gp802/production/main.o
  __c30_signature
-                  0x0004ef          0x6 build/xc16_pic33FJ128gp802/production/system.o
+                  0x000586          0x6 build/xc16_pic33FJ128gp802/production/system.o
  __c30_signature
-                  0x0004f5          0x6 build/xc16_pic33FJ128gp802/production/user.o
+                  0x00058c          0x6 build/xc16_pic33FJ128gp802/production/user.o
  __c30_signature
-                  0x0004fb          0x6 build/xc16_pic33FJ128gp802/production/MISC.o
+                  0x000592          0x6 build/xc16_pic33FJ128gp802/production/MISC.o
  __c30_signature
-                  0x000501          0x6 build/xc16_pic33FJ128gp802/production/configuration_bits.o
+                  0x000598          0x6 build/xc16_pic33FJ128gp802/production/configuration_bits.o
  __c30_signature
-                  0x000507          0x6 build/xc16_pic33FJ128gp802/production/interrupts.o
+                  0x00059e          0x6 build/xc16_pic33FJ128gp802/production/interrupts.o
  __c30_signature
-                  0x00050d          0x6 build/xc16_pic33FJ128gp802/production/SPI.o
+                  0x0005a4          0x6 build/xc16_pic33FJ128gp802/production/SPI.o
  __c30_signature
-                  0x000513          0x6 build/xc16_pic33FJ128gp802/production/FAT.o
+                  0x0005aa          0x6 build/xc16_pic33FJ128gp802/production/FAT.o
  __c30_signature
-                  0x000519          0x6 build/xc16_pic33FJ128gp802/production/DAC.o
+                  0x0005b0          0x6 build/xc16_pic33FJ128gp802/production/DAC.o
  __c30_signature
-                  0x00051f          0x6 build/xc16_pic33FJ128gp802/production/RTCC.o
+                  0x0005b6          0x6 build/xc16_pic33FJ128gp802/production/RTCC.o
  __c30_signature
-                  0x000525          0x6 build/xc16_pic33FJ128gp802/production/Flash.o
+                  0x0005bc          0x6 build/xc16_pic33FJ128gp802/production/Flash.o
  __c30_signature
-                  0x00052b          0x6 build/xc16_pic33FJ128gp802/production/SD.o
+                  0x0005c2          0x6 build/xc16_pic33FJ128gp802/production/SD.o
  __c30_signature
-                  0x000531          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
+                  0x0005c8          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000537          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
+                  0x0005ce          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x00053d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(addsf3.eo)
+                  0x0005d4          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(addsf3.eo)
  __c30_signature
-                  0x000543          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x0005da          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
  __c30_signature
-                  0x000549          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
+                  0x0005e0          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
  __c30_signature
-                  0x00054f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixsfsi.eo)
+                  0x0005e6          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixsfsi.eo)
  __c30_signature
-                  0x000555          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x0005ec          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
  __c30_signature
-                  0x00055b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatsisf.eo)
+                  0x0005f2          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatsisf.eo)
  __c30_signature
-                  0x000561          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x0005f8          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
  __c30_signature
-                  0x000567          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x0005fe          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
  __c30_signature
-                  0x00056d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x000604          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
  __c30_signature
-                  0x000573          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x00060a          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
  __c30_signature
-                  0x000579          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000610          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
  __c30_signature
-                  0x00057f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x000616          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
  __c30_signature
-                  0x000585          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(powf.eo)
+                  0x00061c          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(powf.eo)
  __c30_signature
-                  0x00058b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
+                  0x000622          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x000591          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
+                  0x000628          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(umodsi3.eo)
  __c30_signature
-                  0x000597          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(errno.eo)
+                  0x00062e          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(_frexpf.eo)
  __c30_signature
-                  0x00059d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(expf.eo)
+                  0x000634          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(errno.eo)
  __c30_signature
-                  0x0005a3          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fchop.eo)
+                  0x00063a          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(expf.eo)
  __c30_signature
-                  0x0005a9          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(feqltle.eo)
+                  0x000640          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fchop.eo)
  __c30_signature
-                  0x0005af          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fgtge.eo)
+                  0x000646          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(feqltle.eo)
  __c30_signature
-                  0x0005b5          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
+                  0x00064c          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fgtge.eo)
  __c30_signature
-                  0x0005bb          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x000652          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatdisf.eo)
  __c30_signature
-                  0x0005c1          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
+                  0x000658          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
  __c30_signature
-                  0x0005c7          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(logf.eo)
+                  0x00065e          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(ldexpf.eo)
  __c30_signature
-                  0x0005cd          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fcompare.eo)
+                  0x000664          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(logf.eo)
+ __c30_signature
+                  0x00066a          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fcompare.eo)
 
 .nbss               0x0800          0x2
  .nbss              0x0800          0x2 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(errno.eo)
                     0x0800                  _errno
 
-.bss                0x0802        0x248
- .bss               0x0802        0x248 build/xc16_pic33FJ128gp802/production/SD.o
-                    0x0802                  _SD_Initialized
-                    0x0803                  _Receive_Buffer_Big
-                    0x0a03                  _Receive_Buffer_Small
-                    0x0a17                  _R1_Buffer
-                    0x0a18                  _R2_Buffer
-                    0x0a1a                  _R3_Buffer
-                    0x0a1f                  _R6_Buffer
-                    0x0a25                  _SD_Timeout
-                    0x0a26                  _SD_CardType
-                    0x0a28                  _Global_message
-                    0x0a30                  _PGlobal_message
-                    0x0a32                  _SD
+.bss                0x0802        0xb00
+ .bss               0x0802        0x8b8 build/xc16_pic33FJ128gp802/production/FAT.o
+                    0x0802                  _FAT_STATUS
+                    0x0804                  _FAT_MBR
+                    0x0a04                  _PFAT_MBR
+                    0x0a06                  _FAT_BS
+                    0x0c06                  _PFAT_BS
+                    0x0c08                  _FAT_PART1
+                    0x0c18                  _PFAT_PART1
+                    0x0c1a                  _FAT_FS
+                    0x0e1a                  _PFAT_FS
+                    0x0e1c                  _firstDataSector
+                    0x0e20                  _freeClusterCountUpdated
+                    0x0e22                  _unusedSectors
+                    0x0e26                  _FileList
+ .bss               0x10ba        0x248 build/xc16_pic33FJ128gp802/production/SD.o
+                    0x10ba                  _SD_Initialized
+                    0x10bb                  _Receive_Buffer_Big
+                    0x12bb                  _Receive_Buffer_Small
+                    0x12cf                  _R1_Buffer
+                    0x12d0                  _R2_Buffer
+                    0x12d2                  _R3_Buffer
+                    0x12d7                  _R6_Buffer
+                    0x12dd                  _SD_Timeout
+                    0x12de                  _SD_CardType
+                    0x12e0                  _Global_message
+                    0x12e8                  _PGlobal_message
+                    0x12ea                  _SD
 
-.data               0x0a4a         0x18
- .data              0x0a4a         0x18 build/xc16_pic33FJ128gp802/production/SPI.o
-                    0x0a4a                  _SPIprescale
-                    0x0a60                  _SPI_State
+.data               0x1302         0x18
+ .data              0x1302         0x18 build/xc16_pic33FJ128gp802/production/SPI.o
+                    0x1302                  _SPIprescale
+                    0x1318                  _SPI_State
 
-.bss                0x0a62         0x14
- .bss               0x0a62         0x10 build/xc16_pic33FJ128gp802/production/RTCC.o
-                    0x0a62                  _CurrentTime
-                    0x0a6a                  _SetTime
- .bss               0x0a72          0x4 build/xc16_pic33FJ128gp802/production/interrupts.o
-                    0x0a72                  _place
+.bss                0x131a         0x14
+ .bss               0x131a         0x10 build/xc16_pic33FJ128gp802/production/RTCC.o
+                    0x131a                  _CurrentTime
+                    0x1322                  _SetTime
+ .bss               0x132a          0x4 build/xc16_pic33FJ128gp802/production/interrupts.o
+                    0x132a                  _place
 
-.data               0x0a76          0x2
- .data              0x0a76          0x2 build/xc16_pic33FJ128gp802/production/DAC.o
-                    0x0a76                  _DAC_Res
-                    0x0a77                  _StartupSong
+.data               0x132e          0x2
+ .data              0x132e          0x2 build/xc16_pic33FJ128gp802/production/DAC.o
+                    0x132e                  _DAC_Res
+                    0x132f                  _StartupSong
 
-.bss                0x0a78          0x2
- .bss               0x0a78          0x2 build/xc16_pic33FJ128gp802/production/DAC.o
-                    0x0a78                  _ClipDone
+.bss                0x1330          0x2
+ .bss               0x1330          0x2 build/xc16_pic33FJ128gp802/production/DAC.o
+                    0x1330                  _ClipDone
 
 .config_JTAGEN    0xf8000e          0x2
  .config_JTAGEN
@@ -2186,101 +2262,113 @@ __c30_signature
 .config_IESO      0xf80006          0x2
  .config_IESO     0xf80006          0x2 build/xc16_pic33FJ128gp802/production/configuration_bits.o
 
-.const              0x8af2       0x25f4 load address 0x000af2  
- .const             0x8af2       0x25f4 build/xc16_pic33FJ128gp802/production/interrupts.o
-                    0x8af2                  _Start_Clip
+.const              0x8af8       0x25f4 load address 0x000af8  
+ .const             0x8af8       0x25f4 build/xc16_pic33FJ128gp802/production/interrupts.o
+                    0x8af8                  _Start_Clip
 
-.text             0x0030e6       0x2c98
- .text            0x0030e6       0x16be build/xc16_pic33FJ128gp802/production/MISC.o
-                  0x0030e6                  _delayUS
-                  0x003130                  _delayNOP
-                  0x00314a                  _IsLetter
-                  0x00317a                  _IsNumber
-                  0x00319a                  _IsCharacter
-                  0x0031b8                  _IsAlphaNumeric
-                  0x0031e4                  _IsAlphaNumericString
-                  0x00320e                  _cleanBuffer
-                  0x003234                  _cleanBuffer16bit
-                  0x00325e                  _Round
-                  0x00328a                  _BufferCopy
-                  0x0032fe                  _StringMatch
-                  0x003342                  _StringMatchCaseInsensitive
-                  0x0033a2                  _StringContains
-                  0x003458                  _StringContainsCaseInsensitive
-                  0x00351e                  _lowercaseString
-                  0x003558                  _lowercaseChar
-                  0x003580                  _Reverse_Byte
-                  0x0035e8                  _Reverse_2Byte
-                  0x003688                  _Reverse_4Byte
-                  0x003cb6                  _GetNumber
-                  0x003fc4                  _GetNumberUnsigned
-                  0x0042a8                  _StringAddEqual
-                  0x0043e6                  _GetStringAfterComma
-                  0x0044dc                  _DBround
-                  0x004510                  _LGround
-                  0x00462a                  _Scale
-                  0x0046b6                  _HEXtoBCD
-                  0x00471c                  _BCDtoHEX
-                  0x004770                  _BufferMatch
- .text            0x0047a4        0xd94 build/xc16_pic33FJ128gp802/production/SD.o
-                  0x0047a4                  _InitSD
-                  0x0049c4                  _SD_Set_CardType
-                  0x0049d0                  _SD_Get_CardType
-                  0x0049de                  _Clear_Receive_Buffer_Big
-                  0x0049ec                  _Clear_Receive_Buffer_Small
-                  0x0049fa                  _SD_DeleteCard
-                  0x004a38                  _SD_Properties
-                  0x004c60                  _SD_readStatus
-                  0x004c86                  _SD_readRegister
-                  0x004d9e                  _SD_readBlock
-                  0x004f2a                  _SD_writeBlock
-                  0x005068                  _TestCRC
-                  0x005082                  _SDtoSPI
-                  0x005100                  _SD_CMDSPI_send
-                  0x0051d4                  _SD_SetCMD
-                  0x005200                  _SD_ACMDSPI_send_read
-                  0x005238                  _SD_CMDSPI_send_read
-                  0x005348                  _SDaddCRC
-                  0x00538c                  _CRC7_40bits
-                  0x00548c                  _SD_RESET
-                  0x0054ea                  _SD_Clear
-                  0x0054fe                  _SD_WaitResponse
- .text            0x005538        0x470 build/xc16_pic33FJ128gp802/production/SPI.o
-                  0x005538                  _SPI_Enable
-                  0x005544                  _SPI_Disable
-                  0x005550                  _InitSPI
-                  0x005594                  _SetSPISpeed
-                  0x005916                  _ReadActivityMISO
-                  0x005934                  _SPIwrite_read
-                  0x00599a                  _SPIwrite
- .text            0x0059a8        0x1f2 build/xc16_pic33FJ128gp802/production/RTCC.o
-                  0x0059a8                  _InitRTCC
-                  0x0059d6                  _ClearTime
-                  0x005a08                  _RTCSetTime
-                  0x005a40                  _RTCaccess
-                  0x005a5c                  _RTCread
-                  0x005b00                  _RTCwrite
- .text            0x005b9a        0x11a build/xc16_pic33FJ128gp802/production/main.o
-                  0x005b9a                  _main
- .text            0x005cb4         0xca build/xc16_pic33FJ128gp802/production/DAC.o
-                  0x005cb4                  _DAC_Run
-                  0x005cbc                  _DAC_Stop
-                  0x005cc4                  _InitDAC
-                  0x005cf0                  _TurnOnAmp
-                  0x005cfe                  _TurnOffAmp
-                  0x005d0c                  _MuteAmp
-                  0x005d1a                  _UnMuteAmp
-                  0x005d28                  _DAC_Voltage
-                  0x005d34                  _AudioOn
-                  0x005d4c                  _AudioOff
-                  0x005d56                  _Play_Startup
+.text             0x0030ec       0x35a8
+ .text            0x0030ec       0x16c6 build/xc16_pic33FJ128gp802/production/MISC.o
+                  0x0030ec                  _delayUS
+                  0x003136                  _delayNOP
+                  0x003150                  _IsLetter
+                  0x003180                  _IsNumber
+                  0x0031a0                  _IsCharacter
+                  0x0031be                  _IsAlphaNumeric
+                  0x0031ea                  _IsAlphaNumericString
+                  0x003214                  _cleanBuffer
+                  0x00323a                  _cleanBuffer16bit
+                  0x003264                  _Round
+                  0x003290                  _BufferCopy
+                  0x003302                  _StringMatch
+                  0x003346                  _StringMatchCaseInsensitive
+                  0x0033a6                  _StringContains
+                  0x00345c                  _StringContainsCaseInsensitive
+                  0x003522                  _lowercaseString
+                  0x00355c                  _lowercaseChar
+                  0x003584                  _Reverse_Byte
+                  0x0035ec                  _Reverse_2Byte
+                  0x00368c                  _Reverse_4Byte
+                  0x003cba                  _GetNumber
+                  0x003fc8                  _GetNumberUnsigned
+                  0x0042ac                  _StringAddEqual
+                  0x0043ec                  _GetStringAfterComma
+                  0x0044e2                  _DBround
+                  0x004516                  _LGround
+                  0x004630                  _Scale
+                  0x0046bc                  _HEXtoBCD
+                  0x004722                  _BCDtoHEX
+                  0x004776                  _BufferMatch
+                  0x0047aa                  _TestFunctionPointer
+ .text            0x0047b2        0xfa6 build/xc16_pic33FJ128gp802/production/SD.o
+                  0x0047b2                  _InitSD
+                  0x0049d2                  _SD_Set_CardType
+                  0x0049de                  _SD_Get_CardType
+                  0x0049ec                  _Clear_Receive_Buffer_Big
+                  0x0049fa                  _Clear_Receive_Buffer_Small
+                  0x004a08                  _SD_DeleteCard
+                  0x004a46                  _SD_Properties
+                  0x004c6e                  _SD_readStatus
+                  0x004c94                  _SD_readRegister
+                  0x004dba                  _SD_readBlock
+                  0x004f44                  _SD_readMultipleBlock
+                  0x00513a                  _SD_writeBlock
+                  0x00527c                  _TestCRC
+                  0x005296                  _SDtoSPI
+                  0x005314                  _SD_CMDSPI_send
+                  0x0053e8                  _SD_SetCMD
+                  0x005414                  _SD_ACMDSPI_send_read
+                  0x00544c                  _SD_CMDSPI_send_read
+                  0x005564                  _SDaddCRC
+                  0x0055a8                  _CRC7_40bits
+                  0x0056a8                  _SD_RESET
+                  0x005706                  _SD_Clear
+                  0x00571c                  _SD_WaitResponse
+ .text            0x005758        0x782 build/xc16_pic33FJ128gp802/production/FAT.o
+                  0x005758                  _InitFAT
+                  0x005794                  _FAT_DiscoverFiles
+                  0x0057b0                  _FAT_FindFiles
+                  0x005bb6                  _FAT_ReadSector
+                  0x005bc8                  _FAT_GetBootSectorData
+                  0x005cf4                  _FAT_GetSetFreeCluster
+                  0x005d98                  _FAT_GetSetNextCluster
+                  0x005e6e                  _FAT_GetFirstSector
+                  0x005eac                  _SectorCopy
+ .text            0x005eda        0x48a build/xc16_pic33FJ128gp802/production/SPI.o
+                  0x005eda                  _SPI_Enable
+                  0x005ee6                  _SPI_Disable
+                  0x005ef2                  _InitSPI
+                  0x005f36                  _SetSPISpeed
+                  0x0062b8                  _ReadActivityMISO
+                  0x0062d6                  _SPIwrite_read
+                  0x006354                  _SPIwrite
+ .text            0x006364        0x1f2 build/xc16_pic33FJ128gp802/production/RTCC.o
+                  0x006364                  _InitRTCC
+                  0x006392                  _ClearTime
+                  0x0063c4                  _RTCSetTime
+                  0x0063fc                  _RTCaccess
+                  0x006418                  _RTCread
+                  0x0064bc                  _RTCwrite
+ .text            0x006556         0xca build/xc16_pic33FJ128gp802/production/DAC.o
+                  0x006556                  _DAC_Run
+                  0x00655e                  _DAC_Stop
+                  0x006566                  _InitDAC
+                  0x006592                  _TurnOnAmp
+                  0x0065a0                  _TurnOffAmp
+                  0x0065ae                  _MuteAmp
+                  0x0065bc                  _UnMuteAmp
+                  0x0065ca                  _DAC_Voltage
+                  0x0065d6                  _AudioOn
+                  0x0065ee                  _AudioOff
+                  0x0065f8                  _Play_Startup
+ .text            0x006620         0x74 build/xc16_pic33FJ128gp802/production/main.o
+                  0x006620                  _main
 
-.dinit            0x005d7e         0x3e
- .dinit           0x005d7e         0x3e data_init
+.dinit            0x006694         0x44
+ .dinit           0x006694         0x44 data_init
 
-.text             0x005dbc         0x62
- .text            0x005dbc         0x38 build/xc16_pic33FJ128gp802/production/user.o
-                  0x005dbc                  _InitApp
-                  0x005dde                  _Init_System
- .text            0x005df4         0x2a build/xc16_pic33FJ128gp802/production/system.o
-                  0x005df4                  _ConfigureOscillator
+.text             0x0066d8         0x62
+ .text            0x0066d8         0x38 build/xc16_pic33FJ128gp802/production/user.o
+                  0x0066d8                  _InitApp
+                  0x0066fa                  _Init_System
+ .text            0x006710         0x2a build/xc16_pic33FJ128gp802/production/system.o
+                  0x006710                  _ConfigureOscillator

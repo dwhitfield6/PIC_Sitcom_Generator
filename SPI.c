@@ -249,7 +249,7 @@ void ReadActivityMISO(unsigned char* event)
  *
  * The function writes 2 bytes over the SPI and listens for a response.
 /******************************************************************************/
-unsigned char SPIwrite_read(unsigned char write, unsigned char* read)
+unsigned char SPIwrite_read(unsigned char write, unsigned char* read,unsigned char CheckActivity)
 {
     unsigned int dummy;
     unsigned char MISO_event = FALSE;
@@ -271,8 +271,16 @@ unsigned char SPIwrite_read(unsigned char write, unsigned char* read)
     dummy = SPI2BUF;
     SPI2STATbits.SPIROV = FALSE;
 
-    if(MISO_event)
-    {             
+    if(CheckActivity)
+    {
+        if(MISO_event)
+        {
+            *read = dummy;
+            return 1;
+        }
+    }
+    else
+    {
         *read = dummy;
         return 1;
     }
@@ -286,7 +294,7 @@ unsigned char SPIwrite_read(unsigned char write, unsigned char* read)
 /******************************************************************************/
 void SPIwrite(unsigned char write)
 {
-    SPIwrite_read(write,NULL);
+    SPIwrite_read(write,NULL,NO);
 }
 /*-----------------------------------------------------------------------------/
  End of File

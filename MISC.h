@@ -50,7 +50,7 @@ unsigned char IsCharacter(unsigned char data);
 void cleanBuffer(unsigned char* data, unsigned int count);
 void cleanBuffer16bit(unsigned int* data, unsigned int count);
 double Round(double input);
-void BufferCopy(unsigned char* from,unsigned char* to, unsigned char count, unsigned char shift);
+void BufferCopy(unsigned char* from,unsigned char* to, unsigned int count, unsigned int shift);
 unsigned char StringMatch(const unsigned char* This, const unsigned char* That);
 unsigned char StringMatchCaseInsensitive(const unsigned char* This, const unsigned char* That);
 unsigned char StringContains(const unsigned char* This, const unsigned char* That);
@@ -75,5 +75,6 @@ unsigned int BCDtoHEX(unsigned int input);
 unsigned int HEXtoBCD(unsigned int input);
 unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int size);
 long LGround(long Input,unsigned char places);
+void TestFunctionPointer(void);
 
 #endif	/* MISC_H */

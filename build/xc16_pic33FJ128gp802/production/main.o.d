@@ -6,4 +6,5 @@ user.h  \
 DAC.h  \
 RTCC.h  \
 SPI.h  \
-SD.h 
+SD.h  \
+FAT.h 
