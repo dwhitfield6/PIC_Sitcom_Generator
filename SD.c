@@ -33,7 +33,7 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-volatile unsigned char SD_Initialized = FALSE;
+volatile unsigned char SD_State = NOT_INITIALIZED;
 unsigned char Receive_Buffer_Big[SDblockSize];
 unsigned char Receive_Buffer_Small[20];
 unsigned char R1_Buffer[1];
@@ -216,7 +216,7 @@ void InitSD(void)
         delayUS(1000);/* needed for SPI clock to stabalize */
         if(SD_Properties())
         {
-            SD_Initialized = TRUE;
+            SD_State = INITIALIZED;
         }
     }
 }

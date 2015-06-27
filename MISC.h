@@ -76,5 +76,9 @@ unsigned int HEXtoBCD(unsigned int input);
 unsigned char BufferMatch(unsigned char* This, unsigned char* That, unsigned int size);
 long LGround(long Input,unsigned char places);
 void TestFunctionPointer(void);
+unsigned int Endian2Byte(unsigned int number);
+unsigned int Endian2ByteArray(unsigned char* buffer);
+unsigned long Endian4Byte(unsigned long number);
+unsigned long Endian4ByteArray(unsigned char* buffer);
 
 #endif	/* MISC_H */

@@ -27,6 +27,8 @@
 #include "FAT.h"
 #include "SD.h"
 #include "MISC.h"
+#include "WAV.h"
+#include "DAC.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -44,6 +46,9 @@ unsigned long firstDataSector = 0;
 unsigned char freeClusterCountUpdated;
 unsigned long unusedSectors;
 FAT_FILE FileList[MAX_FILES];
+unsigned char RootName[9];
+unsigned char Cluster[MAXsectorPerCluster][MAXbytesPerSector];
+unsigned char SD_NumFiles = 0;
 
 /******************************************************************************/
 /* Inline Functions
@@ -65,14 +70,19 @@ unsigned char InitFAT(void)
     PFAT_PART1 = &FAT_PART1;
     PFAT_FS = &FAT_FS;
 
-    if(SD_Initialized)
+    if(SD_State == INITIALIZED || SD_State == RUNNING)
     {
         if(FAT_GetBootSectorData())
         {
             FAT_STATUS = VALID;
             if(FAT_DiscoverFiles())
             {
-                return PASS;
+                if(WAV_CheckFiles())
+                {
+                    SD_State == RUNNING;
+                    return PASS;
+                }
+                return FAIL;
             }
         }
     }
@@ -94,6 +104,160 @@ unsigned char FAT_DiscoverFiles(void)
 }
 
 /******************************************************************************/
+/* FAT_ReadFile
+ *
+ * If flag = READ then the function reads the file from SD card and send
+ * contents to the DAC.
+ * If flag = VERIFY then the function will verify whether a specified file is
+ * already existing in the SD card.
+/******************************************************************************/
+unsigned char FAT_ReadWAVFile(unsigned char flag, unsigned char *fileName, unsigned char FileNumber, unsigned char Name_nNumber)
+{
+    PDIR dir = NULL;
+    unsigned long cluster, fileSize, firstSector;
+    unsigned long byteCounter = 0;
+    unsigned int k;
+    unsigned char j;
+
+    if(Name_nNumber)
+    {
+        if(!FAT_ConvertFileName(fileName))
+        {
+            return FAIL; //convert fileName into FAT format
+        }
+
+        if(!FAT_FindFiles (GET_FILE, fileName, dir) == FILE_FOUND)
+        {
+            /* File not found */
+            return FAIL;
+        }
+
+        if (flag == VERIFY) ; //specified file name is already existing
+        {
+            /* File found */
+            return PASS;
+        }
+
+        cluster = ((( unsigned long ) dir->firstClusterHI) << 16) | dir->firstClusterLO;
+        fileSize = dir->fileSize;
+    }
+    else
+    {
+        if(FileNumber <= SD_NumFiles)
+        {
+            cluster = FileList[FileNumber].firstCluster;
+            fileSize = FileList[FileNumber].size;
+        }
+    }
+
+    while (1)
+    {
+        firstSector = FAT_GetFirstSector (cluster);
+        if(!FAT_ReadSector(firstSector))
+        {
+            return FAIL;
+        }
+
+        /* read the wav file header data */
+        if(1)
+        {
+
+        }
+        else
+        {
+            return FAIL;
+        }
+        for (j=1; j<FAT_BS.sectorPerCluster; j++)
+        {
+            if(!FAT_ReadSector(firstSector + j))
+            {
+                return FAIL;
+            }
+        }
+        for (k=0; k<MAXbytesPerSector; k++)
+        {
+            DAC_FIFO[DAC_Page][k] = Receive_Buffer_Big[k];
+            if ((byteCounter++) >= fileSize )
+            {
+                DAC_FIFO_End_Place = 0;
+                return PASS;
+            }
+        }
+        FAT_SectorCopy(Receive_Buffer_Big, &DAC_FIFO[DAC_Page][0]);
+        byteCounter++;
+        if ((byteCounter++) >= fileSize )
+        {
+            return PASS;
+        }
+        cluster = FAT_GetSetNextCluster (cluster, GET, NULL);
+        if (cluster == 0)
+        {
+            return FAIL;
+        }
+    }
+    return FAIL;
+}
+
+/******************************************************************************/
+/* FAT_ConvertFileName
+ *
+ * This function converts the normal short file name into FAT format.
+/******************************************************************************/
+unsigned char FAT_ConvertFileName(unsigned char *fileName)
+{
+    unsigned char fileNameFAT[11];
+    unsigned char j, k;
+    for (j=0; j<12; j++)
+    {
+        if (fileName[j] == '.' )
+        {
+            break ;
+        }
+    }
+
+    if (j>8)
+    {
+        return FAIL;
+    }
+
+    for (k=0; k<j; k++) //setting file name
+    {
+        fileNameFAT[k] = fileName[k];
+    }
+    
+    for (k=j; k<=7; k++) //filling file name trail with blanks
+    {
+        fileNameFAT[k] = ' ' ;
+    }
+
+    j++;
+    for (k=8; k<11; k++) //setting file extention
+    {
+        if (fileName[j] != 0)
+        {
+            fileNameFAT[k] = fileName[j++];
+        }
+        else //filling extension trail with blanks
+        {
+            while (k<11)
+            {
+                fileNameFAT[k++] = ' ' ;
+            }
+        }
+    }
+
+    for (j=0; j<11; j++) //converting small letters to caps
+    {
+        lowercaseChar(&fileNameFAT[j]);
+    }
+    for (j=0; j<11; j++)
+    {
+        fileName[j] = fileNameFAT[j];
+    }
+    return PASS;
+}
+
+/******************************************************************************/
 /* FAT_FindFiles
  *
  * This function gets the directory or the file list or a single file address
@@ -108,6 +272,7 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
     unsigned int i;
     unsigned char j;
     unsigned char file = 0;
+    unsigned char FilesFound = FALSE;
 
     cluster = FAT_BS.rootCluster; //root cluster
 
@@ -132,7 +297,17 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
                     {
                         return FILE_NOT_EXIST;
                     }
-                    return FILE_NOT_EXIST;
+                    else
+                    {
+                        if(FilesFound)
+                        {
+                            return FILE_TABLE_FILLED;
+                        }
+                        else
+                        {
+                            return NO_FILES;
+                        }
+                    }
                 }
                 if((dir->name[0] != DELETED) && (dir->attrib != ATTR_LONG_NAME))
                 {
@@ -186,48 +361,46 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
                     else
                     {
                         /* GET_LIST */
-                        for(j=0; j<8; j++)
-                        {
-                            FileList[file].name[j] = dir->name[j];
-                        }
-                        for(j=8; j<11; j++)
-                        {
-                            FileList[file].type[j-8] = dir->name[j];
-                        }
                         if((dir->attrib != 0x10) && (dir->attrib != 0x08))
                         {
-                            FileList[file].location[0] = 'F';
-                            FileList[file].location[1] = 'I';
-                            FileList[file].location[2] = 'L';
-                            FileList[file].location[3] = 'E';
-                            FileList[file].location[4] = 0;
+                            FilesFound = TRUE;
+                            for(j=0; j<8; j++)
+                            {
+                                FileList[file].name[j] = dir->name[j];
+                            }
+                            for(j=8; j<11; j++)
+                            {
+                                FileList[file].extention[j-8] = dir->name[j];
+                            }
+                            FileList[file].type[0] = 'F';
+                            FileList[file].type[1] = 'I';
+                            FileList[file].type[2] = 'L';
+                            FileList[file].type[3] = 'E';
+                            FileList[file].type[4] = 0;
                             FileList[file].size = dir->fileSize;
+                            FileList[file].firstCluster =(((unsigned long) dir->firstClusterHI) << 16) | dir->firstClusterLO;
+                            file++;
+                            SD_NumFiles = file;
                         }
                         else
                         {
                             if(dir->attrib == 0x10)
                             {
-                                FileList[file].location[0] = 'D';
-                                FileList[file].location[1] = 'I';
-                                FileList[file].location[2] = 'R';
-                                FileList[file].location[3] = 0;
-                                FileList[file].location[4] = 0;
+                                /* Directory (folder) */
                             }
                             else
                             {
-                                FileList[file].location[0] = 'R';
-                                FileList[file].location[1] = 'O';
-                                FileList[file].location[2] = 'O';
-                                FileList[file].location[3] = 'T';
-                                FileList[file].location[4] = 0;
+                                /* Root */
+                                for(j=0; j<8; j++)
+                                {
+                                    RootName[j] = dir->name[j];
+                                }
+                                RootName[9] = 0;
                             }
-                        }
-                        file++;
+                        }                      
+                        if(file >= MAX_FILES)
                         {
-                            if(file >= MAX_FILES)
-                            {
-                                return FILE_TABLE_FILLED;
-                            }
+                            return FILE_TABLE_FILLED;
                         }
                     }
                 }
@@ -279,7 +452,7 @@ unsigned char FAT_GetBootSectorData(void)
         if(Receive_Buffer_Big[510] == 0x55 && Receive_Buffer_Big[511] == 0xAA)
         {
             /* the signiture is present so we have a valid MBR structure */
-            SectorCopy(Receive_Buffer_Big,PFAT_MBR);
+            FAT_SectorCopy(Receive_Buffer_Big,PFAT_MBR);
         }
         else
         {
@@ -295,11 +468,19 @@ unsigned char FAT_GetBootSectorData(void)
             return FAIL;
         }
     }
-    SectorCopy(Receive_Buffer_Big,PFAT_BS);
+    FAT_SectorCopy(Receive_Buffer_Big,PFAT_BS);
     DataSectors = FAT_BS.totalSectors_F32 - FAT_BS.reservedSectorCount - (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
     TotalClusters = DataSectors / FAT_BS.sectorPerCluster;
     firstDataSector = FAT_BS.hiddenSectors + FAT_BS.reservedSectorCount + (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
 
+    if(FAT_BS.bytesPerSector > MAXbytesPerSector)
+    {
+        return FAIL;
+    }
+    if(FAT_BS.sectorPerCluster > MAXsectorPerCluster)
+    {
+        return FAIL;
+    }
     if ((FAT_GetSetFreeCluster(TOTAL_FREE, GET, 0)) > TotalClusters) //check if FSinfo free clusters count is valid
     {
         freeClusterCountUpdated = FALSE;
@@ -322,7 +503,7 @@ unsigned long FAT_GetSetFreeCluster(unsigned char Total_nNext, unsigned char Get
     {
         return FAIL;
     }
-    SectorCopy(Receive_Buffer_Big,PFAT_FS);
+    FAT_SectorCopy(Receive_Buffer_Big,PFAT_FS);
 
     if (FAT_FS.leadSignature != 0x41615252 && FAT_FS.leadSignature != 0x61417272 && FAT_FS.leadSignature != 0xaa550000)
     {
@@ -401,20 +582,42 @@ unsigned long FAT_GetFirstSector(unsigned long clusterNumber)
 }
 
 /******************************************************************************/
-/* SectorCopy
+/* FAT_SectorCopy
  *
  * Copies a sector from the buffer to a structure.
 /******************************************************************************/
-void SectorCopy(unsigned char* from, void* to)
+void FAT_SectorCopy(unsigned char* from, void* to)
 {
     int count = 0;
-    while(count <512)
+    while(count <MAXbytesPerSector)
     {
         *(unsigned char*)to = *from;
         from++;
         to++;
         count++;
     }
+}
+
+/******************************************************************************/
+/* ReadCluster
+ *
+ * Copies a sector from the buffer to a structure.
+/******************************************************************************/
+unsigned char FAT_ReadCluster(unsigned long cluster)
+{
+    unsigned long firstSector, sector;
+
+    firstSector = FAT_GetFirstSector(cluster);
+
+    for(sector = 0; sector < FAT_BS.sectorPerCluster; sector++)
+    {
+        if(!FAT_ReadSector(firstSector + sector))
+        {
+            return FAIL;
+        }
+        FAT_SectorCopy(Receive_Buffer_Big,&Cluster[sector][0]);
+    }
+    return PASS;
 }
 /*-----------------------------------------------------------------------------/
  End of File

@@ -33,6 +33,10 @@
 unsigned char DAC_Res = _8BIT;
 volatile unsigned char ClipDone = FALSE;
 volatile unsigned char StartupSong = TRUE;
+unsigned int DAC_FIFO[2][256];
+unsigned char DAC_Page = 0;
+unsigned int DAC_FIFO_End_Place = 513;
+
 /******************************************************************************/
 /* Inline Functions
 /******************************************************************************/

@@ -96,6 +96,8 @@ typedef struct sd
 #define R6 6
 #define R16 20
 #define R512 512
+#define INITIALIZED  1
+#define RUNNING      2
 
 /******************************************************************************/
 /* Commands                                                                   */
@@ -163,7 +165,7 @@ typedef struct sd
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern volatile unsigned char SD_Initialized;
+extern volatile unsigned char SD_State;
 extern unsigned char ReceiveBuffer;
 extern SDcommand Global_message;
 extern SDcommand* PGlobal_message;

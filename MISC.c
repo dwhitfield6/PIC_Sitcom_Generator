@@ -1052,6 +1052,78 @@ void TestFunctionPointer(void)
     Nop();
 }
 
+/******************************************************************************/
+/* Endian2Byte
+ *
+ * This function converts a 2 byte number from big endian to little endian or
+ * vice versa.
+/******************************************************************************/
+unsigned int Endian2Byte(unsigned int number)
+{
+    unsigned char temp1, temp2;
+
+    temp1 = (unsigned char) (number & 0x00FF);
+    temp2 = (unsigned char) (number & 0xFF00) >> 8;
+
+    return (temp2 | (temp1 << 8));
+}
+
+/******************************************************************************/
+/* Endian2ByteArray
+ *
+ * This function converts an array from big endian to little endian or
+ * vice versa.
+/******************************************************************************/
+unsigned int Endian2ByteArray(unsigned char* buffer)
+{
+    unsigned char temp1, temp2;
+
+    temp1 = *buffer;
+    buffer++;
+    temp2 = *buffer;
+
+    return (temp1 | ((unsigned int) temp2 << 8));
+}
+
+/******************************************************************************/
+/* Endian4Byte
+ *
+ * This function converts a 4 byte number from big endian to little endian or
+ * vice versa.
+/******************************************************************************/
+unsigned long Endian4Byte(unsigned long number)
+{
+    unsigned char temp1, temp2, temp3, temp4;
+
+    temp1 = (unsigned char) (number & 0x000000FF);
+    temp2 = (unsigned char) (number & 0x0000FF00) >> 8;
+    temp3 = (unsigned char) (number & 0x00FF0000) >> 16;
+    temp4 = (unsigned char) (number & 0xFF000000) >> 24;
+
+    return ((temp4 << 24) | (temp3 << 16) | (temp2 << 8) | temp1);
+}
+
+/******************************************************************************/
+/* Endian4ByteArray
+ *
+ * This function converts an array from big endian to little endian or
+ * vice versa.
+/******************************************************************************/
+unsigned long Endian4ByteArray(unsigned char* buffer)
+{
+    unsigned char temp1, temp2, temp3, temp4;
+
+    temp1 = *buffer;
+    buffer++;
+    temp2 = *buffer;
+    buffer++;
+    temp3 = *buffer;
+    buffer++;
+    temp4 = *buffer;
+
+    return ((unsigned long)temp1 | ((unsigned long) temp2 << 8) | ((unsigned long) temp3 << 16) | ((unsigned long) temp4 << 24));
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

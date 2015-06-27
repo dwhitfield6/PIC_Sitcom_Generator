@@ -22,6 +22,7 @@
  *                          Added/fixed SD card read and write.
  *                          Added FAT32 functionality.
  *                          Added directory search to discover all WAV files.
+ *                          Added functions to parse and search WAV files.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -86,15 +87,16 @@ int main (void)
     while(1)
     {
         //RTCread(&CurrentTime);
-        if(SD_Initialized)
+        if(SD_State == INITIALIZED)
         {
             RedLEDON();
             if(InitFAT())
             {
                 Nop();
+                SD_State = RUNNING;
             }
         }
-        else
+        else if(SD_State == NOT_INITIALIZED)
         {
             RedLEDOFF();
             InitSD();

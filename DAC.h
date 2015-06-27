@@ -50,6 +50,9 @@ typedef union
 extern unsigned char DAC_Res;
 extern volatile unsigned char ClipDone;
 extern volatile unsigned char StartupSong;
+extern unsigned int DAC_FIFO[2][256];
+extern unsigned char DAC_Page;
+extern unsigned int DAC_FIFO_End_Place;
 
 /******************************************************************************/
 /* Macro Functions                                                            */

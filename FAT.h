@@ -20,12 +20,8 @@
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
 
-/******************************************************************************/
-/* MAX_FILES
- *
- * This is the number of files that we are able to read.
-/******************************************************************************/
-#define MAX_FILES 30
+#include "WAV.h"
+#include "user.h"
 
 /******************************************************************************/
 /* Structures                                                                 */
@@ -113,14 +109,45 @@ typedef struct __attribute__((packed)) DIR_Struct
     unsigned long fileSize; 	  //size of file in bytes
 }DIR, *PDIR;
 
+// wav file info
+typedef struct __attribute__((packed)) WAV_Struct
+{
+    unsigned char valid;
+    unsigned long ChunkSize;
+    unsigned long Subchunk1Size;
+    unsigned int  AudioFormat;
+    unsigned int  NumChannels;
+    unsigned long SampleRate;
+    unsigned long ByteRate;
+    unsigned char BitsPerSample;
+    unsigned long Subchunk2Size;
+    unsigned long NumSamples;
+}WAV;
+
 // File structure
 typedef struct __attribute__((packed)) File_Struct
 {
     unsigned char name[9];
-    unsigned char type[4];
-    unsigned char location[5];
+    unsigned char extention[4];
+    unsigned char type[5];
     unsigned long size;
+    unsigned long firstCluster;
+    WAV           WAV_DATA;
 }FAT_FILE, *PFAT_FILE;
+
+/******************************************************************************/
+/* MAXsectorPerCluster
+ *
+ * This is the maximume sectors (512 bytes) per cluster.
+/******************************************************************************/
+#define MAXsectorPerCluster 16
+
+/******************************************************************************/
+/* MAXsectorPerCluster
+ *
+ * This is the maximume sectors (512 bytes) per cluster.
+/******************************************************************************/
+#define MAXbytesPerSector 512
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -161,6 +188,8 @@ typedef struct __attribute__((packed)) File_Struct
 #define ERROR_CLUSTER       4
 #define SEARCH_SUCCESS      5
 #define FILE_TABLE_FILLED   6
+#define NO_FILES            7
+
 
 /******************************************************************************/
 /* Macro Functions                                                            */
@@ -170,18 +199,21 @@ typedef struct __attribute__((packed)) File_Struct
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 extern unsigned char FAT_STATUS;
+extern FAT_FILE FileList[MAX_FILES];
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 unsigned char FAT_ReadSector(long sector);
 unsigned char FAT_GetBootSectorData(void);
-void SectorCopy(unsigned char* from, void* to);
+void FAT_SectorCopy(unsigned char* from, void* to);
 unsigned char InitFAT(void);
 unsigned long FAT_GetSetFreeCluster(unsigned char Total_nNext, unsigned char Get_nSet, unsigned long FSEntry);
 unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char Get_nSet, unsigned long ClusterEntry);
 unsigned long FAT_GetFirstSector(unsigned long clusterNumber);
 unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR dirGood);
 unsigned char FAT_DiscoverFiles(void);
+unsigned char FAT_ReadCluster(unsigned long cluster);
+unsigned char FAT_ConvertFileName(unsigned char *fileName);
 
 #endif	/* FAT_H */

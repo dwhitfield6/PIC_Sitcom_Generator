@@ -7,4 +7,5 @@ DAC.h  \
 RTCC.h  \
 SPI.h  \
 SD.h  \
-FAT.h 
+FAT.h  \
+WAV.h 
