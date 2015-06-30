@@ -104,101 +104,6 @@ unsigned char FAT_DiscoverFiles(void)
 }
 
 /******************************************************************************/
-/* FAT_ReadFile
- *
- * If flag = READ then the function reads the file from SD card and send
- * contents to the DAC.
- * If flag = VERIFY then the function will verify whether a specified file is
- * already existing in the SD card.
-/******************************************************************************/
-unsigned char FAT_ReadWAVFile(unsigned char flag, unsigned char *fileName, unsigned char FileNumber, unsigned char Name_nNumber)
-{
-    PDIR dir = NULL;
-    unsigned long cluster, fileSize, firstSector;
-    unsigned long byteCounter = 0;
-    unsigned int k;
-    unsigned char j;
-
-    if(Name_nNumber)
-    {
-        if(!FAT_ConvertFileName(fileName))
-        {
-            return FAIL; //convert fileName into FAT format
-        }
-
-        if(!FAT_FindFiles (GET_FILE, fileName, dir) == FILE_FOUND)
-        {
-            /* File not found */
-            return FAIL;
-        }
-
-        if (flag == VERIFY) ; //specified file name is already existing
-        {
-            /* File found */
-            return PASS;
-        }
-
-        cluster = ((( unsigned long ) dir->firstClusterHI) << 16) | dir->firstClusterLO;
-        fileSize = dir->fileSize;
-    }
-    else
-    {
-        if(FileNumber <= SD_NumFiles)
-        {
-            cluster = FileList[FileNumber].firstCluster;
-            fileSize = FileList[FileNumber].size;
-        }
-    }
-
-    while (1)
-    {
-        firstSector = FAT_GetFirstSector (cluster);
-        if(!FAT_ReadSector(firstSector))
-        {
-            return FAIL;
-        }
-
-        /* read the wav file header data */
-        if(1)
-        {
-
-        }
-        else
-        {
-            return FAIL;
-        }
-        for (j=1; j<FAT_BS.sectorPerCluster; j++)
-        {
-            if(!FAT_ReadSector(firstSector + j))
-            {
-                return FAIL;
-            }
-        }
-        for (k=0; k<MAXbytesPerSector; k++)
-        {
-            DAC_FIFO[DAC_Page][k] = Receive_Buffer_Big[k];
-            if ((byteCounter++) >= fileSize )
-            {
-                DAC_FIFO_End_Place = 0;
-                return PASS;
-            }
-        }
-        FAT_SectorCopy(Receive_Buffer_Big, &DAC_FIFO[DAC_Page][0]);
-        byteCounter++;
-        if ((byteCounter++) >= fileSize )
-        {
-            return PASS;
-        }
-        cluster = FAT_GetSetNextCluster (cluster, GET, NULL);
-        if (cluster == 0)
-        {
-            return FAIL;
-        }
-    }
-    return FAIL;
-}
-
-/******************************************************************************/
 /* FAT_ConvertFileName
  *
  * This function converts the normal short file name into FAT format.
@@ -248,7 +153,7 @@ unsigned char FAT_ConvertFileName(unsigned char *fileName)
 
     for (j=0; j<11; j++) //converting small letters to caps
     {
-        lowercaseChar(&fileNameFAT[j]);
+        MSC_LowercaseChar(&fileNameFAT[j]);
     }
     for (j=0; j<11; j++)
     {

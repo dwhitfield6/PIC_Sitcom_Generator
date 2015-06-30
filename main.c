@@ -23,6 +23,9 @@
  *                          Added FAT32 functionality.
  *                          Added directory search to discover all WAV files.
  *                          Added functions to parse and search WAV files.
+ *                          Added functions to play wav file based on file
+ *                            number.
+ *                          Changed function names to follow new convention.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -70,23 +73,23 @@ int main (void)
 {
     unsigned char i;
 
-    ConfigureOscillator();
-    InitApp();
+    SYS_ConfigureOscillator();
+    Init_App();
     Init_System();
-    RTCSetTime();
-    Play_Startup();
+    RTCC_SetTime();
+    DAC_Play_Startup();
     
     RedLEDOFF();
     for(i=0; i<20;i++)
     {
         RedLEDTOGGLE();
-        delayUS(50000);
+        MSC_DelayUS(50000);
     }
     RedLEDOFF();
 
     while(1)
     {
-        //RTCread(&CurrentTime);
+        //RTCC_Read(&CurrentTime);
         if(SD_State == INITIALIZED)
         {
             RedLEDON();

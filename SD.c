@@ -72,12 +72,12 @@ void InitSD(void)
     unsigned char SD_Init_Tries = SD_INIT_MAX;
     unsigned int Acknowledge = FALSE;
     unsigned long arguement;
-    cleanBuffer(R1_Buffer, 1);
-    cleanBuffer(R2_Buffer, 2);
-    cleanBuffer(R3_Buffer, 5);
-    cleanBuffer(R6_Buffer, 6);
-    Clear_Receive_Buffer_Big();
-    Clear_Receive_Buffer_Small();
+    MSC_CleanBuffer(R1_Buffer, 1);
+    MSC_CleanBuffer(R2_Buffer, 2);
+    MSC_CleanBuffer(R3_Buffer, 5);
+    MSC_CleanBuffer(R6_Buffer, 6);
+    SD_Clear_Receive_Buffer_Big();
+    SD_Clear_Receive_Buffer_Small();
     SD_DeleteCard();
 
     PGlobal_message = &Global_message; // pointer to the message
@@ -112,7 +112,7 @@ void InitSD(void)
             Global_message.Command = CMD8;
             Global_message.Argument = 0x1AA;
             SDaddCRC(PGlobal_message);
-            Clear_Receive_Buffer_Small();
+            SD_Clear_Receive_Buffer_Small();
             Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R16,Receive_Buffer_Small,YES);
             if(Acknowledge == TRUE)
             {
@@ -177,7 +177,7 @@ void InitSD(void)
                 Global_message.Command = CMD58;
                 Global_message.Argument = 0;
                 SDaddCRC(PGlobal_message);
-                Clear_Receive_Buffer_Small();
+                SD_Clear_Receive_Buffer_Small();
                 Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R16,Receive_Buffer_Small,YES);
                 if(Acknowledge == TRUE)
                 {
@@ -197,7 +197,7 @@ void InitSD(void)
                 Global_message.Command = CMD16;
                 Global_message.Argument = 512;
                 SDaddCRC(PGlobal_message);
-                Clear_Receive_Buffer_Small();
+                SD_Clear_Receive_Buffer_Small();
                 Acknowledge = SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer,YES);
                 if(Acknowledge == TRUE)
                 {
@@ -211,9 +211,9 @@ void InitSD(void)
 
             SD_Init_Tries--;
         }
-        SetSPISpeed(400.0); /* set speed to 4MHz */
+        SPI_SetSpeed(400.0); /* set speed to 4MHz */
         SPI_Enable();
-        delayUS(1000);/* needed for SPI clock to stabalize */
+        MSC_DelayUS(1000);/* needed for SPI clock to stabalize */
         if(SD_Properties())
         {
             SD_State = INITIALIZED;
@@ -242,23 +242,23 @@ unsigned char SD_Get_CardType(void)
 }
 
 /******************************************************************************/
-/* Clear_Receive_Buffer_Big
+/* SD_Clear_Receive_Buffer_Big
  *
  * The function clears the large receive buffer.
 /******************************************************************************/
-void Clear_Receive_Buffer_Big(void)
+void SD_Clear_Receive_Buffer_Big(void)
 {
-    cleanBuffer(Receive_Buffer_Big, SDblockSize);
+    MSC_CleanBuffer(Receive_Buffer_Big, SDblockSize);
 }
 
 /******************************************************************************/
-/* Clear_Receive_Buffer_Small
+/* SD_Clear_Receive_Buffer_Small
  *
  * The function clears the small receive buffer.
 /******************************************************************************/
-void Clear_Receive_Buffer_Small(void)
+void SD_Clear_Receive_Buffer_Small(void)
 {
-    cleanBuffer(Receive_Buffer_Small, R16);
+    MSC_CleanBuffer(Receive_Buffer_Small, R16);
 }
 
 /******************************************************************************/
@@ -345,11 +345,11 @@ unsigned char SD_Properties(void)
 
     if(SD.RawSize < 1000000)
     {
-        SD.Size = LGround(SD.RawSize,5);
+        SD.Size = MSC_LG_Round(SD.RawSize,5);
     }
     else
     {
-        SD.Size = LGround(SD.RawSize,6);
+        SD.Size = MSC_LG_Round(SD.RawSize,6);
     }
 
     SD.WP       = (Receive_Buffer_Small[14] & 0b00010000) >> 4;
@@ -384,20 +384,20 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     unsigned char MISOCheck;
 
     R1_Buffer[0] = 0xFF;
-    Clear_Receive_Buffer_Small();
+    SD_Clear_Receive_Buffer_Small();
     
     SD_CMDSPI_send_read(pmessage,R1,R1_Buffer, NO);
     while(R1_Buffer[0] != 0)
     {
         SD_Timeout = 0;
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -408,14 +408,14 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     SD_Timeout = 0;
     while(R1_Buffer[0] != DATA_START_BLOCK)
     {
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -424,7 +424,7 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     MISOCheck = YES;
     for (i=0; i<16; i++)
     {
-        SPIwrite_read(0xFF,Pbuf,MISOCheck);
+        SPI_WriteRead(0xFF,Pbuf,MISOCheck);
         MISOCheck = NO;
         Pbuf++;
     }
@@ -433,9 +433,9 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     SPIwrite(0xFF); // MSB
 
     SD_Clear();
-    delayUS(10);
+    MSC_DelayUS(10);
     SD_CS_INACTIVE();
-    delayUS(10);
+    MSC_DelayUS(10);
     return PASS;
 }
 
@@ -467,7 +467,7 @@ unsigned char SD_readBlock(long blockIndex)
     Global_message.Command = CMD17;
     block = blockIndex;
     R1_Buffer[0] = 0xFF;
-    Clear_Receive_Buffer_Big();
+    SD_Clear_Receive_Buffer_Big();
     
     if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
     {
@@ -480,14 +480,14 @@ unsigned char SD_readBlock(long blockIndex)
     SD_Timeout = 0;
     while(R1_Buffer[0] != 0)
     {        
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -498,14 +498,14 @@ unsigned char SD_readBlock(long blockIndex)
     R1_Buffer[0] = 0xFF;
     while(R1_Buffer[0] != DATA_START_BLOCK)
     {
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -516,7 +516,7 @@ unsigned char SD_readBlock(long blockIndex)
     MISOCheck = YES;
     for (i=0; i<SDblockSize; i++)
     {
-        if(SPIwrite_read(0xFF,Pbuf,MISOCheck))
+        if(SPI_WriteRead(0xFF,Pbuf,MISOCheck))
         {
             BytesRead++;
         }
@@ -528,9 +528,9 @@ unsigned char SD_readBlock(long blockIndex)
     SPIwrite(0xFF); // MSB
 
     SD_Clear();
-    delayUS(10);
+    MSC_DelayUS(10);
     SD_CS_INACTIVE();
-    delayUS(10);
+    MSC_DelayUS(10);
     if(BytesRead == SDblockSize)
     {
         return PASS;
@@ -572,7 +572,7 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     Global_message.Command = CMD18;
     block = StartIndex;
     R1_Buffer[0] = 0xFF;
-    Clear_Receive_Buffer_Big();
+    SD_Clear_Receive_Buffer_Big();
 
     if(SD_Get_CardType() != SD_CARD_TYPE_SDHC)
     {
@@ -585,14 +585,14 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     SD_Timeout = 0;
     while(R1_Buffer[0] != 0)
     {
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -603,14 +603,14 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     R1_Buffer[0] = 0xFF;
     while(R1_Buffer[0] != DATA_START_BLOCK)
     {
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -622,12 +622,12 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     {
         /* read a sector */
         BytesRead = 0;
-        Clear_Receive_Buffer_Big();
+        SD_Clear_Receive_Buffer_Big();
         Pbuf = Receive_Buffer_Big;
         MISOCheck = YES;
         for (i=0; i<SDblockSize; i++)
         {
-            if(SPIwrite_read(0xFF,Pbuf,MISOCheck))
+            if(SPI_WriteRead(0xFF,Pbuf,MISOCheck))
             {
                 BytesRead++;
                 BytesReadTotal++;
@@ -646,9 +646,9 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     }
     SD_CMDSPI_send_read(SD_SetCMD(CMD12,0),R1,R1_Buffer, NO);
     SD_Clear();
-    delayUS(10);
+    MSC_DelayUS(10);
     SD_CS_INACTIVE();
-    delayUS(10);
+    MSC_DelayUS(10);
     return PASS;
 }
 
@@ -689,14 +689,14 @@ unsigned char SD_writeBlock(long blockIndex, unsigned char* data)
     SD_Timeout = 0;
     while(R1_Buffer[0] != 0)
     {
-        while(!SPIwrite_read(0xFF,R1_Buffer,YES))
+        while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
         }
@@ -718,14 +718,14 @@ unsigned char SD_writeBlock(long blockIndex, unsigned char* data)
     SPIwrite(0xFF); // CRC low
 
     SD_Timeout = 0;
-    while(SPIwrite_read(0xFF,R1_Buffer,YES)) // wait for it to finish
+    while(SPI_WriteRead(0xFF,R1_Buffer,YES)) // wait for it to finish
     {
         SD_Timeout++;
         if(SD_Timeout >= SD_TIMEOUT_MAX)
         {
-            delayUS(10);
+            MSC_DelayUS(10);
             SD_CS_INACTIVE();
-            delayUS(10);
+            MSC_DelayUS(10);
             return FAIL;
         }
     }
@@ -735,11 +735,11 @@ unsigned char SD_writeBlock(long blockIndex, unsigned char* data)
 }
 
 /******************************************************************************/
-/* TestCRC
+/* SD_TestCRC
  *
  * The function initializes the CRC algorithm.
 /******************************************************************************/
-void TestCRC(void)
+void SD_TestCRC(void)
 {
     unsigned char result =0;
 
@@ -767,15 +767,15 @@ unsigned char SDtoSPI(void)
     message.Argument = 0;
     SDaddCRC(Pmessage);
 
-    SetSPISpeed(400.0); /* set speed to 400kHz */
+    SPI_SetSpeed(400.0); /* set speed to 400kHz */
     SPI_Enable();
-    delayUS(1000);/* needed for SPI clock to stabalize */
+    MSC_DelayUS(1000);/* needed for SPI clock to stabalize */
 
     for(i=0;i<SD_INIT_MAX;i++)
     {        
         SD_RESET();
 
-        delayUS(1000);
+        MSC_DelayUS(1000);
         Acknowledge = SD_CMDSPI_send_read(Pmessage,R1,R1_Buffer,YES);
         if(Acknowledge == TRUE)
         {
@@ -784,7 +784,7 @@ unsigned char SDtoSPI(void)
                 return TRUE;
             }
         }
-        delayUS(200);
+        MSC_DelayUS(200);
     }
     return FALSE;
 }
@@ -808,9 +808,9 @@ void SD_CMDSPI_send(SDcommand* message)
     sixth = (message->CRC << 1) + 1;
 
     SD_CS_ACTIVE();
-    delayUS(10);
+    MSC_DelayUS(10);
     SD_Clear();
-    delayUS(10);
+    MSC_DelayUS(10);
     SPIwrite(first);
     SPIwrite(second);
     SPIwrite(third);
@@ -872,17 +872,17 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
     SD_Timeout = 0;
     if(ResponseType == R1)
     {
-        while(!SPIwrite_read(0xFF,read,YES))
+        while(!SPI_WriteRead(0xFF,read,YES))
         {
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
-                delayUS(10);
+                MSC_DelayUS(10);
                 SD_CS_INACTIVE();
-                delayUS(10);
+                MSC_DelayUS(10);
                 return FAIL;
             }
-            delayUS(10);
+            MSC_DelayUS(10);
         }
         response = TRUE;
     }
@@ -891,12 +891,12 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
         MISOCheck = YES;
         for(i=0;i<ResponseType;i++)
         {
-            while(!SPIwrite_read(0xFF,read,MISOCheck))
+            while(!SPI_WriteRead(0xFF,read,MISOCheck))
             {
                 SD_Timeout++;
                 if(SD_Timeout >= SD_TIMEOUT_MAX)
                 {
-                    delayUS(10);
+                    MSC_DelayUS(10);
                     SD_CS_INACTIVE();
                     if(response)
                     {
@@ -904,7 +904,7 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
                     }
                     return FALSE;
                 }
-                delayUS(10);
+                MSC_DelayUS(10);
             }
             MISOCheck = NO;
             response = TRUE;
@@ -914,7 +914,7 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
 
     if(CSonGood)
     {
-        delayUS(10);
+        MSC_DelayUS(10);
         SD_CS_INACTIVE();
     }
     if(response)
@@ -1000,7 +1000,7 @@ void SD_RESET(void)
 {
     /* Write 12 bytes aka 96 cycles */
     SD_CS_INACTIVE();
-    delayUS(10);
+    MSC_DelayUS(10);
     SPIwrite(0xFF);
     SPIwrite(0xFF);
     SPIwrite(0xFF);
@@ -1023,7 +1023,7 @@ void SD_RESET(void)
 void SD_Clear(void)
 {
     /* Write data until there is no response */
-    while(SPIwrite_read(0xFF, NULL, YES));
+    while(SPI_WriteRead(0xFF, NULL, YES));
 }
 
 /******************************************************************************/
@@ -1034,7 +1034,7 @@ void SD_Clear(void)
 unsigned char SD_WaitResponse(void)
 {
     SD_Timeout = 0;
-    while(!SPIwrite_read(0xFF, NULL, YES))
+    while(!SPI_WriteRead(0xFF, NULL, YES))
     {
         SD_Timeout++;
         if(SD_Timeout >= SD_TIMEOUT_MAX)

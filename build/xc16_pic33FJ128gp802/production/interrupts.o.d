@@ -5,4 +5,7 @@ MISC.h  \
 DAC.h  \
 user.h  \
 Start_sound.h  \
-SPI.h 
+SPI.h  \
+WAV.h  \
+FAT.h  \
+SD.h 

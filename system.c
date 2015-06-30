@@ -32,11 +32,11 @@
 /******************************************************************************/
 
 /******************************************************************************/
-/* ConfigureOscillator
+/* SYS_ConfigureOscillator
  *
  * The function waits for the high frequency occilator to be working and stable.
 /******************************************************************************/
-void ConfigureOscillator(void)
+void SYS_ConfigureOscillator(void)
 {
     /* this is done in configuration_bits.c so this is not necessary */
     CLKDIVbits.PLLPRE = 0x0; /* N1 = 2 */

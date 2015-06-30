@@ -87,25 +87,25 @@ void InitSPI(void)
     SPI2CON1bits.CKP = 1;
     SPI2CON1bits.SMP = 1;
 
-    SetSPISpeed(400.0); /* set speed to 400kHz */
+    SPI_SetSpeed(400.0); /* set speed to 400kHz */
 
     SPI_Enable();
-    delayUS(1000); /* needed for SPI clock to stabalize */
+    MSC_DelayUS(1000); /* needed for SPI clock to stabalize */
 }
 
 /******************************************************************************/
-/* SetSPISpeed
+/* SPI_SetSpeed
  *
  * The function sets the speed in kHz on the SPI bus.
 /******************************************************************************/
-void SetSPISpeed(double kHz)
+void SPI_SetSpeed(double kHz)
 {
     unsigned char i;
     unsigned int prescale;
     unsigned long FCYtemp = FCY;
 
     SPI_Disable();
-    prescale = (unsigned int) DBround((double) FCYtemp / (kHz*1000.0));
+    prescale = (unsigned int) MSC_DB_Round((double) FCYtemp / (kHz*1000.0));
 
     if(prescale < 1)
     {
@@ -229,11 +229,11 @@ void SetSPISpeed(double kHz)
 }
 
 /******************************************************************************/
-/* ReadActivityMISO
+/* SPI_ReadActivityMISO
  *
  * Reads the MISO line to check for activity.
 /******************************************************************************/
-void ReadActivityMISO(unsigned char* event)
+void SPI_ReadActivityMISO(unsigned char* event)
 {
     if(*event == FALSE)
     {
@@ -245,11 +245,11 @@ void ReadActivityMISO(unsigned char* event)
 }
 
 /******************************************************************************/
-/* SPIwrite_read
+/* SPI_WriteRead
  *
  * The function writes 2 bytes over the SPI and listens for a response.
 /******************************************************************************/
-unsigned char SPIwrite_read(unsigned char write, unsigned char* read,unsigned char CheckActivity)
+unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned char CheckActivity)
 {
     unsigned int dummy;
     unsigned char MISO_event = FALSE;
@@ -265,7 +265,7 @@ unsigned char SPIwrite_read(unsigned char write, unsigned char* read,unsigned ch
     while(SPI2STATbits.SPITBF);
     while(SPI_State != FINISHED)
     {
-        ReadActivityMISO(&MISO_event);
+        SPI_ReadActivityMISO(&MISO_event);
     }
 
     dummy = SPI2BUF;
@@ -294,7 +294,7 @@ unsigned char SPIwrite_read(unsigned char write, unsigned char* read,unsigned ch
 /******************************************************************************/
 void SPIwrite(unsigned char write)
 {
-    SPIwrite_read(write,NULL,NO);
+    SPI_WriteRead(write,NULL,NO);
 }
 /*-----------------------------------------------------------------------------/
  End of File

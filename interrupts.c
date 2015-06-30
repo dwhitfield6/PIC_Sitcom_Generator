@@ -33,11 +33,11 @@
 #include "user.h"
 #include "Start_sound.h"
 #include "SPI.h"
+#include "WAV.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
 /******************************************************************************/
-unsigned long place = 0;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -54,19 +54,20 @@ unsigned long place = 0;
 /******************************************************************************/
 void _ISR_NOPSV _DAC1RInterrupt(void)
 {
-    unsigned int temp;
+    int temp;
     IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
     if(StartupSong)
     {
-        temp = Start_Clip[place];
+        temp = Start_Clip[DAC_Buffer_Place];
         if(temp != 0)
         {
-            place++;
+            DAC_Buffer_Place++;
+            temp -= 127; //Turn from unsigned to signed
             DAC1RDAT = temp << 7;
         }
         else
         {
-            place = 0;
+            DAC_Buffer_Place = 0;
             StartupSong = FALSE;
             ClipDone = TRUE;
             DAC1RDAT = 0x8000;
@@ -74,7 +75,28 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
     }
     else
     {
-
+        if(DAC_Buffer_Place >= DAC_Buffer_Elements)
+        {
+            if(WAV_DONE)
+            {
+                ClipDone = TRUE;
+            }
+            DAC_Buffer_Place = 0;
+            if(DAC_Page_Read == FIRST)
+            {
+                DAC_Page_Read = SECOND;
+            }
+            else
+            {
+                DAC_Page_Read = FIRST;
+            }
+        }
+        else
+        {
+            temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
+            DAC1RDAT = temp;
+            DAC_Buffer_Place++;
+        }
     }
 
     if(ClipDone == TRUE)

@@ -46,27 +46,27 @@ TIMETYPE SetTime;
 /******************************************************************************/
 
 /******************************************************************************/
-/* InitApp
+/* Init_App
  *
  * The function initializes the Digital to analog convertor.
 /******************************************************************************/
 void InitRTCC(void)
 {
-    ClearTime(&CurrentTime);
-    ClearTime(&SetTime);
+    RTCC_ClearTime(&CurrentTime);
+    RTCC_ClearTime(&SetTime);
    __builtin_write_OSCCONL(0x02); /* Enable Secondary Oscillator */
-    RTCaccess(TRUE);
+    RTCC_Access(TRUE);
     EnableRTCC();
-    RTCaccess(FALSE);
+    RTCC_Access(FALSE);
     RCFGCALbits.CAL = 0x00; /* No time Calibration */
 }
 
 /******************************************************************************/
-/* ClearTime
+/* RTCC_ClearTime
  *
  * The function clears the struct TIMETYPE.
 /******************************************************************************/
-void ClearTime(TIMETYPE* Time)
+void RTCC_ClearTime(TIMETYPE* Time)
 {
     Time->Year = 0;
     Time->Month = 0;
@@ -82,7 +82,7 @@ void ClearTime(TIMETYPE* Time)
  *
  * The function sets the time to the current time.
 /******************************************************************************/
-void RTCSetTime(void)
+void RTCC_SetTime(void)
 {
     SetTime.Year = 2015;
     SetTime.Month = May;
@@ -91,16 +91,16 @@ void RTCSetTime(void)
     SetTime.Hour = 17;
     SetTime.Minute = 25;
     SetTime.Second = 0;
-    RTCwrite(SetTime);
+    RTCC_Write(SetTime);
 }
 
 /******************************************************************************/
-/* RTCaccess
+/* RTCC_Access
  *
  * The function allows the user to update teh time and date by unlocking the
  *   RTC.
 /******************************************************************************/
-void RTCaccess(unsigned char Yes_No)
+void RTCC_Access(unsigned char Yes_No)
 {
     if(Yes_No == YES )
     {
@@ -113,54 +113,54 @@ void RTCaccess(unsigned char Yes_No)
 }
 
 /******************************************************************************/
-/* RTCread
+/* RTCC_Read
  *
  * The function reads the RTC.
 /******************************************************************************/
-void RTCread(TIMETYPE* Time)
+void RTCC_Read(TIMETYPE* Time)
 {
     unsigned int temp =0;
 
     RCFGCALbits.RTCPTR = 0x3; /* point to year */
     temp = RTCVAL;
-    Time->Year = BCDtoHEX(temp & 0x00FF) + 2000;
+    Time->Year = MSC_BCDtoHEX(temp & 0x00FF) + 2000;
     temp = RTCVAL;
-    Time->Month = (unsigned char) BCDtoHEX((temp & 0xFF00) >> 8);
-    Time->Date = (unsigned char) BCDtoHEX(temp & 0x00FF);
+    Time->Month = (unsigned char) MSC_BCDtoHEX((temp & 0xFF00) >> 8);
+    Time->Date = (unsigned char) MSC_BCDtoHEX(temp & 0x00FF);
     temp = RTCVAL;
-    Time->Weekday = (unsigned char) BCDtoHEX((temp & 0xFF00) >> 8);
-    Time->Hour = (unsigned char) BCDtoHEX(temp & 0x00FF);
+    Time->Weekday = (unsigned char) MSC_BCDtoHEX((temp & 0xFF00) >> 8);
+    Time->Hour = (unsigned char) MSC_BCDtoHEX(temp & 0x00FF);
     temp = RTCVAL;
-    Time->Minute = (unsigned char) BCDtoHEX((temp & 0xFF00) >> 8);
-    Time->Second = (unsigned char) BCDtoHEX(temp & 0x00FF);
+    Time->Minute = (unsigned char) MSC_BCDtoHEX((temp & 0xFF00) >> 8);
+    Time->Second = (unsigned char) MSC_BCDtoHEX(temp & 0x00FF);
 }
 
 /******************************************************************************/
-/* RTCwrite
+/* RTCC_Write
  *
  * The function allows the user to update teh time and date by unlocking the
  *   RTC.
 /******************************************************************************/
-void RTCwrite(TIMETYPE Time)
+void RTCC_Write(TIMETYPE Time)
 {
     unsigned int temp =0;
 
-    RTCaccess(TRUE);
+    RTCC_Access(TRUE);
 
     RCFGCALbits.RTCPTR = 0x3; /* point to year */
-    temp = HEXtoBCD( Time.Year - 2000);
+    temp = MSC_HEXtoBCD( Time.Year - 2000);
     RTCVAL = temp;
 
-    temp = (HEXtoBCD( (unsigned int) Time.Month) << 8) + (HEXtoBCD( (unsigned int) Time.Date));
+    temp = (MSC_HEXtoBCD( (unsigned int) Time.Month) << 8) + (MSC_HEXtoBCD( (unsigned int) Time.Date));
     RTCVAL = temp;
 
-    temp = (HEXtoBCD( (unsigned int) Time.Weekday) << 8) + (HEXtoBCD( (unsigned int) Time.Hour));
+    temp = (MSC_HEXtoBCD( (unsigned int) Time.Weekday) << 8) + (MSC_HEXtoBCD( (unsigned int) Time.Hour));
     RTCVAL = temp;
 
-    temp = (HEXtoBCD( (unsigned int) Time.Minute) << 8) + (HEXtoBCD( (unsigned int) Time.Second));
+    temp = (MSC_HEXtoBCD( (unsigned int) Time.Minute) << 8) + (MSC_HEXtoBCD( (unsigned int) Time.Second));
     RTCVAL = temp;
 
-    RTCaccess(FALSE);
+    RTCC_Access(FALSE);
 }
 
 /*-----------------------------------------------------------------------------/

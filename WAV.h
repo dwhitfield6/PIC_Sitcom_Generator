@@ -37,12 +37,14 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned char ValidFiles[MAX_FILES];
+extern unsigned char ValidWAVFiles[MAX_FILES];
+extern unsigned char WAV_DONE;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber);
 unsigned char WAV_CheckFiles(void);
+unsigned char WAV_PlayFile(unsigned char file);
 
 #endif	/* WAV_H */

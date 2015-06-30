@@ -28,11 +28,13 @@
 #include "SD.h"
 #include "MISC.h"
 #include "user.h"
+#include "DAC.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned char ValidFiles[MAX_FILES];
+unsigned char ValidWAVFiles[MAX_FILES];
+unsigned char WAV_DONE = FALSE;
 
 /******************************************************************************/
 /* Inline Functions
@@ -60,7 +62,7 @@ unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber)
     }
 
     /* ChunkSize */
-    tempL = Endian4ByteArray(&buffer[4]);
+    tempL = MSC_EndianLongArray(&buffer[4]);
     FileList[fileNumber].WAV_DATA.ChunkSize = tempL;
 
     /* Format */
@@ -78,11 +80,11 @@ unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber)
     }
     
     /* Subchunk1Size */
-    tempL = Endian4ByteArray(&buffer[16]);
+    tempL = MSC_EndianLongArray(&buffer[16]);
     FileList[fileNumber].WAV_DATA.Subchunk1Size = tempL;
 
     /* AudioFormat */
-    tempI = Endian2ByteArray(&buffer[20]);
+    tempI = MSC_EndianIntArray(&buffer[20]);
     FileList[fileNumber].WAV_DATA.AudioFormat = tempI;
     if(tempI != 0x01)
     {
@@ -92,21 +94,21 @@ unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber)
     }
 
     /* NumChannels */
-    tempI = Endian2ByteArray(&buffer[22]);
+    tempI = MSC_EndianIntArray(&buffer[22]);
     FileList[fileNumber].WAV_DATA.NumChannels = tempI;
 
     /* SampleRate */
-    tempL = Endian4ByteArray(&buffer[24]);
+    tempL = MSC_EndianLongArray(&buffer[24]);
     FileList[fileNumber].WAV_DATA.SampleRate = tempL;
 
     /* ByteRate */
-    tempL = Endian4ByteArray(&buffer[28]);
+    tempL = MSC_EndianLongArray(&buffer[28]);
     FileList[fileNumber].WAV_DATA.ByteRate = tempL;
 
     /* Blockalign */
 
     /* BitsPerSample */
-    tempI = Endian2ByteArray(&buffer[32]);
+    tempI = MSC_EndianIntArray(&buffer[34]);
     FileList[fileNumber].WAV_DATA.BitsPerSample = tempI;
 
     /* Subchunk2ID */
@@ -117,9 +119,10 @@ unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber)
     }
 
     /* Subchunk2Size */
-    tempL = Endian4ByteArray(&buffer[40]);
+    tempL = MSC_EndianLongArray(&buffer[40]);
     FileList[fileNumber].WAV_DATA.Subchunk2Size = tempL;
     FileList[fileNumber].WAV_DATA.valid = PASS;
+    FileList[fileNumber].WAV_DATA.NumSamples = FileList[fileNumber].WAV_DATA.Subchunk2Size/(FileList[fileNumber].WAV_DATA.NumChannels * (FileList[fileNumber].WAV_DATA.BitsPerSample >> 3));
     return PASS;
 }
 
@@ -141,16 +144,153 @@ unsigned char WAV_CheckFiles(void)
         FAT_ReadSector(firstSector);
         if(WAV_ParseHeader(Receive_Buffer_Big,i))
         {
-            ValidFiles[i] = PASS;
+            ValidWAVFiles[i] = PASS;
             found = TRUE;
         }
         else
         {
-            ValidFiles[i] = FAIL;
+            ValidWAVFiles[i] = FAIL;
         }
     }
     return found;
 }
+
+/******************************************************************************/
+/* WAV_PlayFile
+ *
+ * This plays the numbered audio file. If the ile is not valid then it returns
+ * FAIL.
+ *
+ * 8-bit samples are stored as unsigned bytes, ranging from 0 to 255.
+ * 16-bit samples are stored as 2's-complement signed integers, ranging from
+ *   -32768 to 32767.
+/******************************************************************************/
+unsigned char WAV_PlayFile(unsigned char file)
+{
+    unsigned long cluster, fileSize, firstSector;
+    unsigned long BytesRead = 0;
+    unsigned int Buffer_Count,DAC_Count;
+    unsigned char j;
+
+    /* check to see if the file is out of range */
+    if(file >= MAX_FILES)
+    {
+        return FAIL;
+    }
+
+    /* Check to see if the file is marked as valid */
+    if(ValidWAVFiles[file] != PASS)
+    {
+        return FAIL;
+    }
+
+    cluster = FileList[file].firstCluster;
+    fileSize = FileList[file].size;
+
+
+    /* Read the first sector. This sector contains the header and some sound data */
+    firstSector = FAT_GetFirstSector (cluster);
+    if(!FAT_ReadSector(firstSector))
+    {
+        goto FINISHED;
+    }
+    BytesRead +=512;
+
+    /* data starts on byte 44 */
+    DAC_Page_Write = FIRST;
+    DAC_Page_Read = FIRST;
+    DAC_Buffer_Place = 0;
+    Buffer_Count = 0;
+    DAC_Count = 44;
+    WAV_DONE = FALSE;
+    while(1)
+    {
+        /* for stereo, skip every other data value */
+        DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
+        Buffer_Count++;
+        DAC_Count+=4;
+        if(DAC_Count > MAXbytesPerSector)
+        {
+            DAC_Buffer_Elements = Buffer_Count;
+            break;
+        }
+    }
+
+    /* The first page of the sound file is loaded into the DAC FIFO */
+    /* Turn on the audio amp and start playback */
+    Buffer_Count = 0;
+    DAC_Count = 0;
+    DAC_ToggleWriteDACPage();
+    DAC_AudioOn();
+    StartupSong = FALSE;
+    ClipDone = FALSE;
+    DAC_ON();
+
+    /* Read the next sectors in the cluster */
+    for (j=1; j<FAT_BS.sectorPerCluster; j++)
+    {
+        FAT_ReadSector(firstSector + j);
+        BytesRead +=512;
+        if(BytesRead >= FileList[file].size)
+        {
+            goto FINISHED;
+        }
+        while(1)
+        {
+            DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
+            Buffer_Count++;
+            DAC_Count+=4;
+            if(DAC_Count > MAXbytesPerSector)
+            {
+                DAC_Buffer_Elements = Buffer_Count;
+                break;
+            }
+        }
+        DAC_ToggleWriteDACPage();
+    }
+
+    while(1)
+    {
+        /* get the next cluster */
+        cluster = FAT_GetSetNextCluster (cluster, GET, NULL);
+
+        /* Read the sectors in the cluster */
+        for (j=0; j<FAT_BS.sectorPerCluster; j++)
+        {
+            FAT_ReadSector(firstSector + j);
+            BytesRead +=512;
+            if(BytesRead >= FileList[file].size)
+            {
+                goto FINISHED;
+            }
+            while(1)
+            {
+                DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
+                Buffer_Count++;
+                DAC_Count+=4;
+                if(DAC_Count > MAXbytesPerSector)
+                {
+                    DAC_Buffer_Elements = Buffer_Count;
+                    break;
+                }
+            }
+            DAC_ToggleWriteDACPage();
+        }
+    }
+
+    FINISHED:
+    WAV_DONE = TRUE;
+    while(!ClipDone); /* wait till it stops playing */
+    DAC_OFF();
+    DAC_AudioOff();
+    if(BytesRead >= FileList[file].size)
+    {
+        return PASS;
+    }
+    return FAIL;
+}
+
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

@@ -90,10 +90,10 @@ extern TIMETYPE SetTime;
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitRTCC(void);
-void ClearTime(TIMETYPE* Time);
-void RTCaccess(unsigned char Yes_No);
-void RTCread(TIMETYPE* Time);
-void RTCwrite(TIMETYPE Time);
-void RTCSetTime(void);
+void RTCC_ClearTime(TIMETYPE* Time);
+void RTCC_Access(unsigned char Yes_No);
+void RTCC_Read(TIMETYPE* Time);
+void RTCC_Write(TIMETYPE Time);
+void RTCC_SetTime(void);
 
 #endif	/* RTCC_H */

@@ -42,6 +42,6 @@
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void ConfigureOscillator(void); /* Handles clock switching/osc initialization */
+void SYS_ConfigureOscillator(void); /* Handles clock switching/osc initialization */
 
 #endif	/* SYSTEM_H */

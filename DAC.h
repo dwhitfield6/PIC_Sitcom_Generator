@@ -47,12 +47,19 @@ typedef union
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned char DAC_Res;
 extern volatile unsigned char ClipDone;
 extern volatile unsigned char StartupSong;
 extern unsigned int DAC_FIFO[2][256];
-extern unsigned char DAC_Page;
-extern unsigned int DAC_FIFO_End_Place;
+extern volatile unsigned char DAC_Page_Write;
+extern volatile unsigned char DAC_Page_Read;
+extern unsigned int DAC_Buffer_Place;
+extern unsigned int DAC_Buffer_Elements;
+
+/******************************************************************************/
+/* Defines                                                                    */
+/******************************************************************************/
+#define FIRST      0
+#define SECOND     1
 
 /******************************************************************************/
 /* Macro Functions                                                            */
@@ -76,15 +83,17 @@ extern unsigned int DAC_FIFO_End_Place;
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitDAC(void);
-void TurnOnAmp(void);
-void TurnOffAmp(void);
-void MuteAmp(void);
-void UnMuteAmp(void);
+void DAC_TurnOnAmp(void);
+void DAC_TurnOffAmp(void);
+void DAC_MuteAmp(void);
+void DAC_UnMuteAmp(void);
 void DAC_Voltage(unsigned int counts);
 inline void DAC_Stop(void);
 inline void DAC_Run(void);
-void AudioOn(void);
-void AudioOff(void);
-void Play_Startup(void);
+void DAC_AudioOn(void);
+void DAC_AudioOff(void);
+void DAC_Play_Startup(void);
+void DAC_WaitForDAC(void);
+inline void DAC_ToggleWriteDACPage(void);
 
 #endif	/* DAC_H */

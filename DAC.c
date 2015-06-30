@@ -30,12 +30,13 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned char DAC_Res = _8BIT;
 volatile unsigned char ClipDone = FALSE;
 volatile unsigned char StartupSong = TRUE;
-unsigned int DAC_FIFO[2][256];
-unsigned char DAC_Page = 0;
-unsigned int DAC_FIFO_End_Place = 513;
+unsigned int DAC_FIFO[2][256]; /* double buffer */
+volatile unsigned char DAC_Page_Write;
+volatile unsigned char DAC_Page_Read;
+unsigned int DAC_Buffer_Place = 0;
+unsigned int DAC_Buffer_Elements;
 
 /******************************************************************************/
 /* Inline Functions
@@ -62,17 +63,35 @@ inline void DAC_Stop(void)
 }
 
 /******************************************************************************/
+/* DAC_ToggleWriteDACPage
+ *
+ * The function switchs to he other page in the double buffer.
+/******************************************************************************/
+inline void DAC_ToggleWriteDACPage(void)
+{
+    if(DAC_Page_Write == FIRST)
+    {
+        DAC_Page_Write = SECOND;
+    }
+    else
+    {
+        DAC_Page_Write = FIRST;
+    }
+    DAC_WaitForDAC();
+}
+
+/******************************************************************************/
 /* Functions
 /******************************************************************************/
 
 /******************************************************************************/
-/* InitApp
+/* Init_App
  *
  * The function initializes the Digital to analog convertor.
 /******************************************************************************/
 void InitDAC(void)
 {
-    AudioOff();
+    DAC_AudioOff();
     ACLKCONbits.APSTSCLR = 7; // Auxiliary Clock Output Divider is 1
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
@@ -88,7 +107,7 @@ void InitDAC(void)
  *
  * The function turns on the audio amp.
 /******************************************************************************/
-void TurnOnAmp(void)
+void DAC_TurnOnAmp(void)
 {
     LATB |= AudioAmpStandby;
 }
@@ -98,7 +117,7 @@ void TurnOnAmp(void)
  *
  * The function turns off the audio amp.
 /******************************************************************************/
-void TurnOffAmp(void)
+void DAC_TurnOffAmp(void)
 {
     LATB &= ~AudioAmpStandby;
 }
@@ -108,7 +127,7 @@ void TurnOffAmp(void)
  *
  * The function mutes the audio amp.
 /******************************************************************************/
-void MuteAmp(void)
+void DAC_MuteAmp(void)
 {
     LATB &= ~AudioAmpMute;
 }
@@ -118,7 +137,7 @@ void MuteAmp(void)
  *
  * The function mutes the audio amp.
 /******************************************************************************/
-void UnMuteAmp(void)
+void DAC_UnMuteAmp(void)
 {
     LATB |= AudioAmpMute;
 }
@@ -138,12 +157,12 @@ void DAC_Voltage(unsigned int counts)
  *
  * The function turns on the amp and starts the DAC sampling.
 /******************************************************************************/
-void AudioOn(void)
+void DAC_AudioOn(void)
 {
     //TurnOnAmp();
-    delayUS(10000);
-    UnMuteAmp();
-    delayUS(1000);
+    MSC_DelayUS(10000);
+    DAC_UnMuteAmp();
+    MSC_DelayUS(1000);
 }
 
 /******************************************************************************/
@@ -151,10 +170,10 @@ void AudioOn(void)
  *
  * The function stops the DAC and powes down the audio amp.
 /******************************************************************************/
-void AudioOff(void)
+void DAC_AudioOff(void)
 {
-    MuteAmp();
-    TurnOffAmp();
+    DAC_MuteAmp();
+    DAC_TurnOffAmp();
 }
 
 /******************************************************************************/
@@ -162,15 +181,25 @@ void AudioOff(void)
  *
  * The function plays "Sitcom Generator On" over the speaker.
 /******************************************************************************/
-void Play_Startup(void)
+void DAC_Play_Startup(void)
 {
-    AudioOn();
+    DAC_Buffer_Place = 0; /* start at beginning of buffer  */
+    DAC_AudioOn();
     StartupSong = TRUE;
     ClipDone = FALSE;
-    DAC_Res = _8BIT;
     DAC_ON();   
     while(!ClipDone); /* wait till it stops playing */
-    AudioOff();
+    DAC_AudioOff();
+}
+
+/******************************************************************************/
+/* WaitForDAC
+ *
+ * The function waits for the DAC to catch up to the SD card read.
+/******************************************************************************/
+void DAC_WaitForDAC(void)
+{
+    while(DAC_Page_Write == DAC_Page_Read);
 }
 
 /*-----------------------------------------------------------------------------/

@@ -200,6 +200,10 @@ typedef struct __attribute__((packed)) File_Struct
 /******************************************************************************/
 extern unsigned char FAT_STATUS;
 extern FAT_FILE FileList[MAX_FILES];
+extern MBR FAT_MBR;
+extern BS  FAT_BS;
+extern PARTITION FAT_PART1;
+extern FS FAT_FS;
 
 /******************************************************************************/
 /* Function prototypes                                                        */

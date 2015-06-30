@@ -53,11 +53,11 @@ extern volatile unsigned char SPI_State;
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitSPI(void);
-void SetSPISpeed(double kHz);
-unsigned char SPIwrite_read(unsigned char write, unsigned char* read,unsigned char CheckActivity);
+void SPI_SetSpeed(double kHz);
+unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned char CheckActivity);
 void SPIwrite(unsigned char write);
 inline void SPI_Enable(void);
 inline void SPI_Disable(void);
-void ReadActivityMISO(unsigned char* event);
+void SPI_ReadActivityMISO(unsigned char* event);
 
 #endif	/* SPI_H */

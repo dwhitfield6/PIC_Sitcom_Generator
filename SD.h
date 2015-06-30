@@ -190,7 +190,7 @@ extern unsigned char Receive_Buffer_Big[SDblockSize];
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitSD(void);
-void TestCRC(void);
+void SD_TestCRC(void);
 unsigned char SDtoSPI(void);
 unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType, unsigned char* read, unsigned char CSonGood);
 unsigned char SD_ACMDSPI_send_read(SDcommand* message, unsigned int ResponseType, unsigned char* read);
@@ -198,8 +198,8 @@ void SD_CMDSPI_send(SDcommand* message);
 void SDaddCRC(SDcommand* message);
 unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
 void SD_RESET(void);
-void Clear_Receive_Buffer_Big(void);
-void Clear_Receive_Buffer_Small(void);
+void SD_Clear_Receive_Buffer_Big(void);
+void SD_Clear_Receive_Buffer_Small(void);
 unsigned char SD_readRegister(SDcommand* pmessage);
 unsigned char SD_readBlock(long blockIndex);
 unsigned char SD_writeBlock(long blockIndex, unsigned char* data);
