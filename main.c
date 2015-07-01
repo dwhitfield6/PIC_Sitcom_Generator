@@ -26,6 +26,7 @@
  *                          Added functions to play wav file based on file
  *                            number.
  *                          Changed function names to follow new convention.
+ *                          Fixed bugs in WAV file playback.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -90,19 +91,22 @@ int main (void)
     while(1)
     {
         //RTCC_Read(&CurrentTime);
-        if(SD_State == INITIALIZED)
+        if(SD_State == NOT_INITIALIZED)
+        {
+            RedLEDOFF();
+            InitSD();
+        }
+        else if(SD_State == INITIALIZED)
         {
             RedLEDON();
             if(InitFAT())
             {
-                Nop();
-                SD_State = RUNNING;
+                SD_State = WAV_READY;
             }
         }
-        else if(SD_State == NOT_INITIALIZED)
+        else if(SD_State == WAV_READY)
         {
-            RedLEDOFF();
-            InitSD();
+            WAV_PlayFile(0);
         }
     }
 }

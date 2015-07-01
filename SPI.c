@@ -259,9 +259,11 @@ unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned ch
     dummy = SPI2BUF;
 
     /* Errata workaround */
-    SPI_State = NOTFINISHED;
-    SPI2BUF = write;
-    while(!SPI2STATbits.SPITBF);
+    SPI_State = NOTFINISHED;    
+    while(!SPI2STATbits.SPITBF)
+    {
+        SPI2BUF = write;
+    }
     while(SPI2STATbits.SPITBF);
     while(SPI_State != FINISHED)
     {

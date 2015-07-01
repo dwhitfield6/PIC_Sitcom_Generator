@@ -36,7 +36,8 @@ unsigned int DAC_FIFO[2][256]; /* double buffer */
 volatile unsigned char DAC_Page_Write;
 volatile unsigned char DAC_Page_Read;
 unsigned int DAC_Buffer_Place = 0;
-unsigned int DAC_Buffer_Elements;
+unsigned int DAC_Buffer_Elements[2];
+volatile unsigned char DAC_Page_Write_Finished[2];
 
 /******************************************************************************/
 /* Inline Functions
@@ -77,7 +78,7 @@ inline void DAC_ToggleWriteDACPage(void)
     {
         DAC_Page_Write = FIRST;
     }
-    DAC_WaitForDAC();
+    while(DAC_Page_Write_Finished[DAC_Page_Write] == TRUE); /* wait for read to finish on the page */
 }
 
 /******************************************************************************/
@@ -190,16 +191,6 @@ void DAC_Play_Startup(void)
     DAC_ON();   
     while(!ClipDone); /* wait till it stops playing */
     DAC_AudioOff();
-}
-
-/******************************************************************************/
-/* WaitForDAC
- *
- * The function waits for the DAC to catch up to the SD card read.
-/******************************************************************************/
-void DAC_WaitForDAC(void)
-{
-    while(DAC_Page_Write == DAC_Page_Read);
 }
 
 /*-----------------------------------------------------------------------------/

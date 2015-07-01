@@ -75,13 +75,14 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
     }
     else
     {
-        if(DAC_Buffer_Place >= DAC_Buffer_Elements)
+        if(DAC_Buffer_Place >= DAC_Buffer_Elements[DAC_Page_Read])
         {
             if(WAV_DONE)
             {
                 ClipDone = TRUE;
             }
             DAC_Buffer_Place = 0;
+            DAC_Page_Write_Finished[DAC_Page_Read] = FALSE; /* Read the page so it can now be written to */
             if(DAC_Page_Read == FIRST)
             {
                 DAC_Page_Read = SECOND;
@@ -91,12 +92,10 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
                 DAC_Page_Read = FIRST;
             }
         }
-        else
-        {
-            temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
-            DAC1RDAT = temp;
-            DAC_Buffer_Place++;
-        }
+        
+        temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
+        DAC1RDAT = temp;
+        DAC_Buffer_Place++;
     }
 
     if(ClipDone == TRUE)

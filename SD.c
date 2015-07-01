@@ -211,7 +211,7 @@ void InitSD(void)
 
             SD_Init_Tries--;
         }
-        SPI_SetSpeed(400.0); /* set speed to 4MHz */
+        SPI_SetSpeed(SPI_FAST); /* set speed to 4MHz */
         SPI_Enable();
         MSC_DelayUS(1000);/* needed for SPI clock to stabalize */
         if(SD_Properties())

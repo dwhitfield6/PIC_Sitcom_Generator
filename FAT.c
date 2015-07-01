@@ -79,7 +79,6 @@ unsigned char InitFAT(void)
             {
                 if(WAV_CheckFiles())
                 {
-                    SD_State == RUNNING;
                     return PASS;
                 }
                 return FAIL;

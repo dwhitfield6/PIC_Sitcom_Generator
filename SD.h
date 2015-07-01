@@ -96,8 +96,14 @@ typedef struct sd
 #define R6 6
 #define R16 20
 #define R512 512
-#define INITIALIZED  1
-#define RUNNING      2
+
+/******************************************************************************/
+/* SD Card Status States                                                      */
+/******************************************************************************/
+#define NOT_INITIALIZED     0
+#define INITIALIZED         1
+#define RUNNING             2
+#define WAV_READY           3
 
 /******************************************************************************/
 /* Commands                                                                   */
@@ -156,7 +162,6 @@ typedef struct sd
 /******************************************************************************/
 /* SD card types                                                              */
 /******************************************************************************/
-#define NOT_INITIALIZED    0x00
 #define SD_CARD_TYPE_SD1   0x01 /* Standard capacity V1 SD card */
 #define SD_CARD_TYPE_SD2   0x02 /* Standard capacity V2 SD card */
 #define SD_CARD_TYPE_SDHC  0x03 /* High capacity SD card */

@@ -53,7 +53,8 @@ extern unsigned int DAC_FIFO[2][256];
 extern volatile unsigned char DAC_Page_Write;
 extern volatile unsigned char DAC_Page_Read;
 extern unsigned int DAC_Buffer_Place;
-extern unsigned int DAC_Buffer_Elements;
+extern unsigned int DAC_Buffer_Elements[2];
+extern volatile unsigned char DAC_Page_Write_Finished[2];
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -93,7 +94,6 @@ inline void DAC_Run(void);
 void DAC_AudioOn(void);
 void DAC_AudioOff(void);
 void DAC_Play_Startup(void);
-void DAC_WaitForDAC(void);
 inline void DAC_ToggleWriteDACPage(void);
 
 #endif	/* DAC_H */

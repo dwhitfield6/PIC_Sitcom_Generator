@@ -171,6 +171,7 @@ unsigned char WAV_PlayFile(unsigned char file)
     unsigned long BytesRead = 0;
     unsigned int Buffer_Count,DAC_Count;
     unsigned char j;
+    unsigned int Last;
 
     /* check to see if the file is out of range */
     if(file >= MAX_FILES)
@@ -197,6 +198,8 @@ unsigned char WAV_PlayFile(unsigned char file)
     BytesRead +=512;
 
     /* data starts on byte 44 */
+    DAC_Page_Write_Finished[FIRST] = FALSE;
+    DAC_Page_Write_Finished[SECOND] = FALSE;
     DAC_Page_Write = FIRST;
     DAC_Page_Read = FIRST;
     DAC_Buffer_Place = 0;
@@ -207,19 +210,19 @@ unsigned char WAV_PlayFile(unsigned char file)
     {
         /* for stereo, skip every other data value */
         DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-        Buffer_Count++;
         DAC_Count+=4;
-        if(DAC_Count > MAXbytesPerSector)
+        if(DAC_Count >= MAXbytesPerSector)
         {
-            DAC_Buffer_Elements = Buffer_Count;
+            DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
+            DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+            Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
             break;
         }
+        Buffer_Count++;
     }
 
     /* The first page of the sound file is loaded into the DAC FIFO */
     /* Turn on the audio amp and start playback */
-    Buffer_Count = 0;
-    DAC_Count = 0;
     DAC_ToggleWriteDACPage();
     DAC_AudioOn();
     StartupSong = FALSE;
@@ -229,6 +232,8 @@ unsigned char WAV_PlayFile(unsigned char file)
     /* Read the next sectors in the cluster */
     for (j=1; j<FAT_BS.sectorPerCluster; j++)
     {
+        Buffer_Count = 0;
+        DAC_Count = 0;
         FAT_ReadSector(firstSector + j);
         BytesRead +=512;
         if(BytesRead >= FileList[file].size)
@@ -238,15 +243,18 @@ unsigned char WAV_PlayFile(unsigned char file)
         while(1)
         {
             DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-            Buffer_Count++;
             DAC_Count+=4;
-            if(DAC_Count > MAXbytesPerSector)
+            if(DAC_Count >= MAXbytesPerSector)
             {
-                DAC_Buffer_Elements = Buffer_Count;
+                DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
+                DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
                 break;
             }
+            Buffer_Count++;
         }
         DAC_ToggleWriteDACPage();
+        Nop();
     }
 
     while(1)
@@ -257,6 +265,8 @@ unsigned char WAV_PlayFile(unsigned char file)
         /* Read the sectors in the cluster */
         for (j=0; j<FAT_BS.sectorPerCluster; j++)
         {
+            Buffer_Count = 0;
+            DAC_Count = 0;
             FAT_ReadSector(firstSector + j);
             BytesRead +=512;
             if(BytesRead >= FileList[file].size)
@@ -266,13 +276,15 @@ unsigned char WAV_PlayFile(unsigned char file)
             while(1)
             {
                 DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-                Buffer_Count++;
                 DAC_Count+=4;
-                if(DAC_Count > MAXbytesPerSector)
+                if(DAC_Count >= MAXbytesPerSector)
                 {
-                    DAC_Buffer_Elements = Buffer_Count;
+                    DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
+                    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                    Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
                     break;
                 }
+                Buffer_Count++;
             }
             DAC_ToggleWriteDACPage();
         }
