@@ -62,8 +62,9 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
         if(temp != 0)
         {
             DAC_Buffer_Place++;
-            temp -= 127; //Turn from unsigned to signed
-            DAC1RDAT = temp << 7;
+            temp -= 127;
+            temp <<= 7; //Turn from unsigned to signed
+            DAC1RDAT = temp;
         }
         else
         {
@@ -94,8 +95,10 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
         }
         
         temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
+        temp >>= 1;
         DAC1RDAT = temp;
         DAC_Buffer_Place++;
+        RedLEDTOGGLE();
     }
 
     if(ClipDone == TRUE)

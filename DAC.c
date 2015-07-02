@@ -32,7 +32,7 @@
 /******************************************************************************/
 volatile unsigned char ClipDone = FALSE;
 volatile unsigned char StartupSong = TRUE;
-unsigned int DAC_FIFO[2][256]; /* double buffer */
+unsigned int DAC_FIFO[2][2048]; /* double buffer */
 volatile unsigned char DAC_Page_Write;
 volatile unsigned char DAC_Page_Read;
 unsigned int DAC_Buffer_Place = 0;
@@ -93,13 +93,13 @@ inline void DAC_ToggleWriteDACPage(void)
 void InitDAC(void)
 {
     DAC_AudioOff();
-    ACLKCONbits.APSTSCLR = 7; // Auxiliary Clock Output Divider is 1
+    ACLKCONbits.APSTSCLR = 0x7; // Auxiliary Clock Output Divider is 1
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
     DAC1CONbits.AMPON = 0; /* Amplifier Disabled During Sleep and Idle Modes */
-    DAC1CONbits.DACFDIV = 61; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
-    DAC1CONbits.FORM = 0; /* Data Format is Unsigned */
-    DAC1DFLT = 0x8000; /* Default value set to Midpoint when FORM = 0 */
+    DAC_SetClock(8000);
+    DAC1CONbits.FORM = 1; /* Data Format is Signed */
+    DAC1DFLT = 0x0000; /* Default value set to Midpoint when FORM = 0 */
     DAC_Run();
 }
 
@@ -111,6 +111,21 @@ void InitDAC(void)
 void DAC_TurnOnAmp(void)
 {
     LATB |= AudioAmpStandby;
+}
+
+/******************************************************************************/
+/* DAC_SetClock
+ *
+ * The function sets the DAC playback speed in Hz.
+/******************************************************************************/
+void DAC_SetClock(double Speed)
+{
+    unsigned long div;
+
+    div = (unsigned long)((double)FOSC /(Speed * 128));
+    div--;
+    
+    DAC1CONbits.DACFDIV = div; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
 }
 
 /******************************************************************************/
@@ -160,7 +175,7 @@ void DAC_Voltage(unsigned int counts)
 /******************************************************************************/
 void DAC_AudioOn(void)
 {
-    //TurnOnAmp();
+    DAC_TurnOnAmp();
     MSC_DelayUS(10000);
     DAC_UnMuteAmp();
     MSC_DelayUS(1000);

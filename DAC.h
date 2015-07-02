@@ -49,7 +49,7 @@ typedef union
 /******************************************************************************/
 extern volatile unsigned char ClipDone;
 extern volatile unsigned char StartupSong;
-extern unsigned int DAC_FIFO[2][256];
+extern unsigned int DAC_FIFO[2][2048];
 extern volatile unsigned char DAC_Page_Write;
 extern volatile unsigned char DAC_Page_Read;
 extern unsigned int DAC_Buffer_Place;
@@ -95,5 +95,6 @@ void DAC_AudioOn(void);
 void DAC_AudioOff(void);
 void DAC_Play_Startup(void);
 inline void DAC_ToggleWriteDACPage(void);
+void DAC_SetClock(double Speed);
 
 #endif	/* DAC_H */

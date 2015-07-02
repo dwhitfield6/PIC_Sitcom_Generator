@@ -81,7 +81,15 @@
  *
  * This is the SPI bus speed used during playback in kHz.
 /******************************************************************************/
-#define SPI_FAST 1000.0
+#define SPI_FAST 800.0
+
+/******************************************************************************/
+/* LOW_MEMORY
+ *
+ * This macro is used to leave out some of the functions when RAM is running
+ * low.
+/******************************************************************************/
+#define LOW_MEMORY
 
 /******************************************************************************/
 /* Defines                                                                    */

@@ -47,8 +47,11 @@ unsigned char freeClusterCountUpdated;
 unsigned long unusedSectors;
 FAT_FILE FileList[MAX_FILES];
 unsigned char RootName[9];
+#ifndef LOW_MEMORY
 unsigned char Cluster[MAXsectorPerCluster][MAXbytesPerSector];
+#endif
 unsigned char SD_NumFiles = 0;
+unsigned long fatStartBlock;
 
 /******************************************************************************/
 /* Inline Functions
@@ -351,12 +354,15 @@ unsigned char FAT_GetBootSectorData(void)
     {
         return FAIL;
     }
+    
+    FAT_PART1.firstSector = 0;
     if(Receive_Buffer_Big[0] != 0xE9 && Receive_Buffer_Big[0] != 0xEB)
     {
         if(Receive_Buffer_Big[510] == 0x55 && Receive_Buffer_Big[511] == 0xAA)
         {
             /* the signiture is present so we have a valid MBR structure */
             FAT_SectorCopy(Receive_Buffer_Big,PFAT_MBR);
+            FAT_Copy(&FAT_MBR.partitionData, &FAT_PART1, 64);
         }
         else
         {
@@ -376,6 +382,7 @@ unsigned char FAT_GetBootSectorData(void)
     DataSectors = FAT_BS.totalSectors_F32 - FAT_BS.reservedSectorCount - (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
     TotalClusters = DataSectors / FAT_BS.sectorPerCluster;
     firstDataSector = FAT_BS.hiddenSectors + FAT_BS.reservedSectorCount + (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
+    fatStartBlock = FAT_PART1.firstSector + FAT_BS.reservedSectorCount;
 
     if(FAT_BS.bytesPerSector > MAXbytesPerSector)
     {
@@ -403,7 +410,7 @@ unsigned char FAT_GetBootSectorData(void)
 /******************************************************************************/
 unsigned long FAT_GetSetFreeCluster(unsigned char Total_nNext, unsigned char Get_nSet, unsigned long FSEntry)
 {
-    if(!FAT_ReadSector(unusedSectors + 1))
+    if(!FAT_ReadSector(1))
     {
         return FAIL;
     }
@@ -447,11 +454,12 @@ unsigned long FAT_GetSetFreeCluster(unsigned char Total_nNext, unsigned char Get
 unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char Get_nSet, unsigned long ClusterEntry)
 {
     unsigned int FATEntryOffset;
-    unsigned long *FATEntryValue;
+    unsigned long FATEntryValue;
     unsigned long FATEntrySector;
+    unsigned long temp1,temp2,temp3,temp4;
 
     /* get sector number of the cluster entry in the FAT */
-    FATEntrySector = unusedSectors + FAT_BS.reservedSectorCount + ((ClusterNumber * 4) / FAT_BS.bytesPerSector);
+    FATEntrySector = fatStartBlock + ((ClusterNumber * 4) / FAT_BS.bytesPerSector);
     
     /* get the offset address in that sector number */
     FATEntryOffset = (unsigned int) ((ClusterNumber * 4) % FAT_BS.bytesPerSector);
@@ -463,14 +471,18 @@ unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char G
     }
 
     /* get the cluster address from the buffer */
-    FATEntryValue = ( unsigned long *) &Receive_Buffer_Big[FATEntryOffset];
+    temp1 = Receive_Buffer_Big[FATEntryOffset];
+    temp2 = Receive_Buffer_Big[FATEntryOffset + 1];
+    temp3 = Receive_Buffer_Big[FATEntryOffset + 2];
+    temp4 = Receive_Buffer_Big[FATEntryOffset + 3];
+    FATEntryValue = temp1 + (temp2 << 8) + (temp3 << 16) + (temp4 << 24);
 
     if (Get_nSet == GET)
     {
-        return ((*FATEntryValue) & 0x0fffffff);
+        return (FATEntryValue & 0x0fffffff);
     }
 
-    *FATEntryValue = ClusterEntry;
+    Receive_Buffer_Big[FATEntryOffset] = ClusterEntry;
     SD_writeBlock(FATEntrySector,Receive_Buffer_Big);
     return PASS;
 }
@@ -503,10 +515,28 @@ void FAT_SectorCopy(unsigned char* from, void* to)
 }
 
 /******************************************************************************/
+/* FAT_Copy
+ *
+ * Copies a part of a sector from the buffer to a structure.
+/******************************************************************************/
+void FAT_Copy(unsigned char* from, void* to, unsigned int amount)
+{
+    int count = 0;
+    while(count <amount)
+    {
+        *(unsigned char*)to = *from;
+        from++;
+        to++;
+        count++;
+    }
+}
+
+/******************************************************************************/
 /* ReadCluster
  *
  * Copies a sector from the buffer to a structure.
 /******************************************************************************/
+#ifndef LOW_MEMORY
 unsigned char FAT_ReadCluster(unsigned long cluster)
 {
     unsigned long firstSector, sector;
@@ -523,6 +553,7 @@ unsigned char FAT_ReadCluster(unsigned long cluster)
     }
     return PASS;
 }
+#endif
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

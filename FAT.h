@@ -217,7 +217,10 @@ unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char G
 unsigned long FAT_GetFirstSector(unsigned long clusterNumber);
 unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR dirGood);
 unsigned char FAT_DiscoverFiles(void);
+#ifndef LOW_MEMORY
 unsigned char FAT_ReadCluster(unsigned long cluster);
+#endif
 unsigned char FAT_ConvertFileName(unsigned char *fileName);
+void FAT_Copy(unsigned char* from, void* to, unsigned int amount);
 
 #endif	/* FAT_H */

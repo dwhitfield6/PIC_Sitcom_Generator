@@ -455,7 +455,7 @@ unsigned char SD_readRegister(SDcommand* pmessage)
  * (b) Argument 0200h is byte address 0200h in the SDSC and 0200h block in SDHC
  *     and SDXC
 /******************************************************************************/
-unsigned char SD_readBlock(long blockIndex)
+unsigned char SD_readBlock(unsigned long blockIndex)
 {
     unsigned int i;
     unsigned char* Pbuf = Receive_Buffer_Big;
@@ -528,9 +528,7 @@ unsigned char SD_readBlock(long blockIndex)
     SPIwrite(0xFF); // MSB
 
     SD_Clear();
-    MSC_DelayUS(10);
     SD_CS_INACTIVE();
-    MSC_DelayUS(10);
     if(BytesRead == SDblockSize)
     {
         return PASS;
@@ -668,7 +666,7 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
  * (b) Argument 0200h is byte address 0200h in the SDSC and 0200h block in SDHC
  *     and SDXC
 /******************************************************************************/
-unsigned char SD_writeBlock(long blockIndex, unsigned char* data)
+unsigned char SD_writeBlock(unsigned long blockIndex, unsigned char* data)
 {
     unsigned int i;
     unsigned long block;
@@ -1022,8 +1020,16 @@ void SD_RESET(void)
 /******************************************************************************/
 void SD_Clear(void)
 {
+    SD_Timeout = 0;
     /* Write data until there is no response */
-    while(SPI_WriteRead(0xFF, NULL, YES));
+    while(SPI_WriteRead(0xFF, NULL, YES))
+    {
+        SD_Timeout++;
+        if(SD_Timeout >= SD_TIMEOUT_MAX)
+        {
+            return;
+        }
+    }
 }
 
 /******************************************************************************/

@@ -27,6 +27,7 @@
  *                            number.
  *                          Changed function names to follow new convention.
  *                          Fixed bugs in WAV file playback.
+ *                          Increased DAC_FIFO size.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -78,7 +79,7 @@ int main (void)
     Init_App();
     Init_System();
     RTCC_SetTime();
-    DAC_Play_Startup();
+    //DAC_Play_Startup();
     
     RedLEDOFF();
     for(i=0; i<20;i++)

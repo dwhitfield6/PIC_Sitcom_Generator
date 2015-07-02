@@ -188,7 +188,6 @@ unsigned char WAV_PlayFile(unsigned char file)
     cluster = FileList[file].firstCluster;
     fileSize = FileList[file].size;
 
-
     /* Read the first sector. This sector contains the header and some sound data */
     firstSector = FAT_GetFirstSector (cluster);
     if(!FAT_ReadSector(firstSector))
@@ -213,26 +212,16 @@ unsigned char WAV_PlayFile(unsigned char file)
         DAC_Count+=4;
         if(DAC_Count >= MAXbytesPerSector)
         {
-            DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
-            DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
             Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
             break;
         }
         Buffer_Count++;
     }
+    /* first sector read and saved to FIFO */
 
-    /* The first page of the sound file is loaded into the DAC FIFO */
-    /* Turn on the audio amp and start playback */
-    DAC_ToggleWriteDACPage();
-    DAC_AudioOn();
-    StartupSong = FALSE;
-    ClipDone = FALSE;
-    DAC_ON();
-
-    /* Read the next sectors in the cluster */
+    /* read next 3 sectors and fill up the FIFO */
     for (j=1; j<FAT_BS.sectorPerCluster; j++)
     {
-        Buffer_Count = 0;
         DAC_Count = 0;
         FAT_ReadSector(firstSector + j);
         BytesRead +=512;
@@ -244,28 +233,36 @@ unsigned char WAV_PlayFile(unsigned char file)
         {
             DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
             DAC_Count+=4;
+            Buffer_Count++;
             if(DAC_Count >= MAXbytesPerSector)
             {
-                DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
-                DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
-                Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
                 break;
             }
-            Buffer_Count++;
         }
-        DAC_ToggleWriteDACPage();
-        Nop();
     }
+    DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
+    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+    Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
+
+    /* The first page of the sound file is loaded into the DAC FIFO */
+    /* Turn on the audio amp and start playback */
+    DAC_ToggleWriteDACPage();
+    DAC_SetClock((double)FileList[file].WAV_DATA.SampleRate);
+    DAC_AudioOn();
+    StartupSong = FALSE;
+    ClipDone = FALSE;
+    DAC_ON();
 
     while(1)
     {
         /* get the next cluster */
         cluster = FAT_GetSetNextCluster (cluster, GET, NULL);
+        firstSector = FAT_GetFirstSector (cluster);
 
-        /* Read the sectors in the cluster */
+        /* Read the first 4 sectors in the cluster */
+        Buffer_Count = 0;
         for (j=0; j<FAT_BS.sectorPerCluster; j++)
         {
-            Buffer_Count = 0;
             DAC_Count = 0;
             FAT_ReadSector(firstSector + j);
             BytesRead +=512;
@@ -277,17 +274,17 @@ unsigned char WAV_PlayFile(unsigned char file)
             {
                 DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
                 DAC_Count+=4;
+                Buffer_Count++;
                 if(DAC_Count >= MAXbytesPerSector)
                 {
-                    DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
-                    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
-                    Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
                     break;
                 }
-                Buffer_Count++;
             }
-            DAC_ToggleWriteDACPage();
         }
+        DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
+        DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+        Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
+        DAC_ToggleWriteDACPage();
     }
 
     FINISHED:
