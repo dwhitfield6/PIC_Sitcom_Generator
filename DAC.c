@@ -32,7 +32,7 @@
 /******************************************************************************/
 volatile unsigned char ClipDone = FALSE;
 volatile unsigned char StartupSong = TRUE;
-unsigned int DAC_FIFO[2][2048]; /* double buffer */
+unsigned int DAC_FIFO[2][DAC_BUFFER_SIZE]; /* double buffer */ /* TODO implement wav play so that the buffer does not overflow for 8 bit of mono data */
 volatile unsigned char DAC_Page_Write;
 volatile unsigned char DAC_Page_Read;
 unsigned int DAC_Buffer_Place = 0;
@@ -96,6 +96,7 @@ void InitDAC(void)
     ACLKCONbits.APSTSCLR = 0x7; // Auxiliary Clock Output Divider is 1
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
+    IPC19bits.DAC1RIP = 5; // Interrupt priority is 5
     DAC1CONbits.AMPON = 0; /* Amplifier Disabled During Sleep and Idle Modes */
     DAC_SetClock(8000);
     DAC1CONbits.FORM = 1; /* Data Format is Signed */

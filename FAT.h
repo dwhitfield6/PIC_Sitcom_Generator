@@ -122,6 +122,7 @@ typedef struct __attribute__((packed)) WAV_Struct
     unsigned char BitsPerSample;
     unsigned long Subchunk2Size;
     unsigned long NumSamples;
+    unsigned char SampleRepeat; // This is the amount of bytes int the buffer between samples
 }WAV;
 
 // File structure

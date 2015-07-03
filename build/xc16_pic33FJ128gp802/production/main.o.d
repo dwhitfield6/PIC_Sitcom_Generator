@@ -8,4 +8,6 @@ RTCC.h  \
 SPI.h  \
 SD.h  \
 FAT.h  \
-WAV.h 
+WAV.h  \
+PIR.h  \
+UART.h 

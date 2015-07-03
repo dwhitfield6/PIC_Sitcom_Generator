@@ -32,6 +32,8 @@
 #include "SPI.h"
 #include "RTCC.h"
 #include "SD.h"
+#include "UART.h"
+#include "PIR.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -55,16 +57,19 @@ void Init_App(void)
     LATA = 0;
     LATB = 0;
     
+    ADPCFG              = 0xFFFF; /* All pins are digital */
     RedLEDTris          = OUTPUT;
     AudioAmpMuteTris    = OUTPUT;
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
     SOSCITris           = INPUT;
     SPI_SD_MISOTris     = INPUT;
-    SPI_SD_MISO2Tris     = INPUT;
+    SPI_SD_MISO2Tris    = INPUT;
     SPI_SD_MOSITris     = OUTPUT;
-    ADPCFG              = 0xFFFF; /* All pins are digital */
-
+    PIR_RX_Tris         = INPUT;
+    PIR_TX_Tris         = INPUT;
+    PIR_MD_Tris         = INPUT;
+    PIR_SLEEP_Tris      = OUTPUT;
 }
 
 /******************************************************************************/
@@ -78,6 +83,8 @@ void Init_System (void)
     InitSPI();
     InitSD();
     InitRTCC();
+    InitUART();
+    InitPIR();
 }
 
 /*-----------------------------------------------------------------------------/

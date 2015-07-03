@@ -6,17 +6,14 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 04/02/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
- *                          Fixed bugs.
- *                          Added features.
+ * 07/02/15     1.0_DW0a    Initial coding.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef SYSTEM_H
-#define	SYSTEM_H
+#ifndef UART_H
+#define	UART_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -24,25 +21,39 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
-/* System frequency
+/* UART_BUFFER_SIZE
  *
- * This is the CPU clock frequency.
- *
- * For this system the clock is 64MHz and the internal PLL is used.
- *
+ * This is the size of the UART receive buffer.
 /******************************************************************************/
+#define UART_BUFFER_SIZE 10
 
-#define FOSC        64000000L
+/******************************************************************************/
+/* User Global Variable Declaration                                           */
+/******************************************************************************/
+extern unsigned char UART_Receive_Buffer[UART_BUFFER_SIZE];
+extern volatile unsigned int UART_Receive_Buffer_Place;
+extern volatile unsigned char RX_Response;
 
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define FCY             (FOSC/2)
-#define SYS_FREQ        FCY
+#define ACK     0x06
+
+/******************************************************************************/
+/* Macro Functions                                                            */
+/******************************************************************************/
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void SYS_ConfigureOscillator(void); /* Handles clock switching/osc initialization */
+inline void UART_TX_PIN(unsigned char status);
+inline void UART_RX_Interrupt(unsigned char status);
+void InitUART(void);
+void UART_SetClock(unsigned long baud);
+void UART_SendChar(unsigned char data);
+void UART_SendCharConst(const unsigned char data);
+void UART_SendString(unsigned char* data);
+void UART_SendStringConst(const unsigned char* data);
+void UART_CleanBuffer(void);
 
-#endif	/* SYSTEM_H */
+#endif	/* UART_H */

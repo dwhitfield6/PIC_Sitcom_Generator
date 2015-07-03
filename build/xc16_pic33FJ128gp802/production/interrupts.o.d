@@ -8,4 +8,6 @@ Start_sound.h  \
 SPI.h  \
 WAV.h  \
 FAT.h  \
-SD.h 
+SD.h  \
+UART.h  \
+PIR.h 

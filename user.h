@@ -74,7 +74,7 @@
  *
  * This is the number of files that we are able to read.
 /******************************************************************************/
-#define MAX_FILES 20
+#define MAX_FILES 10
 
 /******************************************************************************/
 /* SPI_FAST
@@ -110,16 +110,19 @@
 /* Pin Defines                                                                */
 /******************************************************************************/
 
+/************* OScillator *************/
 /* Connected to the secondary oscillator  */
 #define SOSCOTris	TRISBbits.TRISB4
 
 /* Connected to the secondary oscillator  */
 #define SOSCITris	TRISAbits.TRISA4
 
+/************* Red LED over GPIO *************/
 /* Connected to the Red Led  */
 #define RedLEDTris	TRISBbits.TRISB10
 #define RedLED 0x0400//RB10
 
+/************* Audio Amp over GPIO *************/
 /* Connected to Audio Amp mute */
 #define AudioAmpMuteTris	TRISBbits.TRISB5
 #define AudioAmpMute 0x0020//RB5
@@ -128,9 +131,11 @@
 #define AudioAmpStandbyTris	TRISBbits.TRISB6
 #define AudioAmpStandby 0x0040//RB6
 
+/************* SD Card over SPI *************/
 /* Connected to SPI MISO used for the SD card */
 #define SPI_SD_MISOTris	TRISBbits.TRISB2
 #define SPI_SD_MISO 0x0004//RB2 used as RP2
+#define SPI_SD_MISO_RP 2
 
 /* Connected to SPI MISO used for the SD card */
 #define SPI_SD_MISO2Tris	TRISBbits.TRISB3
@@ -147,6 +152,26 @@
 /* Connected to SPI CS used for the SD card */
 #define SPI_SD_CSTris	TRISBbits.TRISB9
 #define SPI_SD_CS 0x0200//RB9 used as RP9
+
+/************* PIR sensor over UART *************/
+/* Connected to UART TX on PIR sensor */
+#define PIR_TX_Tris	TRISBbits.TRISB15
+#define PIR_TX 0x8000//RB15 used as RP15
+
+
+/* Connected to UART RX on PIR sensor */
+#define PIR_RX_Tris	TRISBbits.TRISB11
+#define PIR_RX 0x0800//RB11 used as RP11
+#define PIR_RX_RP 11
+
+/* Connected to Motion Detect on PIR sensor */
+#define PIR_MD_Tris	TRISAbits.TRISA0
+#define PIR_MD 0x0001//RA0 used as CN2
+#define PIR_MD_CN 2
+
+/* Connected to Motion Detect on PIR sensor */
+#define PIR_SLEEP_Tris	TRISAbits.TRISA1
+#define PIR_SLEEP 0x0002//RA1
 
 #ifdef WriteProtect
 /* Connected to SD card holder Write Protect switch */

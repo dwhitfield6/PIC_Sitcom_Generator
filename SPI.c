@@ -77,7 +77,7 @@ void InitSPI(void)
 {
     SPI_Disable();
 
-    RPINR22bits.SDI2R = 0x02; // SPI2 data input (MISO) is set to RP2
+    RPINR22bits.SDI2R = SPI_SD_MISO_RP; // SPI2 data input (MISO) is set to RP2
     RPOR3bits.RP7R = 0x0A;    // RP7 = SDO aka MOSI
     RPOR4bits.RP8R = 0x0B;    // RP8 = SCK
     SPI2CON1bits.MODE16 = FALSE;
@@ -85,7 +85,7 @@ void InitSPI(void)
     /* set to SPI mode 0 */
     SPI2CON1bits.CKE = 0;
     SPI2CON1bits.CKP = 1;
-    SPI2CON1bits.SMP = 1;
+    SPI2CON1bits.SMP = 0;
 
     SPI_SetSpeed(400.0); /* set speed to 400kHz */
 

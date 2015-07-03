@@ -6,17 +6,14 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
- * 04/02/15     1.0_DW0a    Initial project make.
- *                          Derived from project 'PIC_PS2_to_UART'.
- *                          Fixed bugs.
- *                          Added features.
+ * 07/02/15     1.0_DW0a    Initial coding.
 /******************************************************************************/
 
 /******************************************************************************/
 /* Files to Include                                                           */
 /******************************************************************************/
-#ifndef DAC_H
-#define	DAC_H
+#ifndef PIR_H
+#define	PIR_H
 
 #include <xc.h>         /* XC8 General Include File */
 
@@ -24,82 +21,56 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
-/* DAC_BUFFER_SIZE
+/* PIR_UART_BAUD
  *
- * This is the size of each page of the DAC buffer.
+ * This is the BAUD rate of the PIR sensor.
 /******************************************************************************/
-#define DAC_BUFFER_SIZE 2048
+#define PIR_UART_BAUD 4800
 
 /******************************************************************************/
-/* Defines                                                                    */
+/* PIR_RESPONSE_SIZE
+ *
+ * This is the BAUD rate of the PIR sensor.
 /******************************************************************************/
-
-/******************************************************************************/
-/* Union                                                                      */
-/******************************************************************************/
-typedef union
-{
-    unsigned int* uINT;
-    unsigned char* uCHAR;
-    int* INT;
-    char* CHAR;
-    const unsigned int* cuINT;
-    const unsigned char* cuCHAR;
-    const int* cINT;
-    const char* cCHAR;
-} Unkpointer;
+#define PIR_RESPONSE_SIZE 10
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern volatile unsigned char ClipDone;
-extern volatile unsigned char StartupSong;
-extern unsigned int DAC_FIFO[2][DAC_BUFFER_SIZE];
-extern volatile unsigned char DAC_Page_Write;
-extern volatile unsigned char DAC_Page_Read;
-extern unsigned int DAC_Buffer_Place;
-extern unsigned int DAC_Buffer_Elements[2];
-extern volatile unsigned char DAC_Page_Write_Finished[2];
+extern const unsigned char CONF_SEQUENCE[4];
+extern volatile unsigned char Motion;
 
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define FIRST      0
-#define SECOND     1
 
 /******************************************************************************/
 /* Macro Functions                                                            */
 /******************************************************************************/
 
 /******************************************************************************/
-/* DAC_ON
+/* PIR_Asleep
  *
- * The function turns on DAC module.
+ * The function puts the PIR sensor to sleep.
 /******************************************************************************/
-#define DAC_ON() (DAC1CONbits.DACEN = 1) /* DAC1 Module Enabled */
+#define PIR_Asleep()  (LATA &= ~PIR_SLEEP)
 
 /******************************************************************************/
-/* DAC_OFF
+/* PIR_Awake
  *
- * The function turns off DAC module.
+ * The function puts the PIR sensor to sleep.
 /******************************************************************************/
-#define DAC_OFF() (DAC1CONbits.DACEN = 0) /* DAC1 Module disabled */
+#define PIR_Awake()  (LATA |= PIR_SLEEP)
 
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-void InitDAC(void);
-void DAC_TurnOnAmp(void);
-void DAC_TurnOffAmp(void);
-void DAC_MuteAmp(void);
-void DAC_UnMuteAmp(void);
-void DAC_Voltage(unsigned int counts);
-inline void DAC_Stop(void);
-inline void DAC_Run(void);
-void DAC_AudioOn(void);
-void DAC_AudioOff(void);
-void DAC_Play_Startup(void);
-inline void DAC_ToggleWriteDACPage(void);
-void DAC_SetClock(double Speed);
+inline void PIR_Interrupt(unsigned char status);
+void InitPIR(void);
+unsigned char PIR_ReadCommand(const unsigned char Command);
+unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* CurrentValue, unsigned char* NewValue);
+unsigned char PIR_ConfirmationCommand(const unsigned char Command);
+void PIR_Sleep(unsigned char status);
+void PIR_Reset(void);
 
-#endif	/* DAC_H */
+#endif	/* PIR_H */

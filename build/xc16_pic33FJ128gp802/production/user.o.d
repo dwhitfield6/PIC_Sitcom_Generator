@@ -6,4 +6,6 @@ MISC.h  \
 DAC.h  \
 SPI.h  \
 RTCC.h  \
-SD.h 
+SD.h  \
+UART.h  \
+PIR.h 

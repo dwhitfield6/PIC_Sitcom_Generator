@@ -28,6 +28,8 @@
  *                          Changed function names to follow new convention.
  *                          Fixed bugs in WAV file playback.
  *                          Increased DAC_FIFO size.
+ *                          Added UART module.
+ *                          Added PIR functionality.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -54,6 +56,8 @@
 #include "SPI.h"
 #include "SD.h"
 #include "FAT.h"
+#include "PIR.h"
+#include "UART.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -108,6 +112,13 @@ int main (void)
         else if(SD_State == WAV_READY)
         {
             WAV_PlayFile(0);
+            if(Motion == TRUE)
+            {
+                PIR_Interrupt(OFF);
+                WAV_PlayFile(3);
+                Motion = FALSE;
+                PIR_Interrupt(ON);
+            }
         }
     }
 }

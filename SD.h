@@ -175,7 +175,7 @@ extern unsigned char ReceiveBuffer;
 extern SDcommand Global_message;
 extern SDcommand* PGlobal_message;
 extern SDproperties SD;
-extern unsigned char Receive_Buffer_Big[SDblockSize];
+extern unsigned char SD_Receive_Buffer_Big[SDblockSize];
 
 /******************************************************************************/
 /* SD_CS_INACTIVE
@@ -203,8 +203,8 @@ void SD_CMDSPI_send(SDcommand* message);
 void SDaddCRC(SDcommand* message);
 unsigned char CRC7_40bits(unsigned long MSBmessage, unsigned long LSBmessage, unsigned char mask);
 void SD_RESET(void);
-void SD_Clear_Receive_Buffer_Big(void);
-void SD_Clear_Receive_Buffer_Small(void);
+void SD_Clear_SD_Receive_Buffer_Big(void);
+void SD_Clear_SD_Receive_Buffer_Small(void);
 unsigned char SD_readRegister(SDcommand* pmessage);
 unsigned char SD_readBlock(unsigned long blockIndex);
 unsigned char SD_writeBlock(unsigned long blockIndex, unsigned char* data);

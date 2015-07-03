@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c system.c user.c MISC.c configuration_bits.c interrupts.c SPI.c FAT.c DAC.c RTCC.c SD.c WAV.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c system.c user.c MISC.c configuration_bits.c interrupts.c SPI.c FAT.c DAC.c RTCC.c SD.c WAV.c UART.c PIR.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/system.o ${OBJECTDIR}/user.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/configuration_bits.o ${OBJECTDIR}/interrupts.o ${OBJECTDIR}/SPI.o ${OBJECTDIR}/FAT.o ${OBJECTDIR}/DAC.o ${OBJECTDIR}/RTCC.o ${OBJECTDIR}/SD.o ${OBJECTDIR}/WAV.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/user.o.d ${OBJECTDIR}/MISC.o.d ${OBJECTDIR}/configuration_bits.o.d ${OBJECTDIR}/interrupts.o.d ${OBJECTDIR}/SPI.o.d ${OBJECTDIR}/FAT.o.d ${OBJECTDIR}/DAC.o.d ${OBJECTDIR}/RTCC.o.d ${OBJECTDIR}/SD.o.d ${OBJECTDIR}/WAV.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/system.o ${OBJECTDIR}/user.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/configuration_bits.o ${OBJECTDIR}/interrupts.o ${OBJECTDIR}/SPI.o ${OBJECTDIR}/FAT.o ${OBJECTDIR}/DAC.o ${OBJECTDIR}/RTCC.o ${OBJECTDIR}/SD.o ${OBJECTDIR}/WAV.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/PIR.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/system.o.d ${OBJECTDIR}/user.o.d ${OBJECTDIR}/MISC.o.d ${OBJECTDIR}/configuration_bits.o.d ${OBJECTDIR}/interrupts.o.d ${OBJECTDIR}/SPI.o.d ${OBJECTDIR}/FAT.o.d ${OBJECTDIR}/DAC.o.d ${OBJECTDIR}/RTCC.o.d ${OBJECTDIR}/SD.o.d ${OBJECTDIR}/WAV.o.d ${OBJECTDIR}/UART.o.d ${OBJECTDIR}/PIR.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/system.o ${OBJECTDIR}/user.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/configuration_bits.o ${OBJECTDIR}/interrupts.o ${OBJECTDIR}/SPI.o ${OBJECTDIR}/FAT.o ${OBJECTDIR}/DAC.o ${OBJECTDIR}/RTCC.o ${OBJECTDIR}/SD.o ${OBJECTDIR}/WAV.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/system.o ${OBJECTDIR}/user.o ${OBJECTDIR}/MISC.o ${OBJECTDIR}/configuration_bits.o ${OBJECTDIR}/interrupts.o ${OBJECTDIR}/SPI.o ${OBJECTDIR}/FAT.o ${OBJECTDIR}/DAC.o ${OBJECTDIR}/RTCC.o ${OBJECTDIR}/SD.o ${OBJECTDIR}/WAV.o ${OBJECTDIR}/UART.o ${OBJECTDIR}/PIR.o
 
 # Source Files
-SOURCEFILES=main.c system.c user.c MISC.c configuration_bits.c interrupts.c SPI.c FAT.c DAC.c RTCC.c SD.c WAV.c
+SOURCEFILES=main.c system.c user.c MISC.c configuration_bits.c interrupts.c SPI.c FAT.c DAC.c RTCC.c SD.c WAV.c UART.c PIR.c
 
 
 CFLAGS=
@@ -166,6 +166,20 @@ ${OBJECTDIR}/WAV.o: WAV.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE)  WAV.c  -o ${OBJECTDIR}/WAV.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/WAV.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1    -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
 	@${FIXDEPS} "${OBJECTDIR}/WAV.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
+${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART.o.d 
+	@${RM} ${OBJECTDIR}/UART.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  UART.c  -o ${OBJECTDIR}/UART.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1    -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
+	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/PIR.o: PIR.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/PIR.o.d 
+	@${RM} ${OBJECTDIR}/PIR.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  PIR.c  -o ${OBJECTDIR}/PIR.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PIR.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1    -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
+	@${FIXDEPS} "${OBJECTDIR}/PIR.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
 else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -250,6 +264,20 @@ ${OBJECTDIR}/WAV.o: WAV.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/WAV.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  WAV.c  -o ${OBJECTDIR}/WAV.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/WAV.o.d"        -g -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
 	@${FIXDEPS} "${OBJECTDIR}/WAV.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/UART.o: UART.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/UART.o.d 
+	@${RM} ${OBJECTDIR}/UART.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  UART.c  -o ${OBJECTDIR}/UART.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/UART.o.d"        -g -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
+	@${FIXDEPS} "${OBJECTDIR}/UART.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/PIR.o: PIR.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/PIR.o.d 
+	@${RM} ${OBJECTDIR}/PIR.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  PIR.c  -o ${OBJECTDIR}/PIR.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/PIR.o.d"        -g -omf=elf -mlarge-code -mlarge-data -mlarge-scalar -mconst-in-code -O0 -merrata=all -msmart-io=1 -Wall -msfr-warn=off
+	@${FIXDEPS} "${OBJECTDIR}/PIR.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 

@@ -34,6 +34,8 @@
 #include "Start_sound.h"
 #include "SPI.h"
 #include "WAV.h"
+#include "UART.h"
+#include "PIR.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -108,7 +110,7 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
 }
 
 /******************************************************************************/
-/* DAC interrupt
+/* SPI interrupt
 /******************************************************************************/
 void _ISR_NOPSV _SPI2Interrupt(void)
 {
@@ -117,13 +119,45 @@ void _ISR_NOPSV _SPI2Interrupt(void)
 }
 
 /******************************************************************************/
-/* DAC interrupt
+/* UART Receive interrupt
 /******************************************************************************/
-void _ISR_NOPSV _INT1Interrupt(void)
+void _ISR_NOPSV _U1RXInterrupt(void)
 {
-    IFS1bits.INT1IF = 0;    // Clear the Interrupt flag
-    SPI_State = FINISHED;
+    unsigned char temp;
+
+    RX_Response = TRUE;
+    if(!U1STAbits.FERR)
+    {
+        /* there was no error */
+        if(UART_Receive_Buffer_Place < UART_BUFFER_SIZE)
+        {
+            UART_Receive_Buffer[UART_Receive_Buffer_Place] = U1RXREG;
+            UART_Receive_Buffer_Place++;
+        }
+        else
+        {
+            UART_CleanBuffer();
+        }
+    }
+    else
+    {
+        temp = U1RXREG;
+    }
+    IFS4bits.U1EIF = 0; // clear error flag
+    IFS0bits.U1RXIF = 0; // clear receive flag
 }
+
+/******************************************************************************/
+/* PIR Motion Detect interrupt
+/******************************************************************************/
+void _ISR_NOPSV _CNInterrupt(void)
+{
+    /**************Motion Detected ***************/
+
+    Motion = TRUE;
+    IFS1bits.CNIF = 0; // clear flag
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

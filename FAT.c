@@ -196,7 +196,7 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
 
             for(i=0; i<FAT_BS.bytesPerSector; i+=32)
             {
-                dir = &Receive_Buffer_Big[i];
+                dir = &SD_Receive_Buffer_Big[i];
 
                 if(dir->name[0] == EMPTY) //indicates end of the file list of the directory
                 {
@@ -241,7 +241,7 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
 
                                 /* mark file as 'deleted' in FAT table */
                                 dir->name[0] = DELETED;
-                                SD_writeBlock(firstSector+sector,Receive_Buffer_Big);
+                                SD_writeBlock(firstSector+sector,SD_Receive_Buffer_Big);
                                 //FAT_FreeMemoryUpdate (ADD, dir->fileSize);
 
                                 /* update next free cluster entry in FSinfo sector */
@@ -332,7 +332,7 @@ unsigned char FAT_FindFiles (unsigned char flag, unsigned char *fileName, PDIR d
 /* FAT_ReadSector
  *
  * Reads a sector on the FAT32 formatted SD card.
- * Contents are printed stored in Receive_Buffer_Big[];
+ * Contents are printed stored in SD_Receive_Buffer_Big[];
 /******************************************************************************/
 unsigned char FAT_ReadSector(long sector)
 {
@@ -343,7 +343,7 @@ unsigned char FAT_ReadSector(long sector)
 /* FAT_GetBootSectorData
  *
  * Reads a sector on the FAT32 formatted SD card.
- * Contents are printed stored in Receive_Buffer_Big[];
+ * Contents are printed stored in SD_Receive_Buffer_Big[];
 /******************************************************************************/
 unsigned char FAT_GetBootSectorData(void)
 {
@@ -356,12 +356,12 @@ unsigned char FAT_GetBootSectorData(void)
     }
     
     FAT_PART1.firstSector = 0;
-    if(Receive_Buffer_Big[0] != 0xE9 && Receive_Buffer_Big[0] != 0xEB)
+    if(SD_Receive_Buffer_Big[0] != 0xE9 && SD_Receive_Buffer_Big[0] != 0xEB)
     {
-        if(Receive_Buffer_Big[510] == 0x55 && Receive_Buffer_Big[511] == 0xAA)
+        if(SD_Receive_Buffer_Big[510] == 0x55 && SD_Receive_Buffer_Big[511] == 0xAA)
         {
             /* the signiture is present so we have a valid MBR structure */
-            FAT_SectorCopy(Receive_Buffer_Big,PFAT_MBR);
+            FAT_SectorCopy(SD_Receive_Buffer_Big,PFAT_MBR);
             FAT_Copy(&FAT_MBR.partitionData, &FAT_PART1, 64);
         }
         else
@@ -373,12 +373,12 @@ unsigned char FAT_GetBootSectorData(void)
         {
             return FAIL;
         }
-        if(Receive_Buffer_Big[510] == 0xAA && Receive_Buffer_Big[511] == 0x55)
+        if(SD_Receive_Buffer_Big[510] == 0xAA && SD_Receive_Buffer_Big[511] == 0x55)
         {
             return FAIL;
         }
     }
-    FAT_SectorCopy(Receive_Buffer_Big,PFAT_BS);
+    FAT_SectorCopy(SD_Receive_Buffer_Big,PFAT_BS);
     DataSectors = FAT_BS.totalSectors_F32 - FAT_BS.reservedSectorCount - (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
     TotalClusters = DataSectors / FAT_BS.sectorPerCluster;
     firstDataSector = FAT_BS.hiddenSectors + FAT_BS.reservedSectorCount + (FAT_BS.numberofFATs * FAT_BS.FATsize_F32);
@@ -414,7 +414,7 @@ unsigned long FAT_GetSetFreeCluster(unsigned char Total_nNext, unsigned char Get
     {
         return FAIL;
     }
-    FAT_SectorCopy(Receive_Buffer_Big,PFAT_FS);
+    FAT_SectorCopy(SD_Receive_Buffer_Big,PFAT_FS);
 
     if (FAT_FS.leadSignature != 0x41615252 && FAT_FS.leadSignature != 0x61417272 && FAT_FS.leadSignature != 0xaa550000)
     {
@@ -471,10 +471,10 @@ unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char G
     }
 
     /* get the cluster address from the buffer */
-    temp1 = Receive_Buffer_Big[FATEntryOffset];
-    temp2 = Receive_Buffer_Big[FATEntryOffset + 1];
-    temp3 = Receive_Buffer_Big[FATEntryOffset + 2];
-    temp4 = Receive_Buffer_Big[FATEntryOffset + 3];
+    temp1 = SD_Receive_Buffer_Big[FATEntryOffset];
+    temp2 = SD_Receive_Buffer_Big[FATEntryOffset + 1];
+    temp3 = SD_Receive_Buffer_Big[FATEntryOffset + 2];
+    temp4 = SD_Receive_Buffer_Big[FATEntryOffset + 3];
     FATEntryValue = temp1 + (temp2 << 8) + (temp3 << 16) + (temp4 << 24);
 
     if (Get_nSet == GET)
@@ -482,8 +482,8 @@ unsigned long FAT_GetSetNextCluster(unsigned long ClusterNumber, unsigned char G
         return (FATEntryValue & 0x0fffffff);
     }
 
-    Receive_Buffer_Big[FATEntryOffset] = ClusterEntry;
-    SD_writeBlock(FATEntrySector,Receive_Buffer_Big);
+    SD_Receive_Buffer_Big[FATEntryOffset] = ClusterEntry;
+    SD_writeBlock(FATEntrySector,SD_Receive_Buffer_Big);
     return PASS;
 }
 
@@ -549,7 +549,7 @@ unsigned char FAT_ReadCluster(unsigned long cluster)
         {
             return FAIL;
         }
-        FAT_SectorCopy(Receive_Buffer_Big,&Cluster[sector][0]);
+        FAT_SectorCopy(SD_Receive_Buffer_Big,&Cluster[sector][0]);
     }
     return PASS;
 }

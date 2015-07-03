@@ -123,6 +123,34 @@ unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber)
     FileList[fileNumber].WAV_DATA.Subchunk2Size = tempL;
     FileList[fileNumber].WAV_DATA.valid = PASS;
     FileList[fileNumber].WAV_DATA.NumSamples = FileList[fileNumber].WAV_DATA.Subchunk2Size/(FileList[fileNumber].WAV_DATA.NumChannels * (FileList[fileNumber].WAV_DATA.BitsPerSample >> 3));
+    if(FileList[fileNumber].WAV_DATA.NumChannels == 2)
+    {
+        /* Stereo */
+        if(FileList[fileNumber].WAV_DATA.BitsPerSample == 8)
+        {
+            /* 8 bit */
+            FileList[fileNumber].WAV_DATA.SampleRepeat = 2;
+        }
+        else
+        {
+            /* 16 bit */
+            FileList[fileNumber].WAV_DATA.SampleRepeat = 4;
+        }
+    }
+    else
+    {
+        /* Mono */
+        if(FileList[fileNumber].WAV_DATA.BitsPerSample == 8)
+        {
+            /* 8 bit */
+            FileList[fileNumber].WAV_DATA.SampleRepeat = 1;
+        }
+        else
+        {
+            /* 16 bit */
+            FileList[fileNumber].WAV_DATA.SampleRepeat = 2;
+        }
+    }
     return PASS;
 }
 
@@ -142,7 +170,7 @@ unsigned char WAV_CheckFiles(void)
     {
         firstSector = FAT_GetFirstSector (FileList[i].firstCluster);
         FAT_ReadSector(firstSector);
-        if(WAV_ParseHeader(Receive_Buffer_Big,i))
+        if(WAV_ParseHeader(SD_Receive_Buffer_Big,i))
         {
             ValidWAVFiles[i] = PASS;
             found = TRUE;
@@ -169,9 +197,9 @@ unsigned char WAV_PlayFile(unsigned char file)
 {
     unsigned long cluster, fileSize, firstSector;
     unsigned long BytesRead = 0;
-    unsigned int Buffer_Count,DAC_Count;
+    unsigned int DAC_Buffer_Count,SD_Buffer_Count;
     unsigned char j;
-    unsigned int Last;
+    unsigned char playing = FALSE;
 
     /* check to see if the file is out of range */
     if(file >= MAX_FILES)
@@ -194,7 +222,7 @@ unsigned char WAV_PlayFile(unsigned char file)
     {
         goto FINISHED;
     }
-    BytesRead +=512;
+    BytesRead +=FAT_BS.bytesPerSector;
 
     /* data starts on byte 44 */
     DAC_Page_Write_Finished[FIRST] = FALSE;
@@ -202,89 +230,143 @@ unsigned char WAV_PlayFile(unsigned char file)
     DAC_Page_Write = FIRST;
     DAC_Page_Read = FIRST;
     DAC_Buffer_Place = 0;
-    Buffer_Count = 0;
-    DAC_Count = 44;
+    DAC_Buffer_Count = 0;
+    SD_Buffer_Count = 44;
     WAV_DONE = FALSE;
     while(1)
     {
-        /* for stereo, skip every other data value */
-        DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-        DAC_Count+=4;
-        if(DAC_Count >= MAXbytesPerSector)
+        if(FileList[file].WAV_DATA.BitsPerSample == 8)
         {
-            Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
+            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+        }
+        else
+        {
+            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+        }
+        SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
+        DAC_Buffer_Count++;
+        if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
+        {
             break;
         }
-        Buffer_Count++;
+        if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
+        {
+            DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+            DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+            DAC_Buffer_Count = 0;
+            DAC_ToggleWriteDACPage();
+            if(playing == FALSE)
+            {
+                /* Turn on the audio amp and start playback */
+                DAC_SetClock((double)FileList[file].WAV_DATA.SampleRate);
+                DAC_AudioOn();
+                StartupSong = FALSE;
+                ClipDone = FALSE;
+                DAC_ON();
+                playing = TRUE;
+            }
+        }
     }
     /* first sector read and saved to FIFO */
 
-    /* read next 3 sectors and fill up the FIFO */
+    /* read next sectors and fill up the FIFO */
     for (j=1; j<FAT_BS.sectorPerCluster; j++)
     {
-        DAC_Count = 0;
+        SD_Buffer_Count = 0;
         FAT_ReadSector(firstSector + j);
-        BytesRead +=512;
+        BytesRead +=FAT_BS.bytesPerSector;
         if(BytesRead >= FileList[file].size)
         {
             goto FINISHED;
         }
         while(1)
         {
-            DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-            DAC_Count+=4;
-            Buffer_Count++;
-            if(DAC_Count >= MAXbytesPerSector)
+            if(FileList[file].WAV_DATA.BitsPerSample == 8)
+            {
+                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+            }
+            else
+            {
+                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+            }
+            SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
+            DAC_Buffer_Count++;
+            if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
             {
                 break;
             }
+            if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
+            {
+                DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+                DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                DAC_Buffer_Count = 0;
+                DAC_ToggleWriteDACPage();
+                if(playing == FALSE)
+                {
+                    /* Turn on the audio amp and start playback */
+                    DAC_SetClock((double)FileList[file].WAV_DATA.SampleRate);
+                    DAC_AudioOn();
+                    StartupSong = FALSE;
+                    ClipDone = FALSE;
+                    DAC_ON();
+                    playing = TRUE;
+                }
+            }
         }
     }
-    DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
-    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
-    Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
 
     /* The first page of the sound file is loaded into the DAC FIFO */
-    /* Turn on the audio amp and start playback */
-    DAC_ToggleWriteDACPage();
-    DAC_SetClock((double)FileList[file].WAV_DATA.SampleRate);
-    DAC_AudioOn();
-    StartupSong = FALSE;
-    ClipDone = FALSE;
-    DAC_ON();
-
     while(1)
     {
         /* get the next cluster */
         cluster = FAT_GetSetNextCluster (cluster, GET, NULL);
         firstSector = FAT_GetFirstSector (cluster);
 
-        /* Read the first 4 sectors in the cluster */
-        Buffer_Count = 0;
+        /* Read the sectors in the cluster */
         for (j=0; j<FAT_BS.sectorPerCluster; j++)
         {
-            DAC_Count = 0;
+            SD_Buffer_Count = 0;
             FAT_ReadSector(firstSector + j);
-            BytesRead +=512;
+            BytesRead +=FAT_BS.bytesPerSector;
             if(BytesRead >= FileList[file].size)
             {
                 goto FINISHED;
             }
             while(1)
             {
-                DAC_FIFO[DAC_Page_Write][Buffer_Count] = MSC_EndianIntArray(&Receive_Buffer_Big[DAC_Count]);
-                DAC_Count+=4;
-                Buffer_Count++;
-                if(DAC_Count >= MAXbytesPerSector)
+                if(FileList[file].WAV_DATA.BitsPerSample == 8)
+                {
+                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+                }
+                else
+                {
+                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+                }
+                SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
+                DAC_Buffer_Count++;
+                if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
                 {
                     break;
                 }
+                if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
+                {
+                    DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+                    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                    DAC_Buffer_Count = 0;
+                    DAC_ToggleWriteDACPage();
+                    if(playing == FALSE)
+                    {
+                        /* Turn on the audio amp and start playback */
+                        DAC_SetClock((double)FileList[file].WAV_DATA.SampleRate);
+                        DAC_AudioOn();
+                        StartupSong = FALSE;
+                        ClipDone = FALSE;
+                        DAC_ON();
+                        playing = TRUE;
+                    }
+                }
             }
         }
-        DAC_Buffer_Elements[DAC_Page_Write] = Buffer_Count;
-        DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
-        Last = DAC_FIFO[DAC_Page_Write][Buffer_Count]; /* debug */
-        DAC_ToggleWriteDACPage();
     }
 
     FINISHED:
