@@ -141,7 +141,7 @@ typedef struct __attribute__((packed)) File_Struct
  *
  * This is the maximume sectors (512 bytes) per cluster.
 /******************************************************************************/
-#define MAXsectorPerCluster 16
+#define MAXsectorPerCluster 128
 
 /******************************************************************************/
 /* MAXsectorPerCluster

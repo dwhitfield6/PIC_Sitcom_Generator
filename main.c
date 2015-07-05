@@ -30,6 +30,9 @@
  *                          Increased DAC_FIFO size.
  *                          Added UART module.
  *                          Added PIR functionality.
+ *                          Fixed WAV playback bugs. (MFor best results use a
+ *                            fast sd card with 64 k of allocation space with
+ *                            a song sampled at 16000Hz mono.)
 /******************************************************************************/
 
 /******************************************************************************/
@@ -83,7 +86,7 @@ int main (void)
     Init_App();
     Init_System();
     RTCC_SetTime();
-    //DAC_Play_Startup();
+    DAC_Play_Startup();
     
     RedLEDOFF();
     for(i=0; i<20;i++)

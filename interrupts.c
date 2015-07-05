@@ -95,12 +95,16 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
                 DAC_Page_Read = FIRST;
             }
         }
-        
+        if(DAC_Page_Write_Finished[DAC_Page_Read] == FALSE)
+        {
+            /* the read page caught the write page */
+            /* this is an error if the sound file isnt finished playing */
+            Nop();
+        }
         temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
-        temp >>= 1;
+        temp >>= 3;
         DAC1RDAT = temp;
         DAC_Buffer_Place++;
-        RedLEDTOGGLE();
     }
 
     if(ClipDone == TRUE)

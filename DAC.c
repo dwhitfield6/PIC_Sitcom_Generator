@@ -121,12 +121,13 @@ void DAC_TurnOnAmp(void)
 /******************************************************************************/
 void DAC_SetClock(double Speed)
 {
-    unsigned long div;
+    double div;
 
-    div = (unsigned long)((double)FOSC /(Speed * 128));
+    div = (double)(FOSC /(Speed * 128.0));
+    div = MSC_DB_Round(div);
     div--;
     
-    DAC1CONbits.DACFDIV = div; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
+    DAC1CONbits.DACFDIV = (unsigned long)div; /* Divide Clock by 1 (Assumes Clock is 25.6MHz) */
 }
 
 /******************************************************************************/

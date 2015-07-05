@@ -178,20 +178,6 @@ extern SDproperties SD;
 extern unsigned char SD_Receive_Buffer_Big[SDblockSize];
 
 /******************************************************************************/
-/* SD_CS_INACTIVE
- *
- * The function Asserts the chip select pin.
-/******************************************************************************/
-#define SD_CS_ACTIVE() (LATB &= ~SPI_SD_CS)
-
-/******************************************************************************/
-/* SD_CS_ACTIVE
- *
- * The function Asserts the chip select pin.
-/******************************************************************************/
-#define SD_CS_INACTIVE() (LATB |= SPI_SD_CS)
-
-/******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
 void InitSD(void);
@@ -217,5 +203,7 @@ SDcommand* SD_SetCMD(unsigned char CMD, unsigned long arguement);
 unsigned char SD_readStatus(void);
 void SD_DeleteCard(void);
 unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpointer)(void));
+inline void SD_CS_ACTIVE(void);
+inline void SD_CS_INACTIVE(void);
 
 #endif	/* SD_H */

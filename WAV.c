@@ -196,10 +196,11 @@ unsigned char WAV_CheckFiles(void)
 unsigned char WAV_PlayFile(unsigned char file)
 {
     unsigned long cluster, fileSize, firstSector;
-    unsigned long BytesRead = 0;
+    unsigned long SamplesRead = 0;
     unsigned int DAC_Buffer_Count,SD_Buffer_Count;
     unsigned char j;
     unsigned char playing = FALSE;
+    int temp;
 
     /* check to see if the file is out of range */
     if(file >= MAX_FILES)
@@ -222,7 +223,6 @@ unsigned char WAV_PlayFile(unsigned char file)
     {
         goto FINISHED;
     }
-    BytesRead +=FAT_BS.bytesPerSector;
 
     /* data starts on byte 44 */
     DAC_Page_Write_Finished[FIRST] = FALSE;
@@ -237,7 +237,9 @@ unsigned char WAV_PlayFile(unsigned char file)
     {
         if(FileList[file].WAV_DATA.BitsPerSample == 8)
         {
-            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+            temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
+            temp <<= 8;
+            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = temp;
         }
         else
         {
@@ -245,6 +247,11 @@ unsigned char WAV_PlayFile(unsigned char file)
         }
         SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
         DAC_Buffer_Count++;
+        SamplesRead++;
+        if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
+        {
+            goto FINISHED;
+        }
         if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
         {
             break;
@@ -274,16 +281,13 @@ unsigned char WAV_PlayFile(unsigned char file)
     {
         SD_Buffer_Count = 0;
         FAT_ReadSector(firstSector + j);
-        BytesRead +=FAT_BS.bytesPerSector;
-        if(BytesRead >= FileList[file].size)
-        {
-            goto FINISHED;
-        }
         while(1)
         {
             if(FileList[file].WAV_DATA.BitsPerSample == 8)
             {
-                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+                temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
+                temp <<= 8;
+                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = temp;
             }
             else
             {
@@ -291,6 +295,11 @@ unsigned char WAV_PlayFile(unsigned char file)
             }
             SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
             DAC_Buffer_Count++;
+            SamplesRead ++;
+            if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
+            {
+                goto FINISHED;
+            }
             if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
             {
                 break;
@@ -327,16 +336,13 @@ unsigned char WAV_PlayFile(unsigned char file)
         {
             SD_Buffer_Count = 0;
             FAT_ReadSector(firstSector + j);
-            BytesRead +=FAT_BS.bytesPerSector;
-            if(BytesRead >= FileList[file].size)
-            {
-                goto FINISHED;
-            }
             while(1)
             {
                 if(FileList[file].WAV_DATA.BitsPerSample == 8)
                 {
-                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = SD_Receive_Buffer_Big[SD_Buffer_Count] - 127;
+                    temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
+                    temp <<= 8;
+                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = temp;
                 }
                 else
                 {
@@ -344,6 +350,11 @@ unsigned char WAV_PlayFile(unsigned char file)
                 }
                 SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
                 DAC_Buffer_Count++;
+                SamplesRead++;
+                if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
+                {
+                    goto FINISHED;
+                }
                 if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
                 {
                     break;
@@ -374,7 +385,7 @@ unsigned char WAV_PlayFile(unsigned char file)
     while(!ClipDone); /* wait till it stops playing */
     DAC_OFF();
     DAC_AudioOff();
-    if(BytesRead >= FileList[file].size)
+    if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
     {
         return PASS;
     }
