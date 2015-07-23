@@ -147,7 +147,11 @@ void DAC_TurnOffAmp(void)
 /******************************************************************************/
 void DAC_MuteAmp(void)
 {
+#ifdef SitCom_Generator_PROTOBOARD
     LATB &= ~AudioAmpMute;
+#else
+    Nop();
+#endif
 }
 
 /******************************************************************************/
@@ -157,7 +161,11 @@ void DAC_MuteAmp(void)
 /******************************************************************************/
 void DAC_UnMuteAmp(void)
 {
+#ifdef SitCom_Generator_PROTOBOARD
     LATB |= AudioAmpMute;
+#else
+    Nop();
+#endif
 }
 
 /******************************************************************************/

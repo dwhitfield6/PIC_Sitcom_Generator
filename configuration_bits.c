@@ -19,6 +19,7 @@
 /******************************************************************************/
 #include <xc.h>
 
+#include "user.h"
 // FBS
 #pragma config BWRP = WRPROTECT_OFF     // Boot Segment Write Protect (Boot Segment may be written)
 #pragma config BSS = NO_FLASH           // Boot Segment Program Flash Code Protection (No Boot program Flash segment)
@@ -38,7 +39,11 @@
 #pragma config IESO = ON                // Internal External Switch Over Mode (Start-up device with FRC, then automatically switch to user-selected oscillator source when ready)
 
 // FOSC
+#ifdef SitCom_Generator_PROTOBOARD
 #pragma config POSCMD = HS              // Primary Oscillator Source (HS Oscillator Mode)
+#else
+#pragma config POSCMD = XT              // Primary Oscillator Source (XT Oscillator Mode)
+#endif
 #pragma config OSCIOFNC = OFF           // OSC2 Pin Function (OSC2 pin has clock out function)
 #pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow Only One Re-configuration)
 #pragma config FCKSM = CSDCMD           // Clock Switching and Monitor (Both Clock Switching and Fail-Safe Clock Monitor are disabled)

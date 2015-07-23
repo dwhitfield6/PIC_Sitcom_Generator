@@ -59,7 +59,12 @@ void Init_App(void)
     
     ADPCFG              = 0xFFFF; /* All pins are digital */
     RedLEDTris          = OUTPUT;
+#ifdef SitCom_Generator_PROTOBOARD
     AudioAmpMuteTris    = OUTPUT;
+#else
+    SD_PowerTris        = OUTPUT;
+    SD_INSERT_Tris      = INPUT;
+#endif
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
     SOSCITris           = INPUT;

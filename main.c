@@ -99,28 +99,31 @@ int main (void)
     while(1)
     {
         //RTCC_Read(&CurrentTime);
-        if(SD_State == NOT_INITIALIZED)
+        
+        /* SD card routine */
+        if(SD_CardPresent())
         {
-            RedLEDOFF();
-            InitSD();
-        }
-        else if(SD_State == INITIALIZED)
-        {
-            RedLEDON();
-            if(InitFAT())
+            if(SD_State == NOT_INITIALIZED)
             {
-                SD_State = WAV_READY;
+                InitSD();
             }
-        }
-        else if(SD_State == WAV_READY)
-        {
-            WAV_PlayFile(0);
-            if(Motion == TRUE)
+            else if(SD_State == INITIALIZED)
             {
-                PIR_Interrupt(OFF);
-                WAV_PlayFile(3);
-                Motion = FALSE;
-                PIR_Interrupt(ON);
+                if(InitFAT())
+                {
+                    SD_State = WAV_READY;
+                }
+            }
+            else if(SD_State == WAV_READY)
+            {
+                WAV_PlayFile(0);
+                if(Motion == TRUE)
+                {
+                    PIR_Interrupt(OFF);
+                    WAV_PlayFile(3);
+                    Motion = FALSE;
+                    PIR_Interrupt(ON);
+                }
             }
         }
     }

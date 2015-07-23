@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=PIC_Sitcom_Generator
 
 # Active Configuration
-DEFAULTCONF=xc16_pic33FJ128gp802
+DEFAULTCONF=PCB_revA_pic33FJ128gp804
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=xc16_pic33FJ128gp802 
+ALLCONFS=Proto_pic33FJ128gp802 PCB_revA_pic33FJ128gp804 
 
 
 # build
@@ -45,13 +45,15 @@ ALLCONFS=xc16_pic33FJ128gp802
 
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc16_pic33FJ128gp802 clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=Proto_pic33FJ128gp802 clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=PCB_revA_pic33FJ128gp804 clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=xc16_pic33FJ128gp802 build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=Proto_pic33FJ128gp802 build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=PCB_revA_pic33FJ128gp804 build
 
 
 

@@ -38,11 +38,17 @@
 /******************************************************************************/
 void SYS_ConfigureOscillator(void)
 {
-    /* this is done in configuration_bits.c so this is not necessary */
+#ifdef SitCom_Generator_PROTOBOARD
     CLKDIVbits.PLLPRE = 0x0; /* N1 = 2 */
-    PLLFBDbits.PLLDIV = 30; /* M = 40 */
+    PLLFBDbits.PLLDIV = 30; /* M = 32 */
     CLKDIVbits.PLLPOST = 0x1; /* N2 = 4 */
-    /* FOSC = 16MHz * (32/8) = 64 = 32MIPS */
+    /* FOSC = 16MHz * (32/(4*2)) = 64 = 32MIPS */
+#else
+    CLKDIVbits.PLLPRE = 0x0; /* N1 = 2 */
+    PLLFBDbits.PLLDIV = 38; /* M = 40 */
+    CLKDIVbits.PLLPOST = 0x0; /* N2 = 2 */
+    /* FOSC = 8MHz * (40/4) = 80 = 40MIPS */
+#endif
     while(!OSCCONbits.LOCK);
 }
 

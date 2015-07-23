@@ -51,6 +51,27 @@ SDproperties SD;
 /******************************************************************************/
 
 /******************************************************************************/
+/* SD_POWER
+ *
+ * The function Asserts the chip select pin.
+/******************************************************************************/
+inline void SD_POWER(unsigned char State)
+{
+#ifndef SitCom_Generator_PROTOBOARD
+    if(State)
+    {
+        LATC |= SD_Power;
+    }
+    else
+    {
+        LATC &= ~SD_Power;
+    }
+#else
+    Nop();
+#endif
+}
+
+/******************************************************************************/
 /* SD_CS_INACTIVE
  *
  * The function Asserts the chip select pin.
@@ -63,7 +84,6 @@ inline void SD_CS_ACTIVE(void)
     Nop();
     Nop();
 }
-
 
 /******************************************************************************/
 /* SD_CS_ACTIVE
@@ -1049,6 +1069,22 @@ unsigned char SD_WaitResponse(void)
     return TRUE;
 }
 
+/******************************************************************************/
+/* SD_CardPresent
+ *
+ * The function returns true if there is an SD card inserted.
+/******************************************************************************/
+unsigned char SD_CardPresent(void)
+{
+#ifndef SitCom_Generator_PROTOBOARD
+    //READ RC6
+    if(PORTC & SD_INSERT)
+    {
+        return OFF;
+    }
+#endif
+    return ON;
+}
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

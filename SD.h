@@ -53,20 +53,6 @@ typedef struct sd
 # define SDblockSize 512
 
 /******************************************************************************/
-/* WriteProtect
- * 
- * Define this if the SD card holder has a Write protect switch.
-/******************************************************************************/
-//#define WriteProtect
-
-/******************************************************************************/
-/* CardDetect
- * 
- * Define this if the SD card holder has a Card insertion switch.
-/******************************************************************************/
-//#define CardDetect
-
-/******************************************************************************/
 /* CRCMASK_7
  * 
  * Mask for the sd crc polyomial. x^7 + x^3 + 1
@@ -205,5 +191,7 @@ void SD_DeleteCard(void);
 unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpointer)(void));
 inline void SD_CS_ACTIVE(void);
 inline void SD_CS_INACTIVE(void);
+unsigned char SD_CardPresent(void);
+inline void SD_POWER(unsigned char State);
 
 #endif	/* SD_H */

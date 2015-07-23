@@ -13,8 +13,8 @@ ifeq "${IGNORE_LOCAL}" "TRUE"
 else
 include Makefile
 # Include makefile containing local settings
-ifeq "$(wildcard nbproject/Makefile-local-xc16_pic33FJ128gp802.mk)" "nbproject/Makefile-local-xc16_pic33FJ128gp802.mk"
-include nbproject/Makefile-local-xc16_pic33FJ128gp802.mk
+ifeq "$(wildcard nbproject/Makefile-local-PCB_revA_pic33FJ128gp804.mk)" "nbproject/Makefile-local-PCB_revA_pic33FJ128gp804.mk"
+include nbproject/Makefile-local-PCB_revA_pic33FJ128gp804.mk
 endif
 endif
 
@@ -25,7 +25,7 @@ MV=mv
 CP=cp 
 
 # Macros
-CND_CONF=xc16_pic33FJ128gp802
+CND_CONF=PCB_revA_pic33FJ128gp804
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 IMAGE_TYPE=debug
 OUTPUT_SUFFIX=elf
@@ -75,10 +75,10 @@ FIXDEPS=fixDeps
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
-	${MAKE}  -f nbproject/Makefile-xc16_pic33FJ128gp802.mk dist/${CND_CONF}/${IMAGE_TYPE}/PIC_Sitcom_Generator.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	${MAKE}  -f nbproject/Makefile-PCB_revA_pic33FJ128gp804.mk dist/${CND_CONF}/${IMAGE_TYPE}/PIC_Sitcom_Generator.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 
-MP_PROCESSOR_OPTION=33FJ128GP802
-MP_LINKER_FILE_OPTION=,--script=p33FJ128GP802.gld
+MP_PROCESSOR_OPTION=33FJ128GP804
+MP_LINKER_FILE_OPTION=,--script=p33FJ128GP804.gld
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
@@ -318,8 +318,8 @@ endif
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/xc16_pic33FJ128gp802
-	${RM} -r dist/xc16_pic33FJ128gp802
+	${RM} -r build/PCB_revA_pic33FJ128gp804
+	${RM} -r dist/PCB_revA_pic33FJ128gp804
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

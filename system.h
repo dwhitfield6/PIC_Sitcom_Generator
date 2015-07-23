@@ -23,6 +23,8 @@
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
 
+#include "user.h"
+
 /******************************************************************************/
 /* System frequency
  *
@@ -31,9 +33,11 @@
  * For this system the clock is 64MHz and the internal PLL is used.
  *
 /******************************************************************************/
-
+#ifdef SitCom_Generator_PROTOBOARD
 #define FOSC        64000000L
-
+#else
+#define FOSC        80000000L
+#endif
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
