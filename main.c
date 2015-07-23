@@ -33,6 +33,8 @@
  *                          Fixed WAV playback bugs. (MFor best results use a
  *                            fast sd card with 64 k of allocation space with
  *                            a song sampled at 16000Hz mono.)
+ *                          Added RGB LED functions.
+ *                          Added code to work withteh new hardware (PCB_revA)
 /******************************************************************************/
 
 /******************************************************************************/
@@ -61,6 +63,7 @@
 #include "FAT.h"
 #include "PIR.h"
 #include "UART.h"
+#include "PWM.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -85,16 +88,20 @@ int main (void)
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
+    PWM_SetColor(OFF);
     RTCC_SetTime();
-    DAC_Play_Startup();
-    
+
     RedLEDOFF();
     for(i=0; i<20;i++)
     {
+        PWM_SetColor(i>>1);
         RedLEDTOGGLE();
         MSC_DelayUS(50000);
     }
     RedLEDOFF();
+
+    DAC_Play_Startup();
+    PWM_SetColor(RED);
 
     while(1)
     {
@@ -103,6 +110,11 @@ int main (void)
         /* SD card routine */
         if(SD_CardPresent())
         {
+            if(SD_Card_Status_Prev != SD_Card_Status)
+            {
+                /* SD card was just inserted */
+                SD_POWER(ON);
+            }
             if(SD_State == NOT_INITIALIZED)
             {
                 InitSD();
@@ -116,16 +128,26 @@ int main (void)
             }
             else if(SD_State == WAV_READY)
             {
+                PWM_SetColor(GREEN);
                 WAV_PlayFile(0);
                 if(Motion == TRUE)
                 {
+                    PWM_SetColor(PURPLE);
                     PIR_Interrupt(OFF);
                     WAV_PlayFile(3);
                     Motion = FALSE;
                     PIR_Interrupt(ON);
+                    PWM_SetColor(GREEN);
+                    RedLEDOFF();
                 }
             }
         }
+        else
+        {
+            SD_POWER(OFF);
+            PWM_SetColor(RED);
+        }
+        SD_Card_Status_Prev = SD_Card_Status;
     }
 }
 /*-----------------------------------------------------------------------------/

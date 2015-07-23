@@ -42,6 +42,8 @@ unsigned char R3_Buffer[5];
 unsigned char R6_Buffer[6];
 unsigned char SD_Timeout = 0;
 unsigned char SD_CardType = NOT_INITIALIZED;
+unsigned char SD_Card_Status = OFF;
+unsigned char SD_Card_Status_Prev = OFF;
 SDcommand Global_message;
 SDcommand* PGlobal_message;
 SDproperties SD;
@@ -133,16 +135,6 @@ void InitSD(void)
     
     SD_CS_INACTIVE(); /* Deassert the chip select pin */    
     SPI_SD_CSTris = OUTPUT; /* Configure CS pin as an output */
-
-    #ifdef WriteProtect
-        // Configure WP pin as an input
-        SD_WPTris = INPUT;
-    #endif
-
-    #ifdef CardDetect
-        // Configure CD pin as an input
-        SD_CDTris = INPUT;
-    #endif
 
     if(SDtoSPI())
     {
@@ -1080,8 +1072,10 @@ unsigned char SD_CardPresent(void)
     //READ RC6
     if(PORTC & SD_INSERT)
     {
+        SD_Card_Status = ON;
         return OFF;
     }
+    SD_Card_Status = OFF;
 #endif
     return ON;
 }

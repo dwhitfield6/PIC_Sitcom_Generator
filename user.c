@@ -34,6 +34,7 @@
 #include "SD.h"
 #include "UART.h"
 #include "PIR.h"
+#include "PWM.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -64,6 +65,9 @@ void Init_App(void)
 #else
     SD_PowerTris        = OUTPUT;
     SD_INSERT_Tris      = INPUT;
+    RGB_RedTris         = OUTPUT;
+    RGB_GreenTris       = OUTPUT;
+    RGB_BlueTris        = OUTPUT;
 #endif
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
@@ -90,6 +94,7 @@ void Init_System (void)
     InitRTCC();
     InitUART();
     InitPIR();
+    InitPWM();
 }
 
 /*-----------------------------------------------------------------------------/

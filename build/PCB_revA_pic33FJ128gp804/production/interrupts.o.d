@@ -10,4 +10,5 @@ WAV.h  \
 FAT.h  \
 SD.h  \
 UART.h  \
- PIR.h 
+ PIR.h  \
+PWM.h 

@@ -128,15 +128,15 @@
 /************* RGB LED over PWM *************/
 /* Connected to the RGB Red Led  */
 #define RGB_RedTris	TRISCbits.TRISC5
-#define RBG_Red 0x0020 //RC5 used as RP21
+#define RBG_Red 0x0008 //RC3 used as RP19
 
 /* Connected to the RGB Green Led  */
-#define RGB_GreenTris	TRISCbits.TRISC5
+#define RGB_GreenTris	TRISCbits.TRISC4
 #define RBG_Green 0x0010 //RC4 used as RP20
 
 /* Connected to the RGB Blue Led  */
-#define RGB_BlueTris	TRISCbits.TRISC5
-#define RBG_Blue 0x0008 //RC3 used as RP19
+#define RGB_BlueTris	TRISCbits.TRISC3
+#define RBG_Blue 0x0020 //RC5 used as RP21
 #endif
 
 /************* DAC Right channel *************/
@@ -205,6 +205,7 @@
 #define SD_INSERT_CN 18
 #endif
 
+#ifdef SitCom_Generator_PROTOBOARD
 /* Connected to SPI MISO used for the SD card */
 #define SPI_SD_MISOTris	TRISBbits.TRISB2
 #define SPI_SD_MISO 0x0004 //RB2 used as RP2
@@ -225,6 +226,28 @@
 /* Connected to SPI CS used for the SD card */
 #define SPI_SD_CSTris	TRISBbits.TRISB9
 #define SPI_SD_CS 0x0200 //RB9 used as RP9
+#else
+/* Connected to SPI MISO used for the SD card */
+#define SPI_SD_MISOTris	TRISBbits.TRISB5
+#define SPI_SD_MISO 0x0020 //RB5 used as RP5
+#define SPI_SD_MISO_RP 5
+
+/* Connected to SPI MISO used for the SD card */
+#define SPI_SD_MISO2Tris	TRISBbits.TRISB6
+#define SPI_SD_MISO2 0x0040 //RB6
+
+/* Connected to SPI MOSI used for the SD card */
+#define SPI_SD_MOSITris	TRISBbits.TRISB8
+#define SPI_SD_MOSI 0x0100 //RB8 used as RP8
+
+/* Connected to SPI SCK used for the SD card */
+#define SPI_SD_SCKTris	TRISBbits.TRISB7
+#define SPI_SD_SCK 0x0080 //RB7 used as RP7
+
+/* Connected to SPI CS used for the SD card */
+#define SPI_SD_CSTris	TRISBbits.TRISB9
+#define SPI_SD_CS 0x0200 //RB9 used as RP9
+#endif
 
 /************* PIR sensor over UART *************/
 /* Connected to UART RX on PIR sensor */

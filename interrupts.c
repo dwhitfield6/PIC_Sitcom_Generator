@@ -36,6 +36,7 @@
 #include "WAV.h"
 #include "UART.h"
 #include "PIR.h"
+#include "PWM.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -159,7 +160,20 @@ void _ISR_NOPSV _CNInterrupt(void)
     /**************Motion Detected ***************/
 
     Motion = TRUE;
+    RedLEDON();
     IFS1bits.CNIF = 0; // clear flag
+}
+
+/******************************************************************************/
+/* PWM RED interrupt
+/******************************************************************************/
+void _ISR_NOPSV _T2Interrupt( void )
+{
+/* Interrupt Service Routine code goes here */
+OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
 }
 
 /*-----------------------------------------------------------------------------/

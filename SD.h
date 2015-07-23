@@ -162,6 +162,8 @@ extern SDcommand Global_message;
 extern SDcommand* PGlobal_message;
 extern SDproperties SD;
 extern unsigned char SD_Receive_Buffer_Big[SDblockSize];
+extern unsigned char SD_Card_Status;
+extern unsigned char SD_Card_Status_Prev;
 
 /******************************************************************************/
 /* Function prototypes                                                        */
