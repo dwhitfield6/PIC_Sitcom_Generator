@@ -124,7 +124,7 @@
 #define RedLEDTris	TRISBbits.TRISB10
 #define RedLED 0x0400 //RB10
 
-#ifdef SitCom_Generator_PCB_REVA
+#ifndef SitCom_Generator_PROTOBOARD
 /************* RGB LED over PWM *************/
 /* Connected to the RGB Red Led  */
 #define RGB_RedTris	TRISCbits.TRISC5
@@ -144,25 +144,33 @@
 #define DAC_RightPTris	TRISBbits.TRISB14
 #define DAC_RightP 0x1000 //RB12
 
+#ifndef SitCom_Generator_PROTOBOARD
+/* Connected to Audio Amp IN- */
+#define DAC_RightNTris	TRISBbits.TRISB13
+#define DAC_RightN 0x1000 //RB13
+#endif
+
 /************* Audio Amp over GPIO *************/
 #ifdef SitCom_Generator_PROTOBOARD
 /* Connected to Audio Amp mute on protoboard only */
 #define AudioAmpMuteTris	TRISBbits.TRISB5
 #define AudioAmpMute 0x0020 //RB5
-#endif
-
-#ifdef SitCom_Generator_PCB_REVA
-/* Connected to Audio Amp Diagnostics on PCB only */
-#define AudioAmpDiagTris	TRISBbits.TRISB5
-#define AudioAmpDiag 0x0020 //RB5
-#endif
 
 /* Connected to Audio Amp Standby */
 #define AudioAmpStandbyTris	TRISBbits.TRISB6
 #define AudioAmpStandby 0x0040 //RB6
+#else
+/* Connected to Audio Amp Diagnostics on PCB only */
+#define AudioAmpDiagTris	TRISBbits.TRISB5
+#define AudioAmpDiag 0x0020 //RB5
 
+/* Connected to Audio Amp Standby */
+#define AudioAmpStandbyTris	TRISBbits.TRISB6
+#define AudioAmpStandby 0x0040 //RB6
+#endif
+
+#ifndef SitCom_Generator_PROTOBOARD
 /************* Test Point *************/
-#ifdef SitCom_Generator_PCB_REVA
 /* Connected to Test Point 1 on PCB only */
 #define TP1_Tris	TRISAbits.TRISA8
 #define TP1 0x0100 //RA8
@@ -181,30 +189,19 @@
 #endif
 
 /************* Input Voltage over ADC *************/
-#ifdef SitCom_Generator_PCB_REVA
+#ifndef SitCom_Generator_PROTOBOARD
 /* Connected from VIN to Voltage divider to ADC on PCB only */
 #define ADC_VINTris	TRISCbits.TRISC2
 #define ADC_VIN 0x0004 //RC2 used as AN8
-#define ADC_VIN_AN 8
+#define ADC_VIN_AN 0x0100 //AN8
 
 /* Connected from 5 volt rail to Voltage divider to ADC on PCB only */
 #define ADC_5INTris	TRISBbits.TRISB14
 #define ADC_5IN 0x4000 //RB14 used as AN10
-#define ADC_5IN_AN 10
+#define ADC_5IN_AN 0x0400 //AN10
 #endif
 
 /************* SD Card over SPI *************/
-#ifdef SitCom_Generator_PCB_REVA
-/* Connected to SD Card Power on PCB only */
-#define SD_PowerTris	TRISCbits.TRISC0
-#define SD_Power 0x0001 //RC0
-
-/* Connected to SD Connector switch on PCB only */
-#define SD_INSERT_Tris	TRISCbits.TRISC6
-#define SD_INSERT 0x0040 //RC6 used as CN18
-#define SD_INSERT_CN 18
-#endif
-
 #ifdef SitCom_Generator_PROTOBOARD
 /* Connected to SPI MISO used for the SD card */
 #define SPI_SD_MISOTris	TRISBbits.TRISB2
@@ -247,9 +244,19 @@
 /* Connected to SPI CS used for the SD card */
 #define SPI_SD_CSTris	TRISBbits.TRISB9
 #define SPI_SD_CS 0x0200 //RB9 used as RP9
+
+/* Connected to SD Card Power on PCB only */
+#define SD_PowerTris	TRISCbits.TRISC0
+#define SD_Power 0x0001 //RC0
+
+/* Connected to SD Connector switch on PCB only */
+#define SD_INSERT_Tris	TRISCbits.TRISC6
+#define SD_INSERT 0x0040 //RC6 used as CN18
+#define SD_INSERT_CN 18
 #endif
 
 /************* PIR sensor over UART *************/
+#ifdef SitCom_Generator_PROTOBOARD
 /* Connected to UART RX on PIR sensor */
 #define PIR_TX_Tris	TRISBbits.TRISB15
 #define PIR_TX 0x8000 //RB15 used as RP15
@@ -265,18 +272,36 @@
 #define PIR_MD 0x0001 //RA0 used as CN2
 #define PIR_MD_CN 2
 
-#ifdef SitCom_Generator_PCB_REVA
-/* Connected to Motion Detect on PIR sensor on PCB only */
-#define PIR_MD2_Tris	TRISCbits.TRISC1
-#define PIR_MD2 0x0002 //RC1
-#endif
+/* Connected to Motion Detect on PIR sensor */
+#define PIR_SLEEP_Tris	TRISAbits.TRISA1
+#define PIR_SLEEP 0x0002 //RA1
+#else
+/* Connected to UART RX on PIR sensor */
+#define PIR_TX_Tris	TRISBbits.TRISB11
+#define PIR_TX 0x8000 //RB11 used as RP15
+
+
+/* Connected to UART TX on PIR sensor */
+#define PIR_RX_Tris	TRISBbits.TRISB11
+#define PIR_RX 0x0800 //RB11 used as RP11
+#define PIR_RX_RP 11
+
+/* Connected to Motion Detect on PIR sensor */
+#define PIR_MD_Tris	TRISCbits.TRISC1
+#define PIR_MD 0x0002 //RC1 used as CN9
+#define PIR_MD_CN 9
 
 /* Connected to Motion Detect on PIR sensor */
 #define PIR_SLEEP_Tris	TRISAbits.TRISA1
 #define PIR_SLEEP 0x0002 //RA1
 
+/* Connected to Motion Detect on PIR sensor on PCB only */
+#define PIR_MD2_Tris	TRISAbits.TRISA0
+#define PIR_MD2 0x0001 //RA0
+#endif
+
+#ifndef SitCom_Generator_PROTOBOARD
 /************* Debug UART *************/
-#ifdef SitCom_Generator_PCB_REVA
 /* Connected to UART RX on Debug Port */
 #define DBG_TX_Tris	TRISCbits.TRISC8
 #define DBG_TX 0x0100 //RC8 used as RP24
@@ -288,8 +313,8 @@
 #define DBG_RX_RP 23
 #endif
 
+#ifndef SitCom_Generator_PROTOBOARD
 /************* Optional Door Switch *************/
-#ifdef SitCom_Generator_PCB_REVA
 /* Connected to Optional Door Switch */
 #define DOOR_SW_Tris	TRISCbits.TRISC9
 #define DOOR_SW 0x0200 //RC9 used as CN19

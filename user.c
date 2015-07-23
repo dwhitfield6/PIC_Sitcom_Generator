@@ -58,7 +58,7 @@ void Init_App(void)
     LATA = 0;
     LATB = 0;
     
-    ADPCFG              = 0xFFFF; /* All pins are digital */
+    AD1PCFGL              = 0xFFFF; /* All pins are digital */
     RedLEDTris          = OUTPUT;
 #ifdef SitCom_Generator_PROTOBOARD
     AudioAmpMuteTris    = OUTPUT;
@@ -68,6 +68,14 @@ void Init_App(void)
     RGB_RedTris         = OUTPUT;
     RGB_GreenTris       = OUTPUT;
     RGB_BlueTris        = OUTPUT;
+    AudioAmpDiagTris    = INPUT;
+    TP1_Tris            = OUTPUT;
+    TP2_Tris            = OUTPUT;
+    TP3_Tris            = OUTPUT;
+    TP4_Tris            = OUTPUT;
+    ADC_VINTris         = INPUT;
+    ADC_5INTris         = INPUT;
+    AD1PCFGL            &= ~(ADC_VIN_AN + ADC_5IN_AN); /* Configure ADC pins as analog */
 #endif
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
@@ -90,7 +98,12 @@ void Init_System (void)
 {
     InitDAC();
     InitSPI();
-    InitSD();
+    if(SD_CardPresent())
+    {
+        SD_POWER(ON);
+        MSC_DelayUS(1000);
+        InitSD();
+    }
     InitRTCC();
     InitUART();
     InitPIR();

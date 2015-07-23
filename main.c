@@ -110,11 +110,8 @@ int main (void)
         /* SD card routine */
         if(SD_CardPresent())
         {
-            if(SD_Card_Status_Prev != SD_Card_Status)
-            {
-                /* SD card was just inserted */
-                SD_POWER(ON);
-            }
+
+            SD_POWER(ON);
             if(SD_State == NOT_INITIALIZED)
             {
                 InitSD();
@@ -129,7 +126,7 @@ int main (void)
             else if(SD_State == WAV_READY)
             {
                 PWM_SetColor(GREEN);
-                WAV_PlayFile(0);
+                //WAV_PlayFile(0);
                 if(Motion == TRUE)
                 {
                     PWM_SetColor(PURPLE);
@@ -147,7 +144,6 @@ int main (void)
             SD_POWER(OFF);
             PWM_SetColor(RED);
         }
-        SD_Card_Status_Prev = SD_Card_Status;
     }
 }
 /*-----------------------------------------------------------------------------/
