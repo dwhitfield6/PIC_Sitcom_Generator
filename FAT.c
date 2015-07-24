@@ -23,7 +23,7 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "user.h"
+#include "USER.h"
 #include "FAT.h"
 #include "SD.h"
 #include "MISC.h"

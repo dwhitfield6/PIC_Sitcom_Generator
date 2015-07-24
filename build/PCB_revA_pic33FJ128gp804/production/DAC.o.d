@@ -1,6 +1,6 @@
 build/PCB_revA_pic33FJ128gp804/production/DAC.o:  \
 DAC.c  \
-user.h  \
+USER.h  \
 MISC.h  \
- system.h  \
+ SYSTEM.h  \
 DAC.h 

@@ -2,8 +2,8 @@ build/Proto_pic33FJ128gp802/production/WAV.o:  \
 WAV.c  \
 WAV.h  \
 FAT.h  \
-user.h  \
+USER.h  \
  SD.h  \
 MISC.h  \
-system.h  \
+SYSTEM.h  \
 DAC.h 

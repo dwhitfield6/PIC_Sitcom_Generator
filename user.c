@@ -26,7 +26,7 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "user.h"
+#include "USER.h"
 #include "MISC.h"
 #include "DAC.h"
 #include "SPI.h"
@@ -35,6 +35,9 @@
 #include "UART.h"
 #include "PIR.h"
 #include "PWM.h"
+#include "SWITCH.h"
+#include "TIMERS.h"
+#include "ADC.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -76,6 +79,10 @@ void Init_App(void)
     ADC_VINTris         = INPUT;
     ADC_5INTris         = INPUT;
     AD1PCFGL            &= ~(ADC_VIN_AN + ADC_5IN_AN); /* Configure ADC pins as analog */
+    PIR_MD2_Tris        = INPUT;
+    DBG_TX_Tris         = OUTPUT;
+    DBG_RX_Tris         = INPUT;
+    DOOR_SW_Tris        = INPUT;
 #endif
     AudioAmpStandbyTris = OUTPUT;
     SOSCOTris           = INPUT;
@@ -104,10 +111,13 @@ void Init_System (void)
         MSC_DelayUS(1000);
         InitSD();
     }
+    InitSWITCH();
     InitRTCC();
     InitUART();
     InitPIR();
+    InitTIMERS();
     InitPWM();
+    InitADC();
 }
 
 /*-----------------------------------------------------------------------------/

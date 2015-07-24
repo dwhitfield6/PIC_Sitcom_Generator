@@ -49,22 +49,6 @@
 #define SitCom_Generator_PCB_REVA
 
 /******************************************************************************/
-/* WriteProtect
- *
- * Define this variable to tell the firmware that our sd card holder has a
- *   write protect detector switch.
-/******************************************************************************/
-//#define WriteProtect
-
-/******************************************************************************/
-/* CardDetect
- *
- * Define this variable to tell the firmware that our sd card holder has a
- *   Card detector switch.
-/******************************************************************************/
-//#define CardDetect
-
-/******************************************************************************/
 /* Version
  *
  * This defines the Firmware version.
@@ -252,7 +236,6 @@
 /* Connected to SD Connector switch on PCB only */
 #define SD_INSERT_Tris	TRISCbits.TRISC6
 #define SD_INSERT 0x0040 //RC6 used as CN18
-#define SD_INSERT_CN 18
 #endif
 
 /************* PIR sensor over UART *************/
@@ -288,8 +271,8 @@
 
 /* Connected to Motion Detect on PIR sensor */
 #define PIR_MD_Tris	TRISCbits.TRISC1
-#define PIR_MD 0x0002 //RC1 used as CN9
-#define PIR_MD_CN 9
+#define PIR_MD 0x0002 //RC1 used as RP17
+#define PIR_MD_RP 17
 
 /* Connected to Motion Detect on PIR sensor */
 #define PIR_SLEEP_Tris	TRISAbits.TRISA1
@@ -318,33 +301,12 @@
 /* Connected to Optional Door Switch */
 #define DOOR_SW_Tris	TRISCbits.TRISC9
 #define DOOR_SW 0x0200 //RC9 used as CN19
-#define DOOR_SW_CN 19
+#define DOOR_SW_RP 25
 #endif
 
 /******************************************************************************/
 /* Macro Functions                                                            */
 /******************************************************************************/
-
-/******************************************************************************/
-/* RedLEDON
- *
- * The function turns on the Red LED.
-/******************************************************************************/
-#define RedLEDON()  (LATB |= RedLED)
-
-/******************************************************************************/
-/* RedLEDOFF
- *
- * The function turns off the Red LED.
-/******************************************************************************/
-#define RedLEDOFF()  (LATB &= ~RedLED)
-
-/******************************************************************************/
-/* RedLEDTOGGLE
- *
- * The function toggles the Red LED.
-/******************************************************************************/
-#define RedLEDTOGGLE()  (LATB ^= RedLED)
 
 /******************************************************************************/
 /* Function prototypes                                                        */

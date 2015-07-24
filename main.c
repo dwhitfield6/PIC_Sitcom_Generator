@@ -34,7 +34,8 @@
  *                            fast sd card with 64 k of allocation space with
  *                            a song sampled at 16000Hz mono.)
  *                          Added RGB LED functions.
- *                          Added code to work withteh new hardware (PCB_revA)
+ *                          Added code to work withteh new hardware (PCB_revA).
+ *                          Added debug UART, ADC, and timer functionality.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -53,8 +54,8 @@
 #include <stdio.h>       /* For true/false definition */
 #include <string.h>
 
-#include "system.h"
-#include "user.h"
+#include "SYSTEM.h"
+#include "USER.h"
 #include "MISC.h"
 #include "DAC.h"
 #include "RTCC.h"
@@ -64,6 +65,7 @@
 #include "PIR.h"
 #include "UART.h"
 #include "PWM.h"
+#include "SWITCH.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -91,14 +93,14 @@ int main (void)
     PWM_SetColor(OFF);
     RTCC_SetTime();
 
-    RedLEDOFF();
+    MSC_RedLEDOFF();
     for(i=0; i<20;i++)
     {
         PWM_SetColor(i>>1);
-        RedLEDTOGGLE();
+        MSC_RedLEDTOGGLE();
         MSC_DelayUS(50000);
     }
-    RedLEDOFF();
+    MSC_RedLEDOFF();
 
     DAC_Play_Startup();
     PWM_SetColor(RED);
@@ -127,15 +129,16 @@ int main (void)
             {
                 PWM_SetColor(GREEN);
                 //WAV_PlayFile(0);
-                if(Motion == TRUE)
+                if(Motion == TRUE || DoorOpened == TRUE)
                 {
                     PWM_SetColor(PURPLE);
                     PIR_Interrupt(OFF);
                     WAV_PlayFile(3);
                     Motion = FALSE;
+                    DoorOpened = FALSE;
                     PIR_Interrupt(ON);
                     PWM_SetColor(GREEN);
-                    RedLEDOFF();
+                    MSC_RedLEDOFF();
                 }
             }
         }

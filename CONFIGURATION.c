@@ -19,7 +19,7 @@
 /******************************************************************************/
 #include <xc.h>
 
-#include "user.h"
+#include "USER.h"
 // FBS
 #pragma config BWRP = WRPROTECT_OFF     // Boot Segment Write Protect (Boot Segment may be written)
 #pragma config BSS = NO_FLASH           // Boot Segment Program Flash Code Protection (No Boot program Flash segment)

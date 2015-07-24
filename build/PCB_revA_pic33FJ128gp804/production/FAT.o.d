@@ -1,9 +1,9 @@
 build/PCB_revA_pic33FJ128gp804/production/FAT.o:  \
 FAT.c  \
-user.h  \
+USER.h  \
 FAT.h  \
 WAV.h  \
  SD.h  \
 MISC.h  \
-system.h  \
+SYSTEM.h  \
 DAC.h 

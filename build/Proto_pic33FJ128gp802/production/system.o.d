@@ -1,4 +1,4 @@
-build/Proto_pic33FJ128gp802/production/system.o:  \
-system.c  \
-system.h  \
-user.h 
+build/Proto_pic33FJ128gp802/production/SYSTEM.o:  \
+SYSTEM.c  \
+SYSTEM.h  \
+USER.h 

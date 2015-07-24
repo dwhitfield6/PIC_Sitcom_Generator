@@ -23,8 +23,8 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "user.h"
-#include "system.h"
+#include "USER.h"
+#include "SYSTEM.h"
 #include "UART.h"
 #include "PIR.h"
 #include "MISC.h"
@@ -32,20 +32,23 @@
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-unsigned char UART_Receive_Buffer[UART_BUFFER_SIZE];
-volatile unsigned int UART_Receive_Buffer_Place = 0;
-volatile unsigned char RX_Response;
+unsigned char UART_Rx_Buffer_PIR[UART_BUFFER_SIZE_PIR];
+unsigned char UART_Rx_Buffer_DEBUG[UART_BUFFER_SIZE_DEBUG];
+volatile unsigned int UART_Rx_Buffer_Place_PIR = 0;
+volatile unsigned int UART_Rx_Buffer_Place_DEBUG = 0;
+volatile unsigned char RX_Response_PIR;
+volatile unsigned char RX_Response_DEBUG;
 
 /******************************************************************************/
 /* Inline Functions                                                           */
 /******************************************************************************/
 
 /******************************************************************************/
-/* UART_TX_PIN
+/* UART_PIR_TX_PIN
  *
- * This function controls the TX pin direction.
+ * This function controls the TX pin direction associated with the PIR sensor.
 /******************************************************************************/
-inline void UART_TX_PIN(unsigned char status)
+inline void UART_PIR_TX_PIN(unsigned char status)
 {
     if(status)
     {
@@ -59,11 +62,29 @@ inline void UART_TX_PIN(unsigned char status)
 }
 
 /******************************************************************************/
-/* UART_RX_Interrupt
+/* UART_DEBUG_TX_PIN
  *
- * Controls the UART receive interrupt.
+ * This function controls the TX pin direction associated with the debug port.
 /******************************************************************************/
-inline void UART_RX_Interrupt(unsigned char status)
+inline void UART_DEBUG_TX_PIN(unsigned char status)
+{
+    if(status)
+    {
+        DBG_TX_Tris         = OUTPUT;
+        RPOR1bits.RP3R      = 0x05;   // RP3 = UART2 Transmit
+    }
+    else
+    {
+        DBG_TX_Tris         = INPUT;
+    }
+}
+
+/******************************************************************************/
+/* UART_PIR_RX_Interrupt
+ *
+ * Controls the UART receive interrupt associated with the PIR sensor.
+/******************************************************************************/
+inline void UART_PIR_RX_Interrupt(unsigned char status)
 {
     if(status)
     {
@@ -72,6 +93,23 @@ inline void UART_RX_Interrupt(unsigned char status)
     else
     {
         IEC0bits.U1RXIE = 0;
+    }
+}
+
+/******************************************************************************/
+/* UART_DEBUG_RX_Interrupt
+ *
+ * Controls the UART receive interrupt associated with the debug port.
+/******************************************************************************/
+inline void UART_DEBUG_RX_Interrupt(unsigned char status)
+{
+    if(status)
+    {
+        IEC1bits.U2RXIE = 1;
+    }
+    else
+    {
+        IEC1bits.U2RXIE = 0;
     }
 }
 
@@ -86,21 +124,32 @@ inline void UART_RX_Interrupt(unsigned char status)
 /******************************************************************************/
 void InitUART(void)
 {
-    UART_CleanBuffer();
+    UART_PIR_CleanBuffer();
     IPC2bits.U1RXIP = 1; // Interrupt priority is 1
     RPINR18bits.U1RXR = PIR_RX_RP;
-    UART_SetClock(PIR_UART_BAUD);
+    UART_PIR_SetClock(PIR_UART_BAUD);
     U1MODEbits.UARTEN = ON;     // Turn on module
     U1STAbits.UTXEN = ON;       // Turn on transmit
-    UART_RX_Interrupt(ON);
+    UART_PIR_RX_Interrupt(ON);
+
+#ifndef SitCom_Generator_PROTOBOARD
+    UART_DEBUG_CleanBuffer();
+    IPC7bits.U2RXIP = 1; // Interrupt priority is 1
+    RPINR19bits.U2RXR = DBG_RX_RP;
+    UART_DEBUG_SetClock(DEBUG_UART_BAUD);
+    U2MODEbits.UARTEN = ON;     // Turn on module
+    U2STAbits.UTXEN = ON;       // Turn on transmit
+    UART_DEBUG_RX_Interrupt(ON);
+#endif
 }
 
 /******************************************************************************/
-/* UART_SetClock
+/* UART_PIR_SetClock
  *
- * The function sets the clock speed (Baud rate) of the UART.
+ * The function sets the clock speed (Baud rate) of the UART associated with
+ *  the PIR sensor.
 /******************************************************************************/
-void UART_SetClock(unsigned long baud)
+void UART_PIR_SetClock(unsigned long baud)
 {
     unsigned long div;
 
@@ -116,11 +165,32 @@ void UART_SetClock(unsigned long baud)
 }
 
 /******************************************************************************/
-/* UART_SendChar
+/* UART_DEBUG_SetClock
  *
- * The function sends one character of data over the communication port.
+ * The function sets the clock speed (Baud rate) of the UART associated with
+ *  the debug port.
 /******************************************************************************/
-void UART_SendChar(unsigned char data)
+void UART_DEBUG_SetClock(unsigned long baud)
+{
+    unsigned long div;
+
+    if(U2MODEbits.BRGH)
+    {
+        div = FCY /(4* baud * 2) - 1;
+    }
+    else
+    {
+        div = FCY /(16* baud * 2) - 1;
+    }
+    U2BRG = div;
+}
+
+/******************************************************************************/
+/* UART_PIR_SendChar
+ *
+ * The function sends one character of data over the PIR communication port.
+/******************************************************************************/
+void UART_PIR_SendChar(unsigned char data)
 {
     U1TXREG = data;
     while(U1STAbits.TRMT);
@@ -128,12 +198,24 @@ void UART_SendChar(unsigned char data)
 }
 
 /******************************************************************************/
-/* UART_SendCharConst
+/* UART_DEBUG_SendChar
  *
- * The function sends one constant character of data over the communication
+ * The function sends one character of data over the debug communication port.
+/******************************************************************************/
+void UART_DEBUG_SendChar(unsigned char data)
+{
+    U2TXREG = data;
+    while(U2STAbits.TRMT);
+    while(!U2STAbits.TRMT); //wait for the character to be transmitted.
+}
+
+/******************************************************************************/
+/* UART_PIR_SendCharConst
+ *
+ * The function sends one constant character of data over the PIR communication
  *  port.
 /******************************************************************************/
-void UART_SendCharConst(const unsigned char data)
+void UART_PIR_SendCharConst(const unsigned char data)
 {
     U1TXREG = data;
     while(U1STAbits.TRMT);
@@ -141,50 +223,112 @@ void UART_SendCharConst(const unsigned char data)
 }
 
 /******************************************************************************/
-/* UART_SendString
+/* UART_DEBUG_SendCharConst
  *
- * The function sends one string of characters over the communication port.
+ * The function sends one constant character of data over the debug
+ * communication port.
 /******************************************************************************/
-void UART_SendString(unsigned char* data)
+void UART_DEBUG_SendCharConst(const unsigned char data)
+{
+    U2TXREG = data;
+    while(U2STAbits.TRMT);
+    while(!U2STAbits.TRMT); //wait for the character to be transmitted.
+}
+
+/******************************************************************************/
+/* UART_PIR_SendString
+ *
+ * The function sends one string of characters over the PIR communication port.
+/******************************************************************************/
+void UART_PIR_SendString(unsigned char* data)
 {
     while(*data !=0)
     {
-        UART_SendChar(*data);
+        UART_PIR_SendChar(*data);
         data++;
     }
 }
 
 /******************************************************************************/
-/* UART_SendStringConst
+/* UART_DEBUG_SendString
  *
- * The function sends one string of constant characters over the communication
+ * The function sends one string of characters over the debug communication
  *  port.
 /******************************************************************************/
-void UART_SendStringConst(const unsigned char* data)
+void UART_DEBUG_SendString(unsigned char* data)
 {
     while(*data !=0)
     {
-        UART_SendCharConst(*data);
+        UART_DEBUG_SendChar(*data);
         data++;
     }
 }
 
 /******************************************************************************/
-/* UART_CleanBuffer
+/* UART_PIR_SendStringConst
+ *
+ * The function sends one string of constant characters over the PIR 
+ *  communication port.
+/******************************************************************************/
+void UART_PIR_SendStringConst(const unsigned char* data)
+{
+    while(*data !=0)
+    {
+        UART_PIR_SendCharConst(*data);
+        data++;
+    }
+}
+
+/******************************************************************************/
+/* UART_DEBUG_SendStringConst
+ *
+ * The function sends one string of constant characters over the debug
+ *  communication port.
+/******************************************************************************/
+void UART_DEBUG_SendStringConst(const unsigned char* data)
+{
+    while(*data !=0)
+    {
+        UART_DEBUG_SendCharConst(*data);
+        data++;
+    }
+}
+
+/******************************************************************************/
+/* UART_PIR_CleanBuffer
  *
  * The function cleans the UART receive buffer.
 /******************************************************************************/
-void UART_CleanBuffer(void)
+void UART_PIR_CleanBuffer(void)
 {
     unsigned char status;
     
     status = IEC0bits.U1RXIE;
-    UART_RX_Interrupt(OFF);
-    UART_Receive_Buffer_Place = 0;
-    MSC_CleanBuffer(UART_Receive_Buffer,UART_BUFFER_SIZE);
+    UART_PIR_RX_Interrupt(OFF);
+    UART_Rx_Buffer_Place_PIR = 0;
+    MSC_CleanBuffer(UART_Rx_Buffer_PIR,UART_BUFFER_SIZE_PIR);
     if(status)
     {
-        UART_RX_Interrupt(ON);
+        UART_PIR_RX_Interrupt(ON);
+    }
+}
+
+/******************************************************************************/
+/* UART_DEBUG_CleanBuffer
+ *
+ * The function cleans the UART receive buffer.
+/******************************************************************************/
+void UART_DEBUG_CleanBuffer(void)
+{
+    unsigned char status;
+
+    status = IEC1bits.U2RXIE;
+    UART_DEBUG_RX_Interrupt(OFF);
+    UART_Rx_Buffer_Place_DEBUG = 0;
+    MSC_CleanBuffer(UART_Rx_Buffer_DEBUG,UART_BUFFER_SIZE_DEBUG);
+    if(status)
+    {
+        UART_DEBUG_RX_Interrupt(ON);
     }
 }
 

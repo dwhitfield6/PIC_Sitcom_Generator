@@ -16,7 +16,7 @@
 /* Contains ISR
  *
  * Look here for the default vector names
- * c:\Program Files (x86)\Microchip\xc16\v1.11\support\dsPIC33F\gld\ 
+ * c:\Program Files (x86)\Microchip\xc16\v1.24\support\dsPIC33F\gld\
 /******************************************************************************/
 
 /******************************************************************************/
@@ -30,13 +30,14 @@
 
 #include "MISC.h"
 #include "DAC.h"
-#include "user.h"
-#include "Start_sound.h"
+#include "USER.h"
+#include "START_SOUND.h"
 #include "SPI.h"
 #include "WAV.h"
 #include "UART.h"
 #include "PIR.h"
 #include "PWM.h"
+#include "SWITCH.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -124,24 +125,24 @@ void _ISR_NOPSV _SPI2Interrupt(void)
 }
 
 /******************************************************************************/
-/* UART Receive interrupt
+/* UART Receive interrupt from communication from PIR
 /******************************************************************************/
 void _ISR_NOPSV _U1RXInterrupt(void)
 {
     unsigned char temp;
 
-    RX_Response = TRUE;
+    RX_Response_PIR = TRUE;
     if(!U1STAbits.FERR)
     {
         /* there was no error */
-        if(UART_Receive_Buffer_Place < UART_BUFFER_SIZE)
+        if(UART_Rx_Buffer_Place_PIR < UART_BUFFER_SIZE_PIR)
         {
-            UART_Receive_Buffer[UART_Receive_Buffer_Place] = U1RXREG;
-            UART_Receive_Buffer_Place++;
+            UART_Rx_Buffer_PIR[UART_Rx_Buffer_Place_PIR] = U1RXREG;
+            UART_Rx_Buffer_Place_PIR++;
         }
         else
         {
-            UART_CleanBuffer();
+            UART_PIR_CleanBuffer();
         }
     }
     else
@@ -153,15 +154,59 @@ void _ISR_NOPSV _U1RXInterrupt(void)
 }
 
 /******************************************************************************/
+/* UART Receive interrupt from communication from Debug port
+/******************************************************************************/
+void _ISR_NOPSV _U2RXInterrupt(void)
+{
+    unsigned char temp;
+
+    if(!U2STAbits.FERR)
+    {
+        /* there was no error */
+        if(UART_Rx_Buffer_Place_DEBUG < UART_BUFFER_SIZE_DEBUG)
+        {
+            UART_Rx_Buffer_DEBUG[UART_Rx_Buffer_Place_DEBUG] = U2RXREG;
+            UART_Rx_Buffer_Place_DEBUG++;
+        }
+        else
+        {
+            UART_DEBUG_CleanBuffer();
+        }
+    }
+    else
+    {
+        temp = U2RXREG;
+    }
+    IFS4bits.U2EIF = 0; // clear error flag
+    IFS1bits.U2RXIF = 0; // clear receive flag
+}
+
+/******************************************************************************/
 /* PIR Motion Detect interrupt
 /******************************************************************************/
+#ifndef SitCom_Generator_PROTOBOARD
+void _ISR_NOPSV _INT1Interrupt(void)
+{
+    Motion = TRUE;
+    IFS1bits.INT1IF = 0; // clear flag
+}
+#else
 void _ISR_NOPSV _CNInterrupt(void)
 {
-    /**************Motion Detected ***************/
-
     Motion = TRUE;
-    RedLEDON();
+    MSC_RedLEDON();
     IFS1bits.CNIF = 0; // clear flag
+}
+#endif
+
+/******************************************************************************/
+/* Door open Detect through optional switch interrupt
+/******************************************************************************/
+void _ISR_NOPSV _INT2Interrupt(void)
+{
+
+    DoorOpened = TRUE;
+    IFS1bits.INT2IF = 0; // clear flag
 }
 
 /******************************************************************************/

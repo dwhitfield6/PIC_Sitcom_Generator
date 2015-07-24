@@ -21,18 +21,35 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
-/* UART_BUFFER_SIZE
+/* DEBUG_UART_BAUD
  *
- * This is the size of the UART receive buffer.
+ * This is the BAUD rate of the debug interface.
 /******************************************************************************/
-#define UART_BUFFER_SIZE 10
+#define DEBUG_UART_BAUD 115200
+
+/******************************************************************************/
+/* UART_BUFFER_SIZE_PIR
+ *
+ * This is the size of the UART receive buffer associated with the PIR sensor.
+/******************************************************************************/
+#define UART_BUFFER_SIZE_PIR 10
+
+/******************************************************************************/
+/* UART_BUFFER_SIZE_DEBUG
+ *
+ * This is the size of the UART receive buffer associated with the DEBUG port.
+/******************************************************************************/
+#define UART_BUFFER_SIZE_DEBUG 10
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
-extern unsigned char UART_Receive_Buffer[UART_BUFFER_SIZE];
-extern volatile unsigned int UART_Receive_Buffer_Place;
-extern volatile unsigned char RX_Response;
+extern unsigned char UART_Rx_Buffer_PIR[UART_BUFFER_SIZE_PIR];
+extern unsigned char UART_Rx_Buffer_DEBUG[UART_BUFFER_SIZE_DEBUG];
+extern volatile unsigned int UART_Rx_Buffer_Place_PIR;
+extern volatile unsigned int UART_Rx_Buffer_Place_DEBUG;
+extern volatile unsigned char RX_Response_PIR;
+extern volatile unsigned char RX_Response_DEBUG;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -46,14 +63,22 @@ extern volatile unsigned char RX_Response;
 /******************************************************************************/
 /* Function prototypes                                                        */
 /******************************************************************************/
-inline void UART_TX_PIN(unsigned char status);
-inline void UART_RX_Interrupt(unsigned char status);
+inline void UART_PIR_TX_PIN(unsigned char status);
+inline void UART_DEBUG_TX_PIN(unsigned char status);
+inline void UART_PIR_RX_Interrupt(unsigned char status);
+inline void UART_DEBUG_RX_Interrupt(unsigned char status);
 void InitUART(void);
-void UART_SetClock(unsigned long baud);
-void UART_SendChar(unsigned char data);
-void UART_SendCharConst(const unsigned char data);
-void UART_SendString(unsigned char* data);
-void UART_SendStringConst(const unsigned char* data);
-void UART_CleanBuffer(void);
+void UART_PIR_SetClock(unsigned long baud);
+void UART_DEBUG_SetClock(unsigned long baud);
+void UART_PIR_SendChar(unsigned char data);
+void UART_DEBUG_SendChar(unsigned char data);
+void UART_PIR_SendCharConst(const unsigned char data);
+void UART_DEBUG_SendCharConst(const unsigned char data);
+void UART_PIR_SendString(unsigned char* data);
+void UART_DEBUG_SendString(unsigned char* data);
+void UART_PIR_SendStringConst(const unsigned char* data);
+void UART_DEBUG_SendStringConst(const unsigned char* data);
+void UART_PIR_CleanBuffer(void);
+void UART_DEBUG_CleanBuffer(void);
 
 #endif	/* UART_H */

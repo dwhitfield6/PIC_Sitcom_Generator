@@ -21,7 +21,7 @@
 #include <stdbool.h>        /* For true/false definition */
 
 #include "WAV.h"
-#include "user.h"
+#include "USER.h"
 
 /******************************************************************************/
 /* Structures                                                                 */

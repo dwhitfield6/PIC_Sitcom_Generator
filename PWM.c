@@ -23,9 +23,10 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "user.h"
-#include "system.h"
+#include "USER.h"
+#include "SYSTEM.h"
 #include "PWM.h"
+#include "TIMERS.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -87,7 +88,8 @@ inline void PWM_SetRGB(unsigned int Red, unsigned int Green, unsigned int Blue)
 /******************************************************************************/
 /* InitPIR
  *
- * The function initializes the 3 PWM channels.
+ * The function initializes the 3 PWM channels. This must be called after a
+ * a call to initialize the timers.
 /******************************************************************************/
 void InitPWM(void)
 {
@@ -114,17 +116,6 @@ void InitPWM(void)
     OC3CONbits.OCTSEL = 0; // Select Timer 2 as output compare time base
     OC3CONbits.OCM = 0b110; // Select the Output Compare mode
 
-    // Initialize and enable Timer2
-    T2CONbits.TON = 0; // Disable Timer
-    T2CONbits.TCS = 0; // Select internal instruction cycle clock
-    T2CONbits.TGATE = 0; // Disable Gated Timer mode
-    T2CONbits.TCKPS = 0b10; // Select 1:64 Prescaler
-    TMR2 = 0x00; // Clear timer register
-    PR2 = 1000; // Load the period value
-    IPC1bits.T2IP = 0x01; // Set Timer 2 Interrupt Priority Level
-    IFS0bits.T2IF = 0; // Clear Timer 2 Interrupt Flag
-    IEC0bits.T2IE = 1; // Enable Timer 2 interrupt
-    T2CONbits.TON = 1; // Start Timer
 #else
     Nop();
 #endif
@@ -165,10 +156,10 @@ void PWM_SetColor(unsigned int Color)
             PWM_SetRGB(0,0,0);
             break;
     }
-}
 #else
     Nop();
 #endif
+}
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

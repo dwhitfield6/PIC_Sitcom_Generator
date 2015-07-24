@@ -27,7 +27,7 @@
 #include "FAT.h"
 #include "SD.h"
 #include "MISC.h"
-#include "user.h"
+#include "USER.h"
 #include "DAC.h"
 
 /******************************************************************************/

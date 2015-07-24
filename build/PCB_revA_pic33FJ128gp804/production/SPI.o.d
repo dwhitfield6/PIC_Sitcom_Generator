@@ -1,6 +1,6 @@
 build/PCB_revA_pic33FJ128gp804/production/SPI.o:  \
 SPI.c  \
-user.h  \
-system.h  \
+USER.h  \
+SYSTEM.h  \
  MISC.h  \
 SPI.h 

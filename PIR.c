@@ -23,8 +23,8 @@
 #include <stdbool.h>        /* For true/false definition */
 #include <stdio.h>         /* For sprintf definition */
 
-#include "user.h"
-#include "system.h"
+#include "USER.h"
+#include "SYSTEM.h"
 #include "PIR.h"
 #include "UART.h"
 #include "MISC.h"
@@ -46,10 +46,21 @@ volatile unsigned char Motion = FALSE;
 /******************************************************************************/
 /* PIR_Interrupt
  *
- * This function controls the change notification interrupt.
+ * This function controls the external interrupt INT1 for pcb versions and the
+ * change input interrupt for proto version.
 /******************************************************************************/
 inline void PIR_Interrupt(unsigned char status)
 {
+#ifndef SitCom_Generator_PROTOBOARD
+    if(status)
+    {
+        IEC1bits.INT1IE = ON;
+    }
+    else
+    {
+        IEC1bits.INT1IE = OFF;
+    }
+#else
     if(status)
     {
         IEC1bits.CNIE = 1;
@@ -60,6 +71,25 @@ inline void PIR_Interrupt(unsigned char status)
         IEC1bits.CNIE = 0;
         CNEN1 &= ~PIR_MD_CN;
     }
+#endif
+}
+
+/******************************************************************************/
+/* PIR_Interrupt
+ *
+ * This function controls the external interrupt INT1.
+/******************************************************************************/
+inline unsigned char PIR_MD_READ(void)
+{
+#ifndef SitCom_Generator_PROTOBOARD
+    if(PORTA & PIR_MD2)
+    {
+        return TRUE;
+    }
+    return FALSE;
+#else
+    return FALSE;
+#endif
 }
 
 /******************************************************************************/
@@ -73,7 +103,14 @@ inline void PIR_Interrupt(unsigned char status)
 /******************************************************************************/
 void InitPIR(void)
 {
+#ifndef SitCom_Generator_PROTOBOARD
+    /* the PIR module MD pin indicating motion is triggered by INT1 */
+    INTCON2bits.INT1EP = 1; // trigger on negative edge
+    IPC5bits.INT1IP = 2; // priority is 2
+    RPINR0bits.INT1R = PIR_MD_RP;
+#else
     IPC4bits.CNIP = 2;  // Interrupt priority is 2
+#endif
     PIR_Reset();        // Put the device into serial interface mode
     PIR_ReadCommand('a');
     MSC_DelayUS(2000); // Wait for data to be received
@@ -86,11 +123,11 @@ void InitPIR(void)
 /******************************************************************************/
 unsigned char PIR_ReadCommand(const unsigned char Command)
 {
-    UART_CleanBuffer();
-    RX_Response = FALSE;
-    UART_SendCharConst(Command);
+    UART_PIR_CleanBuffer();
+    RX_Response_PIR = FALSE;
+    UART_PIR_SendCharConst(Command);
     MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response)
+    if(!RX_Response_PIR)
     {
         return FALSE;
     }
@@ -108,16 +145,16 @@ unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* Curre
     {
         return FALSE;
     }
-    MSC_BufferCopy(UART_Receive_Buffer,CurrentValue, PIR_RESPONSE_SIZE, 0);
-    UART_CleanBuffer();
-    RX_Response = FALSE;
-    UART_SendString(NewValue);
+    MSC_BufferCopy(UART_Rx_Buffer_PIR,CurrentValue, PIR_RESPONSE_SIZE, 0);
+    UART_PIR_CleanBuffer();
+    RX_Response_PIR = FALSE;
+    UART_PIR_SendString(NewValue);
     MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response)
+    if(!RX_Response_PIR)
     {
         return FAIL;
     }
-    if(UART_Receive_Buffer[0] != ACK)
+    if(UART_Rx_Buffer_PIR[0] != ACK)
     {
         return FAIL;
     }
@@ -135,19 +172,19 @@ unsigned char PIR_ConfirmationCommand(const unsigned char Command)
     {
         return FALSE;
     }
-    if(UART_Receive_Buffer[0] != ACK)
+    if(UART_Rx_Buffer_PIR[0] != ACK)
     {
         return FAIL;
     }
-    UART_CleanBuffer();
-    RX_Response = FALSE;
-    UART_SendStringConst(CONF_SEQUENCE);
+    UART_PIR_CleanBuffer();
+    RX_Response_PIR = FALSE;
+    UART_PIR_SendStringConst(CONF_SEQUENCE);
     MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response)
+    if(!RX_Response_PIR)
     {
         return FAIL;
     }
-    if(UART_Receive_Buffer[0] != ACK)
+    if(UART_Rx_Buffer_PIR[0] != ACK)
     {
         return FAIL;
     }
@@ -181,11 +218,11 @@ void PIR_Sleep(unsigned char status)
 void PIR_Reset(void)
 {
     PIR_Sleep(TRUE);
-    UART_TX_PIN(OFF);
+    UART_PIR_TX_PIN(OFF);
     MSC_DelayUS(500);
     PIR_Sleep(FALSE);
     MSC_DelayUS(500);
-    UART_TX_PIN(ON);
+    UART_PIR_TX_PIN(ON);
 }
 
 /*-----------------------------------------------------------------------------/

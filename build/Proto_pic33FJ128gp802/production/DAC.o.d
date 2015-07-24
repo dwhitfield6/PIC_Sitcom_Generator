@@ -1,6 +1,6 @@
 build/Proto_pic33FJ128gp802/production/DAC.o:  \
 DAC.c  \
-user.h  \
+USER.h  \
 MISC.h  \
- system.h  \
+ SYSTEM.h  \
 DAC.h 
