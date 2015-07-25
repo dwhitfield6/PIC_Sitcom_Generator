@@ -66,6 +66,7 @@
 #include "UART.h"
 #include "PWM.h"
 #include "SWITCH.h"
+#include "ADC.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -87,12 +88,14 @@ int main (void)
 {
     unsigned char i;
 
+    /* Initialize */
     SYS_ConfigureOscillator();
     Init_App();
     Init_System();
     PWM_SetColor(OFF);
     RTCC_SetTime();
 
+    /* Flash LEDS */
     MSC_RedLEDOFF();
     for(i=0; i<20;i++)
     {
@@ -102,9 +105,13 @@ int main (void)
     }
     MSC_RedLEDOFF();
 
+    /* Play start-up song */
     DAC_Play_Startup();
     PWM_SetColor(RED);
 
+    /* Read Voltage rails */
+    ADC_ReadVIN();
+    
     while(1)
     {
         //RTCC_Read(&CurrentTime);
@@ -128,12 +135,11 @@ int main (void)
             else if(SD_State == WAV_READY)
             {
                 PWM_SetColor(GREEN);
-                //WAV_PlayFile(0);
                 if(Motion == TRUE || DoorOpened == TRUE)
                 {
                     PWM_SetColor(PURPLE);
                     PIR_Interrupt(OFF);
-                    WAV_PlayFile(3);
+                    WAV_PlayFile(4);
                     Motion = FALSE;
                     DoorOpened = FALSE;
                     PIR_Interrupt(ON);

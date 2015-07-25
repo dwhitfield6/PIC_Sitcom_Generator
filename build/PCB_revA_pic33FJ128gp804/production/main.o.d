@@ -12,4 +12,5 @@ WAV.h  \
 PIR.h  \
 UART.h  \
 PWM.h  \
-SWITCH.h 
+SWITCH.h  \
+ ADC.h 

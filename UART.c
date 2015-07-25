@@ -140,6 +140,7 @@ void InitUART(void)
     U2MODEbits.UARTEN = ON;     // Turn on module
     U2STAbits.UTXEN = ON;       // Turn on transmit
     UART_DEBUG_RX_Interrupt(ON);
+    UART_DEBUG_TX_PIN(ON);
 #endif
 }
 
@@ -329,6 +330,19 @@ void UART_DEBUG_CleanBuffer(void)
     if(status)
     {
         UART_DEBUG_RX_Interrupt(ON);
+    }
+}
+
+/******************************************************************************/
+/* UART_DEBUG_TestSpeed
+ *
+ * The function tests the baud rate of the debug UART.
+/******************************************************************************/
+void UART_DEBUG_TestSpeed(void)
+{
+    while(1)
+    {
+        UART_DEBUG_SendCharConst('U');
     }
 }
 

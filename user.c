@@ -78,7 +78,7 @@ void Init_App(void)
     TP4_Tris            = OUTPUT;
     ADC_VINTris         = INPUT;
     ADC_5INTris         = INPUT;
-    AD1PCFGL            &= ~(ADC_VIN_AN + ADC_5IN_AN); /* Configure ADC pins as analog */
+    AD1PCFGL            &= ~((1<<ADC_VIN_AN) + (1<<ADC_5IN_AN)); /* Configure ADC pins as analog */
     PIR_MD2_Tris        = INPUT;
     DBG_TX_Tris         = OUTPUT;
     DBG_RX_Tris         = INPUT;

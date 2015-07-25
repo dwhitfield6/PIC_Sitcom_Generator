@@ -60,6 +60,7 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
 {
     int temp;
     IFS4bits.DAC1RIF = 0; /* Clear Right Channel Interrupt Flag */
+    MSC_TestPoint1TOGGLE();
     if(StartupSong)
     {
         temp = Start_Clip[DAC_Buffer_Place];
@@ -104,7 +105,7 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
             Nop();
         }
         temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
-        temp >>= 3;
+        temp >>= 2;
         DAC1RDAT = temp;
         DAC_Buffer_Place++;
     }
@@ -214,11 +215,11 @@ void _ISR_NOPSV _INT2Interrupt(void)
 /******************************************************************************/
 void _ISR_NOPSV _T2Interrupt( void )
 {
-/* Interrupt Service Routine code goes here */
-OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
-OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
-OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
-IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
+    /* Interrupt Service Routine code goes here */
+    OC1RS = Red_Duty; // Write Duty Cycle value for next PWM cycle
+    OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
+    OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
+    IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
 }
 
 /*-----------------------------------------------------------------------------/

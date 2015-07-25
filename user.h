@@ -177,7 +177,7 @@
 /* Connected from VIN to Voltage divider to ADC on PCB only */
 #define ADC_VINTris	TRISCbits.TRISC2
 #define ADC_VIN 0x0004 //RC2 used as AN8
-#define ADC_VIN_AN 0x0100 //AN8
+#define ADC_VIN_AN 8 //AN8
 
 /* Connected from 5 volt rail to Voltage divider to ADC on PCB only */
 #define ADC_5INTris	TRISBbits.TRISB14

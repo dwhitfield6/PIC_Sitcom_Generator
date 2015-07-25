@@ -44,6 +44,25 @@ volatile unsigned char Motion = FALSE;
 /******************************************************************************/
 
 /******************************************************************************/
+/* PIR_MD_PinControl
+ *
+ * This function controls the MD/RST pin. The pin is set as an active low reset
+ * by default. If theis funtion is TRUE, the pin is set as MD (an input)
+ * otherwise it is set as an output as pin RST.
+/******************************************************************************/
+inline void PIR_MD_PinControl(unsigned char MD_state)
+{
+    if(MD_state)
+    {
+        PIR_MD_Tris         = INPUT;
+    }
+    else
+    {
+        PIR_MD_Tris         = OUTPUT; //pin is RST not MD
+        LATC |= PIR_MD;
+    }
+}
+/******************************************************************************/
 /* PIR_Interrupt
  *
  * This function controls the external interrupt INT1 for pcb versions and the
@@ -54,6 +73,7 @@ inline void PIR_Interrupt(unsigned char status)
 #ifndef SitCom_Generator_PROTOBOARD
     if(status)
     {
+        IFS1bits.INT1IF = 0; // clear flag
         IEC1bits.INT1IE = ON;
     }
     else
@@ -103,17 +123,56 @@ inline unsigned char PIR_MD_READ(void)
 /******************************************************************************/
 void InitPIR(void)
 {
+    unsigned char Receivebuf[PIR_RESPONSE_SIZE];
+    unsigned char Sendbuf[PIR_RESPONSE_SIZE];
+    MSC_CleanBuffer(Receivebuf, PIR_RESPONSE_SIZE);
+
 #ifndef SitCom_Generator_PROTOBOARD
     /* the PIR module MD pin indicating motion is triggered by INT1 */
     INTCON2bits.INT1EP = 1; // trigger on negative edge
     IPC5bits.INT1IP = 2; // priority is 2
     RPINR0bits.INT1R = PIR_MD_RP;
+    /* disable hard reset until the pin is switched to MD function */
+    PIR_Reset();        // Put the device into serial interface mode
+    PIR_MD_PinControl(FALSE);
+    PIR_Reset();        // Put the device into serial interface mode
+    MSC_DelayUS(1000); // Wait for data to be received
+
+    /* configure MD pin */
+    PIR_WriteCommand('C', Receivebuf, "M", NULL);
+    PIR_MD_PinControl(TRUE);
+    MSC_CleanBuffer(Receivebuf, 10);
+    
+    /* configure MD Activation time */
+    Sendbuf[0] = 1;
+    PIR_WriteCommand('D', Receivebuf, Sendbuf, 1);
+    MSC_CleanBuffer(Receivebuf, 10);
+
+    /* Disable Hyper Sense */
+    Sendbuf[0] = 1;
+    PIR_WriteCommand('E', Receivebuf, "N", NULL);
+    MSC_CleanBuffer(Receivebuf, 10);
+
+    /* Frequency Response to detect low/high frequencies */
+    Sendbuf[0] = 1;
+    PIR_WriteCommand('F', Receivebuf, "L", NULL);
+    MSC_CleanBuffer(Receivebuf, 10);
+
+    /* configure Range */
+    Sendbuf[0] = 3; // range is 0-7 with 0 being most sensitive
+    PIR_WriteCommand('R', Receivebuf, Sendbuf, 1);
+    MSC_CleanBuffer(Receivebuf, 10);
+
+    /* configure Sensitivity */
+    Sendbuf[0] = 100; // range is 0-255 with 0 being most sensitive
+    PIR_WriteCommand('S', Receivebuf, Sendbuf, 1);
+    MSC_CleanBuffer(Receivebuf, 10);
+
 #else
     IPC4bits.CNIP = 2;  // Interrupt priority is 2
 #endif
-    PIR_Reset();        // Put the device into serial interface mode
-    PIR_ReadCommand('a');
-    MSC_DelayUS(2000); // Wait for data to be received
+    Motion = FALSE;
+    PIR_Interrupt(ON);
 }
 
 /******************************************************************************/
@@ -123,13 +182,19 @@ void InitPIR(void)
 /******************************************************************************/
 unsigned char PIR_ReadCommand(const unsigned char Command)
 {
+    unsigned int count = 0;
+
     UART_PIR_CleanBuffer();
     RX_Response_PIR = FALSE;
     UART_PIR_SendCharConst(Command);
-    MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response_PIR)
+    while(!RX_Response_PIR)
     {
-        return FALSE;
+        count++;
+        MSC_DelayUS(20); // Wait for data to be received
+        if(count > 500)
+        {
+            return FALSE;
+        }
     }
     return TRUE;
 }
@@ -139,20 +204,40 @@ unsigned char PIR_ReadCommand(const unsigned char Command)
  *
  * The function sends a write command.
 /******************************************************************************/
-unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* CurrentValue, unsigned char* NewValue)
+unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* CurrentValue, unsigned char* NewValue, unsigned char AmountBytes)
 {
+    unsigned char i = 0;
+    unsigned int count = 0;
+    
     if(!PIR_ReadCommand(Command))
     {
         return FALSE;
     }
+    Nop();
     MSC_BufferCopy(UART_Rx_Buffer_PIR,CurrentValue, PIR_RESPONSE_SIZE, 0);
     UART_PIR_CleanBuffer();
     RX_Response_PIR = FALSE;
-    UART_PIR_SendString(NewValue);
-    MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response_PIR)
+    if(!AmountBytes)
     {
-        return FAIL;
+        UART_PIR_SendString(NewValue);
+    }
+    else
+    {
+        while(AmountBytes)
+        {
+            UART_PIR_SendChar(NewValue[i]);
+            i++;
+            AmountBytes--;
+        }
+    }
+    while(!RX_Response_PIR)
+    {
+        count++;
+        MSC_DelayUS(20); // Wait for data to be received
+        if(count > 500)
+        {
+            return FALSE;
+        }
     }
     if(UART_Rx_Buffer_PIR[0] != ACK)
     {
@@ -168,6 +253,8 @@ unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* Curre
 /******************************************************************************/
 unsigned char PIR_ConfirmationCommand(const unsigned char Command)
 {
+    unsigned int count = 0;
+
     if(!PIR_ReadCommand(Command))
     {
         return FALSE;
@@ -180,9 +267,14 @@ unsigned char PIR_ConfirmationCommand(const unsigned char Command)
     RX_Response_PIR = FALSE;
     UART_PIR_SendStringConst(CONF_SEQUENCE);
     MSC_DelayUS(2000); // Wait for data to be received
-    if(!RX_Response_PIR)
+    while(!RX_Response_PIR)
     {
-        return FAIL;
+        count++;
+        MSC_DelayUS(20); // Wait for data to be received
+        if(count > 500)
+        {
+            return FALSE;
+        }
     }
     if(UART_Rx_Buffer_PIR[0] != ACK)
     {

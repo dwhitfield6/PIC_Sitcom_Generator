@@ -151,6 +151,19 @@
  * The function toggles test point 4.
 /******************************************************************************/
 #define MSC_TestPoint4TOGGLE()  (LATA ^= TP4)
+#else
+#define MSC_TestPoint1ON()  (Nop())
+#define MSC_TestPoint1OFF()  (Nop())
+#define MSC_TestPoint1TOGGLE()  (Nop())
+#define MSC_TestPoint2ON()  (Nop())
+#define MSC_TestPoint2OFF()  (Nop())
+#define MSC_TestPoint2TOGGLE()  (Nop())
+#define MSC_TestPoint3ON()  (Nop())
+#define MSC_TestPoint3OFF()  (Nop())
+#define MSC_TestPoint3TOGGLE()  (Nop())
+#define MSC_TestPoint4ON()  (Nop())
+#define MSC_TestPoint4OFF()  (Nop())
+#define MSC_TestPoint4TOGGLE()  (Nop())
 #endif
 
 /******************************************************************************/
