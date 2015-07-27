@@ -29,6 +29,9 @@
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
+#define WAV_FINISHED 129
+#define WAV_CONTINUE 110
+#define WAV_FAIL 118
 
 /******************************************************************************/
 /* Macro Functions                                                            */
@@ -46,6 +49,9 @@ extern unsigned char WaveFilesNumHigh;
 /******************************************************************************/
 unsigned char WAV_ParseHeader(unsigned char* buffer, unsigned char fileNumber);
 unsigned char WAV_CheckFiles(void);
-unsigned char WAV_PlayFile(unsigned char file);
+unsigned char WAV_PlayFile_Random_Sector(unsigned char file);
+unsigned char WAV_PlayFile_Continuous_Sector(unsigned char file);
+unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, unsigned char *status );
+unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned char File, unsigned char *First, unsigned char *Status);
 
 #endif	/* WAV_H */

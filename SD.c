@@ -685,8 +685,7 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
         SPIwrite(0xFF); // MSB
 
         /* function to use the data goes here */
-        fpointer();
-        
+        fpointer();        
         SD_Clear();
     }
     SD_CMDSPI_send_read(SD_SetCMD(CMD12,0),R1,R1_Buffer, NO);

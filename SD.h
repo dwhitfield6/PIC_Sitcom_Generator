@@ -154,14 +154,25 @@ typedef struct sd
 #define NOT_SUPPORTED      0x04 /* High capacity SD card */
 
 /******************************************************************************/
+/* Continuous read states                                                     */
+/******************************************************************************/
+#define NOT_DONE    55
+#define DONE        65
+/******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 extern volatile unsigned char SD_State;
-extern unsigned char ReceiveBuffer;
+extern unsigned char SD_Receive_Buffer_Big[SDblockSize];
+extern unsigned char SD_Receive_Buffer_Small[20];
+extern unsigned char R1_Buffer[1];
+extern unsigned char R2_Buffer[2];
+extern unsigned char R3_Buffer[5];
+extern unsigned char R6_Buffer[6];
+extern unsigned char SD_Timeout;
+extern unsigned char SD_CardType;
 extern SDcommand Global_message;
 extern SDcommand* PGlobal_message;
 extern SDproperties SD;
-extern unsigned char SD_Receive_Buffer_Big[SDblockSize];
 
 /******************************************************************************/
 /* Function prototypes                                                        */

@@ -38,6 +38,9 @@
  *                          Added debug UART, ADC, and timer functionality.
  *                          Added random number generator to randomly choose a
  *                            wav file to play.
+ *                          Addd code to read the 5 volt rail.
+ *                          Added SD functions to use SD continuous read to
+ *                            play WAV files.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -115,6 +118,7 @@ int main (void)
 
     /* Read Voltage rails */
     ADC_ReadVIN();
+    ADC_ReadFiveVoltRail();
     
     while(1)
     {
@@ -156,7 +160,7 @@ int main (void)
                     }
                     PWM_SetColor(BLUE);
                     PIR_Interrupt(OFF);
-                    WAV_PlayFile(playfile);
+                    WAV_PlayFile_Random_Sector(playfile);
                     Motion = FALSE;
                     DoorOpened = FALSE;
                     PIR_Interrupt(ON);

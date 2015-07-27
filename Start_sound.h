@@ -26,7 +26,7 @@
 #include <stdint.h>         /* For uint8_t definition */
 #include <stdbool.h>        /* For true/false definition */
 
-#define NUM_ELEMENTS 9715
+#define NUM_ELEMENTS 9716
 
 const unsigned char Start_Clip[NUM_ELEMENTS] = {
 127, 128, 128, 128, 128, 128, 128, 128, // 0-7

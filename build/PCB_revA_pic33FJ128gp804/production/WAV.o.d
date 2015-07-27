@@ -6,4 +6,5 @@ USER.h  \
  SD.h  \
 MISC.h  \
 SYSTEM.h  \
-DAC.h 
+DAC.h  \
+SPI.h 

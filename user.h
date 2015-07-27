@@ -182,7 +182,7 @@
 /* Connected from 5 volt rail to Voltage divider to ADC on PCB only */
 #define ADC_5INTris	TRISBbits.TRISB14
 #define ADC_5IN 0x4000 //RB14 used as AN10
-#define ADC_5IN_AN 0x0400 //AN10
+#define ADC_5IN_AN 10 //AN10
 #endif
 
 /************* SD Card over SPI *************/

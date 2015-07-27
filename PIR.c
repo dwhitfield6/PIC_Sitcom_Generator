@@ -180,7 +180,7 @@ void InitPIR(void)
  *
  * The function sends a read command.
 /******************************************************************************/
-unsigned char PIR_ReadCommand(const unsigned char Command)
+unsigned char PIR_ReadCommand(const char Command)
 {
     unsigned int count = 0;
 
@@ -204,7 +204,7 @@ unsigned char PIR_ReadCommand(const unsigned char Command)
  *
  * The function sends a write command.
 /******************************************************************************/
-unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* CurrentValue, unsigned char* NewValue, unsigned char AmountBytes)
+unsigned char PIR_WriteCommand(const char Command, unsigned char* CurrentValue, char* NewValue, unsigned char AmountBytes)
 {
     unsigned char i = 0;
     unsigned int count = 0;
@@ -251,7 +251,7 @@ unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* Curre
  *
  * The function sends a confirmation command.
 /******************************************************************************/
-unsigned char PIR_ConfirmationCommand(const unsigned char Command)
+unsigned char PIR_ConfirmationCommand(const char Command)
 {
     unsigned int count = 0;
 

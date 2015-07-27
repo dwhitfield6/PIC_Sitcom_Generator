@@ -67,9 +67,9 @@ extern volatile unsigned char Motion;
 /******************************************************************************/
 inline void PIR_Interrupt(unsigned char status);
 void InitPIR(void);
-unsigned char PIR_ReadCommand(const unsigned char Command);
-unsigned char PIR_WriteCommand(const unsigned char Command, unsigned char* CurrentValue, unsigned char* NewValue, unsigned char AmountBytes);
-unsigned char PIR_ConfirmationCommand(const unsigned char Command);
+unsigned char PIR_ReadCommand(const char Command);
+unsigned char PIR_WriteCommand(const char Command, unsigned char* CurrentValue, char* NewValue, unsigned char AmountBytes);
+unsigned char PIR_ConfirmationCommand(const char Command);
 void PIR_Sleep(unsigned char status);
 void PIR_Reset(void);
 
