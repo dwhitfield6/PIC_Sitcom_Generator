@@ -102,10 +102,10 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
         {
             /* the read page caught the write page */
             /* this is an error if the sound file isnt finished playing */
-            Nop();
+            DAC_ERROR = TIMING;
         }
         temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
-        temp >>= 2;
+        temp >>= 1;
         DAC1RDAT = temp;
         DAC_Buffer_Place++;
     }

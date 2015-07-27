@@ -39,6 +39,7 @@
 /******************************************************************************/
 extern unsigned char ValidWAVFiles[MAX_FILES];
 extern unsigned char WAV_DONE;
+extern unsigned char WaveFilesNumHigh;
 
 /******************************************************************************/
 /* Function prototypes                                                        */

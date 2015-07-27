@@ -80,7 +80,19 @@ inline void SD_CS_ACTIVE(void)
 {
     Nop();
     Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
     LATB &= ~SPI_SD_CS;
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
     Nop();
     Nop();
 }
@@ -94,7 +106,19 @@ inline void SD_CS_INACTIVE(void)
 {
     Nop();
     Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
     LATB |= SPI_SD_CS;
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    Nop();
     Nop();
     Nop();
 }

@@ -75,6 +75,10 @@ void MSC_DelayUS(long US)
         Nop();
         Nop();
         Nop();
+#ifndef SitCom_Generator_PROTOBOARD
+        Nop();
+        Nop();
+#endif
     }
 }
 

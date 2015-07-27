@@ -32,12 +32,13 @@
 /******************************************************************************/
 volatile unsigned char ClipDone = FALSE;
 volatile unsigned char StartupSong = TRUE;
-unsigned int DAC_FIFO[2][DAC_BUFFER_SIZE]; /* double buffer */ /* TODO implement wav play so that the buffer does not overflow for 8 bit of mono data */
+int DAC_FIFO[2][DAC_BUFFER_SIZE]; /* double buffer */ /* TODO implement wav play so that the buffer does not overflow for 8 bit of mono data */
 volatile unsigned char DAC_Page_Write;
 volatile unsigned char DAC_Page_Read;
 unsigned int DAC_Buffer_Place = 0;
 unsigned int DAC_Buffer_Elements[2];
 volatile unsigned char DAC_Page_Write_Finished[2];
+volatile unsigned char DAC_ERROR = 0;
 
 /******************************************************************************/
 /* Inline Functions
@@ -68,8 +69,10 @@ inline void DAC_Stop(void)
  *
  * The function switchs to he other page in the double buffer.
 /******************************************************************************/
-inline void DAC_ToggleWriteDACPage(void)
+inline unsigned char DAC_ToggleWriteDACPage(void)
 {
+    unsigned int count = 0;
+
     if(DAC_Page_Write == FIRST)
     {
         DAC_Page_Write = SECOND;
@@ -79,6 +82,15 @@ inline void DAC_ToggleWriteDACPage(void)
         DAC_Page_Write = FIRST;
     }
     while(DAC_Page_Write_Finished[DAC_Page_Write] == TRUE); /* wait for read to finish on the page */
+    {
+        count++;
+        MSC_DelayUS(10);
+        if(count > 2000)
+        {
+            return FAIL;
+        }
+    }
+    return PASS;
 }
 
 /******************************************************************************/

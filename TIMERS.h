@@ -37,5 +37,7 @@
 /******************************************************************************/
 void InitTIMERS(void);
 void InitTIMER2(void);
+void InitTIMER4(void);
+long TMR_RandomNum(long low, long high);
 
 #endif	/* TIMERS_H */

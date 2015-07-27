@@ -36,6 +36,8 @@
  *                          Added RGB LED functions.
  *                          Added code to work withteh new hardware (PCB_revA).
  *                          Added debug UART, ADC, and timer functionality.
+ *                          Added random number generator to randomly choose a
+ *                            wav file to play.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -67,6 +69,7 @@
 #include "PWM.h"
 #include "SWITCH.h"
 #include "ADC.h"
+#include "TIMERS.h"
 
 /******************************************************************************/
 /* Version number                                                             */
@@ -87,6 +90,7 @@
 int main (void)
 {
     unsigned char i;
+    unsigned char playfile;
 
     /* Initialize */
     SYS_ConfigureOscillator();
@@ -137,9 +141,22 @@ int main (void)
                 PWM_SetColor(GREEN);
                 if(Motion == TRUE || DoorOpened == TRUE)
                 {
-                    PWM_SetColor(PURPLE);
+                    playfile = (unsigned char)TMR_RandomNum(0,(long)WaveFilesNumHigh);
+                    /* Check to see if the file is marked as valid */
+                    while(ValidWAVFiles[playfile] != PASS)
+                    {
+                        if(playfile >= WaveFilesNumHigh)
+                        {
+                            playfile = 0;
+                        }
+                        else
+                        {
+                            playfile++;
+                        }
+                    }
+                    PWM_SetColor(BLUE);
                     PIR_Interrupt(OFF);
-                    WAV_PlayFile(4);
+                    WAV_PlayFile(playfile);
                     Motion = FALSE;
                     DoorOpened = FALSE;
                     PIR_Interrupt(ON);

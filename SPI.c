@@ -269,6 +269,8 @@ unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned ch
     while(!SPI2STATbits.SPITBF)
     {
         SPI2BUF = write;
+        Nop();
+        Nop();
     }
     while(SPI2STATbits.SPITBF);
     while(SPI_State != FINISHED)

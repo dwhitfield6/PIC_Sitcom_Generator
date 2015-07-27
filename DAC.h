@@ -31,8 +31,11 @@
 #define DAC_BUFFER_SIZE 1024
 
 /******************************************************************************/
-/* Defines                                                                    */
+/* DAC_Error
+ *
+ * This contains the possible DAC errors.
 /******************************************************************************/
+#define TIMING  1
 
 /******************************************************************************/
 /* Union                                                                      */
@@ -54,12 +57,13 @@ typedef union
 /******************************************************************************/
 extern volatile unsigned char ClipDone;
 extern volatile unsigned char StartupSong;
-extern unsigned int DAC_FIFO[2][DAC_BUFFER_SIZE];
+extern int DAC_FIFO[2][DAC_BUFFER_SIZE];
 extern volatile unsigned char DAC_Page_Write;
 extern volatile unsigned char DAC_Page_Read;
 extern unsigned int DAC_Buffer_Place;
 extern unsigned int DAC_Buffer_Elements[2];
 extern volatile unsigned char DAC_Page_Write_Finished[2];
+extern volatile unsigned char DAC_ERROR;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -99,7 +103,7 @@ inline void DAC_Run(void);
 void DAC_AudioOn(void);
 void DAC_AudioOff(void);
 void DAC_Play_Startup(void);
-inline void DAC_ToggleWriteDACPage(void);
+inline unsigned char DAC_ToggleWriteDACPage(void);
 void DAC_SetClock(double Speed);
 
 #endif	/* DAC_H */

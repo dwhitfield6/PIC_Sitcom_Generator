@@ -179,7 +179,6 @@ unsigned char MSC_StringMatch(const unsigned char* This, const unsigned char* Th
 unsigned char MSC_StringMatchCaseInsensitive(const unsigned char* This, const unsigned char* That);
 unsigned char MSC_StringContains(const unsigned char* This, const unsigned char* That);
 unsigned char MSC_StringContainsCaseInsensitive(const unsigned char* This, const unsigned char* That);
-void MSC_CalibrateDelay(void);
 void MSC_LowercaseChar(unsigned char* Input);
 void MSC_LowercaseString(unsigned char* Input);
 void MSC_DelayNOP(unsigned char NOPs);

@@ -35,6 +35,7 @@
 /******************************************************************************/
 unsigned char ValidWAVFiles[MAX_FILES];
 unsigned char WAV_DONE = FALSE;
+unsigned char WaveFilesNumHigh = 0;
 
 /******************************************************************************/
 /* Inline Functions
@@ -166,6 +167,7 @@ unsigned char WAV_CheckFiles(void)
     unsigned long firstSector;
     unsigned char found = FALSE;
 
+    WaveFilesNumHigh = 0;
     for (i=0; i<MAX_FILES; i++)
     {
         firstSector = FAT_GetFirstSector (FileList[i].firstCluster);
@@ -174,6 +176,7 @@ unsigned char WAV_CheckFiles(void)
         {
             ValidWAVFiles[i] = PASS;
             found = TRUE;
+            WaveFilesNumHigh = i;
         }
         else
         {
@@ -225,6 +228,7 @@ unsigned char WAV_PlayFile(unsigned char file)
     }
 
     /* data starts on byte 44 */
+    DAC_ERROR =0; // clear the DAC error
     DAC_Page_Write_Finished[FIRST] = FALSE;
     DAC_Page_Write_Finished[SECOND] = FALSE;
     DAC_Page_Write = FIRST;
@@ -235,6 +239,10 @@ unsigned char WAV_PlayFile(unsigned char file)
     WAV_DONE = FALSE;
     while(1)
     {
+        if(DAC_ERROR)
+        {
+           goto FINISHED;
+        }
         if(FileList[file].WAV_DATA.BitsPerSample == 8)
         {
             temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
@@ -243,7 +251,7 @@ unsigned char WAV_PlayFile(unsigned char file)
         }
         else
         {
-            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+            DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = (int) MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
         }
         SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
         DAC_Buffer_Count++;
@@ -261,7 +269,10 @@ unsigned char WAV_PlayFile(unsigned char file)
             DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
             DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
             DAC_Buffer_Count = 0;
-            DAC_ToggleWriteDACPage();
+            if(!DAC_ToggleWriteDACPage())
+            {
+                goto FINISHED;
+            }
             if(playing == FALSE)
             {
                 /* Turn on the audio amp and start playback */
@@ -283,6 +294,10 @@ unsigned char WAV_PlayFile(unsigned char file)
         FAT_ReadSector(firstSector + j);
         while(1)
         {
+            if(DAC_ERROR)
+            {
+               goto FINISHED;
+            }
             if(FileList[file].WAV_DATA.BitsPerSample == 8)
             {
                 temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
@@ -291,7 +306,7 @@ unsigned char WAV_PlayFile(unsigned char file)
             }
             else
             {
-                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+                DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = (int) MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
             }
             SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
             DAC_Buffer_Count++;
@@ -309,7 +324,10 @@ unsigned char WAV_PlayFile(unsigned char file)
                 DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
                 DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
                 DAC_Buffer_Count = 0;
-                DAC_ToggleWriteDACPage();
+                if(!DAC_ToggleWriteDACPage())
+                {
+                    goto FINISHED;
+                }
                 if(playing == FALSE)
                 {
                     /* Turn on the audio amp and start playback */
@@ -338,6 +356,10 @@ unsigned char WAV_PlayFile(unsigned char file)
             FAT_ReadSector(firstSector + j);
             while(1)
             {
+                if(DAC_ERROR)
+                {
+                   goto FINISHED;
+                }
                 if(FileList[file].WAV_DATA.BitsPerSample == 8)
                 {
                     temp = (SD_Receive_Buffer_Big[SD_Buffer_Count] - 127);
@@ -346,7 +368,7 @@ unsigned char WAV_PlayFile(unsigned char file)
                 }
                 else
                 {
-                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
+                    DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = (int) MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
                 }
                 SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
                 DAC_Buffer_Count++;
@@ -364,7 +386,10 @@ unsigned char WAV_PlayFile(unsigned char file)
                     DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
                     DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
                     DAC_Buffer_Count = 0;
-                    DAC_ToggleWriteDACPage();
+                    if(!DAC_ToggleWriteDACPage())
+                    {
+                        goto FINISHED;
+                    }
                     if(playing == FALSE)
                     {
                         /* Turn on the audio amp and start playback */
