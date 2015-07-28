@@ -5,9 +5,7 @@ Debuggers Used: PicKit3
 Programmers Used: PicKit3
 
 Description:
-This project is used for home automation. The board has an IR receiver, IR LED,
-Bluetooth module, a pushbutton switch, 4 dip switches and a 315MHz RF
-transmitter. This is used to bridge between bluetooth, IR, and 315MHz RF. Some
-RF relays from walmart, homedepot...etc are used at the other end of the
-315MHz channel.
+This project is used to simulate your life as a Sitcom. When motion is detected,
+the system reads wav audio files from an Sd crd. The songs are clapping, booing,
+and laughing.
 
