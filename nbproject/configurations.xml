@@ -40,12 +40,12 @@
       <itemPath>PIR.c</itemPath>
       <itemPath>PWM.c</itemPath>
       <itemPath>SWITCH.c</itemPath>
-      <itemPath>INTERRUPTS.c</itemPath>
       <itemPath>CONFIGURATION.c</itemPath>
       <itemPath>TIMERS.c</itemPath>
       <itemPath>ADC.c</itemPath>
       <itemPath>SYSTEM.c</itemPath>
       <itemPath>USER.c</itemPath>
+      <itemPath>INTERRUPTS.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
