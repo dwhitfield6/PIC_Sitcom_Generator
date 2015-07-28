@@ -29,15 +29,6 @@
  * 
 /******************************************************************************/
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/******************************************************************************/
-/* Pick Which System!!!
- * 
- * Choose if the system has a bluetooth module or not.
- *
-/******************************************************************************/
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
 /******************************************************************************/
 /* PCB board
  *
@@ -96,12 +87,19 @@
 /* Pin Defines                                                                */
 /******************************************************************************/
 
-/************* OScillator *************/
+/************* Secondary Oscillator ***********/
 /* Connected to the secondary oscillator  */
 #define SOSCOTris	TRISBbits.TRISB4
 
 /* Connected to the secondary oscillator  */
 #define SOSCITris	TRISAbits.TRISA4
+
+/************* Primary Oscillator ***********/
+/* Connected to the primary oscillator  */
+#define OSC1Tris	TRISAbits.TRISA2
+
+/* Connected to the primary oscillator  */
+#define OSC2Tris	TRISAbits.TRISA3
 
 /************* Red LED over GPIO *************/
 /* Connected to the Red Led  */
