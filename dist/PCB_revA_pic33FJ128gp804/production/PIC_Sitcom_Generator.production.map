@@ -33,12 +33,12 @@ Command:
   build/PCB_revA_pic33FJ128gp804/production/PIR.o \
   build/PCB_revA_pic33FJ128gp804/production/PWM.o \
   build/PCB_revA_pic33FJ128gp804/production/SWITCH.o \
-  build/PCB_revA_pic33FJ128gp804/production/USER.o \
-  build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o \
   build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o \
   build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o \
   build/PCB_revA_pic33FJ128gp804/production/TIMERS.o \
   build/PCB_revA_pic33FJ128gp804/production/ADC.o \
+  build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o \
+  build/PCB_revA_pic33FJ128gp804/production/USER.o \
   --defsym=__MPLAB_BUILD=1 \
   -Tp33FJ128GP804.gld.00 \
   --stack=16 \
@@ -746,12 +746,12 @@ LOAD build/PCB_revA_pic33FJ128gp804/production/UART.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/PIR.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/PWM.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
-LOAD build/PCB_revA_pic33FJ128gp804/production/USER.o
-LOAD build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
 LOAD build/PCB_revA_pic33FJ128gp804/production/ADC.o
+LOAD build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+LOAD build/PCB_revA_pic33FJ128gp804/production/USER.o
                     0x0001                  __MPLAB_BUILD = 0x1
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC33F\libp33FJ128GP804-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libfx-elf.a
@@ -940,12 +940,12 @@ __FUID3
  .debug_info      0x007829        0xc5d build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_info      0x008486        0x96f build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_info      0x008df5        0x6ea build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_info      0x0094df        0x59d build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_info      0x009a7c        0x640 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_info      0x00a0bc        0xfa7 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_info      0x00b063        0x127 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_info      0x00b18a        0x998 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_info      0x00bb22        0x908 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_info      0x0094df        0xfa7 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_info      0x00a486        0x127 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_info      0x00a5ad        0x998 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_info      0x00af45        0x908 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_info      0x00b84d        0x640 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_info      0x00be8d        0x59d build/PCB_revA_pic33FJ128gp804/production/USER.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000       0x1587
@@ -962,12 +962,12 @@ __FUID3
  .debug_abbrev    0x000d2d        0x1c7 build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_abbrev    0x000ef4        0x115 build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_abbrev    0x001009         0xde build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_abbrev    0x0010e7         0x8e build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_abbrev    0x001175         0xa7 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_abbrev    0x00121c        0x148 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_abbrev    0x001364         0x1f build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_abbrev    0x001383        0x106 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_abbrev    0x001489         0xfe build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_abbrev    0x0010e7        0x148 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_abbrev    0x00122f         0x1f build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_abbrev    0x00124e        0x106 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_abbrev    0x001354         0xfe build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_abbrev    0x001452         0xa7 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_abbrev    0x0014f9         0x8e build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .debug_line       0x000000       0x8e76
  *(.debug_line)
@@ -983,12 +983,12 @@ __FUID3
  .debug_line      0x007883        0x5bb build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_line      0x007e3e        0x31c build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_line      0x00815a        0x104 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_line      0x00825e        0x244 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_line      0x0084a2         0xea build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_line      0x00858c        0x43e build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_line      0x0089ca         0x24 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_line      0x0089ee        0x224 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_line      0x008c12        0x264 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_line      0x00825e        0x43e build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_line      0x00869c         0x24 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_line      0x0086c0        0x224 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_line      0x0088e4        0x264 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_line      0x008b48         0xea build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_line      0x008c32        0x244 build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .debug_frame      0x000000        0xb6c
  *(.debug_frame)
@@ -1004,11 +1004,11 @@ __FUID3
  .debug_frame     0x000874         0xa4 build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_frame     0x000918         0x74 build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_frame     0x00098c         0x34 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_frame     0x0009c0         0x34 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_frame     0x0009f4         0x24 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_frame     0x000a18         0x84 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_frame     0x000a9c         0x8c build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_frame     0x000b28         0x44 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_frame     0x0009c0         0x84 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_frame     0x000a44         0x8c build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_frame     0x000ad0         0x44 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_frame     0x000b14         0x24 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_frame     0x000b38         0x34 build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .debug_str        0x000000        0x96b
  *(.debug_str)
@@ -1024,11 +1024,11 @@ __FUID3
  .debug_str       0x00061a         0x75 build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_str       0x00068f         0x62 build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_str       0x0006f1         0x29 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_str       0x00071a         0x27 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_str       0x000741         0x21 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_str       0x000762        0x197 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_str       0x0008f9         0x2f build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_str       0x000928         0x43 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_str       0x00071a        0x197 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_str       0x0008b1         0x2f build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_str       0x0008e0         0x43 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_str       0x000923         0x21 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_str       0x000944         0x27 build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .debug_loc
  *(.debug_loc)
@@ -1064,15 +1064,15 @@ __FUID3
  .debug_pubnames
                   0x000f8f         0x43 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
  .debug_pubnames
-                  0x000fd2         0x2f build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x000fd2         0xa5 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
  .debug_pubnames
-                  0x001001         0x2e build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x001077         0x7b build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
  .debug_pubnames
-                  0x00102f         0xa5 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+                  0x0010f2         0x60 build/PCB_revA_pic33FJ128gp804/production/ADC.o
  .debug_pubnames
-                  0x0010d4         0x7b build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x001152         0x2e build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
  .debug_pubnames
-                  0x00114f         0x60 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x001180         0x2f build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -1104,15 +1104,15 @@ __FUID3
  .debug_aranges
                   0x000108         0x18 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
  .debug_aranges
-                  0x000120         0x18 build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x000120         0x18 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
  .debug_aranges
-                  0x000138         0x18 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x000138         0x18 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
  .debug_aranges
-                  0x000150         0x18 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+                  0x000150         0x18 build/PCB_revA_pic33FJ128gp804/production/ADC.o
  .debug_aranges
-                  0x000168         0x18 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x000168         0x18 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
  .debug_aranges
-                  0x000180         0x18 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x000180         0x18 build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 .ivt              0x000004         0xfc
                   0x000004          0x4 LONG 0x4ac DEFINED (__ReservedTrap0)?ABSOLUTE (__ReservedTrap0):ABSOLUTE (__DefaultInterrupt)
@@ -2400,17 +2400,17 @@ LOAD data_init
  .debug_pubtypes
                   0x0008c5         0x90 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
  .debug_pubtypes
-                  0x000955         0x6f build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x000955         0xe7 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
  .debug_pubtypes
-                  0x0009c4         0x75 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x000a3c         0x12 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
  .debug_pubtypes
-                  0x000a39         0xe7 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+                  0x000a4e         0xa7 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
  .debug_pubtypes
-                  0x000b20         0x12 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+                  0x000af5         0x9e build/PCB_revA_pic33FJ128gp804/production/ADC.o
  .debug_pubtypes
-                  0x000b32         0xa7 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x000b93         0x75 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
  .debug_pubtypes
-                  0x000bd9         0x9e build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x000c08         0x6f build/PCB_revA_pic33FJ128gp804/production/USER.o
 
 __c30_signature
                   0x000c77        0x114
@@ -2439,17 +2439,17 @@ __c30_signature
  __c30_signature
                   0x000cb9          0x6 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
  __c30_signature
-                  0x000cbf          0x6 build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x000cbf          0x6 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
  __c30_signature
-                  0x000cc5          0x6 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x000cc5          0x6 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
  __c30_signature
-                  0x000ccb          0x6 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+                  0x000ccb          0x6 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
  __c30_signature
-                  0x000cd1          0x6 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+                  0x000cd1          0x6 build/PCB_revA_pic33FJ128gp804/production/ADC.o
  __c30_signature
-                  0x000cd7          0x6 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x000cd7          0x6 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
  __c30_signature
-                  0x000cdd          0x6 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x000cdd          0x6 build/PCB_revA_pic33FJ128gp804/production/USER.o
  __c30_signature
                   0x000ce3          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
  __c30_signature

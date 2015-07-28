@@ -14,12 +14,12 @@
       <itemPath>UART.h</itemPath>
       <itemPath>PIR.h</itemPath>
       <itemPath>PWM.h</itemPath>
-      <itemPath>USER.h</itemPath>
-      <itemPath>SYSTEM.h</itemPath>
-      <itemPath>START_SOUND.h</itemPath>
       <itemPath>SWITCH.h</itemPath>
       <itemPath>TIMERS.h</itemPath>
       <itemPath>ADC.h</itemPath>
+      <itemPath>USER.h</itemPath>
+      <itemPath>SYSTEM.h</itemPath>
+      <itemPath>START_SOUND.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -40,12 +40,12 @@
       <itemPath>PIR.c</itemPath>
       <itemPath>PWM.c</itemPath>
       <itemPath>SWITCH.c</itemPath>
-      <itemPath>USER.c</itemPath>
-      <itemPath>SYSTEM.c</itemPath>
       <itemPath>INTERRUPTS.c</itemPath>
       <itemPath>CONFIGURATION.c</itemPath>
       <itemPath>TIMERS.c</itemPath>
       <itemPath>ADC.c</itemPath>
+      <itemPath>SYSTEM.c</itemPath>
+      <itemPath>USER.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
