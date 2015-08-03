@@ -38,6 +38,7 @@ volatile unsigned int UART_Rx_Buffer_Place_PIR = 0;
 volatile unsigned int UART_Rx_Buffer_Place_DEBUG = 0;
 volatile unsigned char RX_Response_PIR;
 volatile unsigned char RX_Response_DEBUG;
+unsigned char Print_Col = 0;
 
 /******************************************************************************/
 /* Inline Functions                                                           */
@@ -68,6 +69,7 @@ inline void UART_PIR_TX_PIN(unsigned char status)
 /******************************************************************************/
 inline void UART_DEBUG_TX_PIN(unsigned char status)
 {
+#ifndef SitCom_Generator_PROTOBOARD
     if(status)
     {
         DBG_TX_Tris         = OUTPUT;
@@ -77,6 +79,7 @@ inline void UART_DEBUG_TX_PIN(unsigned char status)
     {
         DBG_TX_Tris         = INPUT;
     }
+#endif
 }
 
 /******************************************************************************/
@@ -156,11 +159,11 @@ void UART_PIR_SetClock(unsigned long baud)
 
     if(U1MODEbits.BRGH)
     {
-        div = FCY /(4* baud * 2) - 1;
+        div = FCY /(4* baud) - 1;
     }
     else
     {
-        div = FCY /(16* baud * 2) - 1;
+        div = FCY /(16* baud) - 1;
     }
     U1BRG = div;
 }
@@ -177,11 +180,11 @@ void UART_DEBUG_SetClock(unsigned long baud)
 
     if(U2MODEbits.BRGH)
     {
-        div = FCY /(4* baud * 2) - 1;
+        div = FCY /(4* baud) - 1;
     }
     else
     {
-        div = FCY /(16* baud * 2) - 1;
+        div = FCY /(16* baud) - 1;
     }
     U2BRG = div;
 }
@@ -205,9 +208,13 @@ void UART_PIR_SendChar(unsigned char data)
 /******************************************************************************/
 void UART_DEBUG_SendChar(unsigned char data)
 {
+#ifndef SitCom_Generator_PROTOBOARD
     U2TXREG = data;
     while(U2STAbits.TRMT);
     while(!U2STAbits.TRMT); //wait for the character to be transmitted.
+#else
+    Nop();
+#endif
 }
 
 /******************************************************************************/
@@ -231,9 +238,13 @@ void UART_PIR_SendCharConst(const unsigned char data)
 /******************************************************************************/
 void UART_DEBUG_SendCharConst(const unsigned char data)
 {
+#ifndef SitCom_Generator_PROTOBOARD
     U2TXREG = data;
     while(U2STAbits.TRMT);
     while(!U2STAbits.TRMT); //wait for the character to be transmitted.
+#else
+    Nop();
+#endif
 }
 
 /******************************************************************************/
@@ -296,6 +307,23 @@ void UART_DEBUG_SendStringConst(const unsigned char* data)
 }
 
 /******************************************************************************/
+/* UART_DEBUG_SendStringConstCRLN
+ *
+ * The function sends one string of constant characters over the debug
+ *  communication port and send a new line carriage return.
+/******************************************************************************/
+void UART_DEBUG_SendStringConstCRLN(const unsigned char* data)
+{
+    while(*data !=0)
+    {
+        UART_DEBUG_SendCharConst(*data);
+        data++;
+    }
+    UART_DEBUG_SendCharConst('\r');
+    UART_DEBUG_SendCharConst('\n');
+}
+
+/******************************************************************************/
 /* UART_PIR_CleanBuffer
  *
  * The function cleans the UART receive buffer.
@@ -343,6 +371,27 @@ void UART_DEBUG_TestSpeed(void)
     while(1)
     {
         UART_DEBUG_SendCharConst('U');
+    }
+}
+
+/******************************************************************************/
+/* UART_Display_WAV
+ *
+ * The function prints out the contents of the wav file over the debug port.
+/******************************************************************************/
+void UART_Display_WAV(int value)
+{
+    unsigned char buf[10];
+    
+    MSC_CleanBuffer(buf, 10);
+
+    sprintf(buf,"0x%04X ",value);
+    UART_DEBUG_SendString(buf);
+    Print_Col++;
+    if(Print_Col >= PRINT_COLUMNS)
+    {
+        Print_Col = 0;
+        UART_DEBUG_SendStringConst("\r\n");
     }
 }
 

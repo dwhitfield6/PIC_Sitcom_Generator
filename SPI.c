@@ -91,7 +91,7 @@ void InitSPI(void)
     /* set to SPI mode 0 */
     SPI2CON1bits.CKE = 0;
     SPI2CON1bits.CKP = 1;
-    SPI2CON1bits.SMP = 0;
+    SPI2CON1bits.SMP = 1;
 
     SPI_SetSpeed(400.0); /* set speed to 400kHz */
 
@@ -258,6 +258,7 @@ void SPI_ReadActivityMISO(unsigned char* event)
 unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned char CheckActivity)
 {
     unsigned int dummy;
+    unsigned long timer=0;
     unsigned char MISO_event = FALSE;
     /* dummy read */
     dummy = SPI2BUF;
@@ -275,12 +276,25 @@ unsigned char SPI_WriteRead(unsigned char write, unsigned char* read,unsigned ch
     while(SPI2STATbits.SPITBF);
     while(SPI_State != FINISHED)
     {
+        timer++;
+        if(SD_CardPresent() == FAIL)
+        {
+            return 0;
+        }
         SPI_ReadActivityMISO(&MISO_event);
+        if(timer>SPI_TIMEOUT_COUNTS || !SD_CardPresent())
+        {
+            return 0;
+        }
     }
 
     dummy = SPI2BUF;
     SPI2STATbits.SPIROV = FALSE;
 
+    if(SD_CardPresent() == FAIL)
+    {
+        return 0;
+    }
     if(CheckActivity)
     {
         if(MISO_event)

@@ -21,6 +21,12 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
+/* SPI_TIMEOUT_COUNTS
+ *
+ * This is the conts that the spi module will wait for a response.
+/******************************************************************************/
+#define SPI_TIMEOUT_COUNTS 50000
+/******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 extern volatile unsigned char SPI_State;

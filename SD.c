@@ -455,6 +455,10 @@ unsigned char SD_readRegister(SDcommand* pmessage)
         SD_Timeout = 0;
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -471,6 +475,10 @@ unsigned char SD_readRegister(SDcommand* pmessage)
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -519,6 +527,7 @@ unsigned char SD_readBlock(unsigned long blockIndex)
     unsigned long block;
     unsigned int BytesRead;
     unsigned char MISOCheck;
+    unsigned long SDRead_Timer=0;
 
     Global_message.Transmitter = 1;
     Global_message.Command = CMD17;
@@ -538,6 +547,10 @@ unsigned char SD_readBlock(unsigned long blockIndex)
     {        
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -549,11 +562,17 @@ unsigned char SD_readBlock(unsigned long blockIndex)
 
      // wait for data token
     SD_Timeout = 0;
+    SDRead_Timer=0;
     R1_Buffer[0] = 0xFF;
     while(R1_Buffer[0] != DATA_START_BLOCK)
     {
+        SDRead_Timer++;
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -636,6 +655,10 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -652,6 +675,10 @@ unsigned char SD_readMultipleBlock(long StartIndex, long StopIndex, void (*fpoin
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -732,6 +759,10 @@ unsigned char SD_writeBlock(unsigned long blockIndex, unsigned char* data)
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -909,6 +940,10 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
     {
         while(!SPI_WriteRead(0xFF,read,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -925,6 +960,10 @@ unsigned char SD_CMDSPI_send_read(SDcommand* message, unsigned int ResponseType,
         {
             while(!SPI_WriteRead(0xFF,read,MISOCheck))
             {
+                if(SD_CardPresent() == FAIL)
+                {
+                    return FAIL;
+                }
                 SD_Timeout++;
                 if(SD_Timeout >= SD_TIMEOUT_MAX)
                 {
@@ -1055,6 +1094,10 @@ void SD_Clear(void)
     /* Write data until there is no response */
     while(SPI_WriteRead(0xFF, NULL, YES))
     {
+        if(SD_CardPresent() == FAIL)
+        {
+            return;
+        }
         SD_Timeout++;
         if(SD_Timeout >= SD_TIMEOUT_MAX)
         {
@@ -1073,6 +1116,10 @@ unsigned char SD_WaitResponse(void)
     SD_Timeout = 0;
     while(!SPI_WriteRead(0xFF, NULL, YES))
     {
+        if(SD_CardPresent() == FAIL)
+        {
+            return FAIL;
+        }
         SD_Timeout++;
         if(SD_Timeout >= SD_TIMEOUT_MAX)
         {

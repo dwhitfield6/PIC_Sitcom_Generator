@@ -105,7 +105,7 @@ void _ISR_NOPSV _DAC1RInterrupt(void)
             DAC_ERROR = TIMING;
         }
         temp = DAC_FIFO[DAC_Page_Read][DAC_Buffer_Place];
-        temp >>= 1;
+        temp >>= 2;
         DAC1RDAT = temp;
         DAC_Buffer_Place++;
     }
@@ -148,6 +148,7 @@ void _ISR_NOPSV _U1RXInterrupt(void)
     }
     else
     {
+        U1STAbits.FERR = 0;
         temp = U1RXREG;
     }
     IFS4bits.U1EIF = 0; // clear error flag

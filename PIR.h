@@ -25,7 +25,14 @@
  *
  * This is the BAUD rate of the PIR sensor.
 /******************************************************************************/
-#define PIR_UART_BAUD 4800
+#define PIR_UART_BAUD 9600
+
+/******************************************************************************/
+/* PIR_INIT_LIMIT
+ *
+ * This is the limit that the system will try to initialize the PIR sensor.
+/******************************************************************************/
+#define PIR_INIT_LIMIT 5
 
 /******************************************************************************/
 /* PIR_RESPONSE_SIZE
@@ -39,6 +46,8 @@
 /******************************************************************************/
 extern const unsigned char CONF_SEQUENCE[4];
 extern volatile unsigned char Motion;
+extern unsigned char PIR_Init_attempts;
+extern unsigned char PIR_STATUS;
 
 /******************************************************************************/
 /* Defines                                                                    */

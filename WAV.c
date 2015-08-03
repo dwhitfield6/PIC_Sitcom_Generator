@@ -179,9 +179,18 @@ unsigned char WAV_CheckFiles(void)
         FAT_ReadSector(firstSector);
         if(WAV_ParseHeader(SD_Receive_Buffer_Big,i))
         {
-            ValidWAVFiles[i] = PASS;
-            found = TRUE;
-            WaveFilesNumHigh = i;
+            /* Valid wave file found */
+            if(FileList[i].WAV_DATA.SampleRate <=WAV_SAMPLERATE_LIMIT)
+            {
+                ValidWAVFiles[i] = PASS;
+                found = TRUE;
+                WaveFilesNumHigh = i;
+            }
+            else
+            {
+                /* Wav sample rate is too high to playback */
+               ValidWAVFiles[i] = FAIL;
+            }
         }
         else
         {
@@ -300,7 +309,10 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
     for (j=1; j<FAT_BS.sectorPerCluster; j++)
     {
         SD_Buffer_Count = 0;
-        FAT_ReadSector(firstSector + j);
+        if(!FAT_ReadSector(firstSector + j))
+        {
+            goto Finish;
+        }
         while(1)
         {
             if(DAC_ERROR)
@@ -362,7 +374,10 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
         for (j=0; j<FAT_BS.sectorPerCluster; j++)
         {
             SD_Buffer_Count = 0;
-            FAT_ReadSector(firstSector + j);
+            if(!FAT_ReadSector(firstSector + j))
+            {
+                goto Finish;
+            }
             while(1)
             {
                 if(DAC_ERROR)
@@ -511,7 +526,6 @@ unsigned char WAV_PlayFile_Continuous_Sector(unsigned char file)
 unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, unsigned char *status )
 {
     int temp;
-    unsigned long SamplesRead = 0;
     
     if(*first == TRUE)
     {
@@ -546,19 +560,22 @@ unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, u
             DAC_FIFO[DAC_Page_Write][DAC_Buffer_Count] = (int) MSC_EndianIntArray(&SD_Receive_Buffer_Big[SD_Buffer_Count]);
         }
         SD_Buffer_Count+=FileList[file].WAV_DATA.SampleRepeat;
-        DAC_Buffer_Count++;
         SamplesRead++;
+        DAC_Buffer_Count++;
         if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
         {
+            /* whole file was read */
             *status = WAV_FINISHED;
             return DONE;
         }
         if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
         {
+            /* place in wave file */
+            SD_Buffer_Count = 0;
             *status = WAV_CONTINUE;
             return NOT_DONE;
         }
-        if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
+        if(DAC_Buffer_Count >= (DAC_BUFFER_SIZE - 2))
         {
             DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
             DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
@@ -633,12 +650,20 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
                 SD_CS_INACTIVE();
                 return FAIL;
             }
+        }
+        if(SD_CardPresent() == FAIL)
+        {
+            return FAIL;
         }
     }
 
@@ -649,6 +674,10 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
     {
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
+            if(SD_CardPresent() == FAIL)
+            {
+                return FAIL;
+            }
             SD_Timeout++;
             if(SD_Timeout >= SD_TIMEOUT_MAX)
             {
@@ -662,11 +691,30 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
     BytesReadTotal = 0;
     for(j = StartIndex; j < StopIndex; j++)
     {
+        /* Check for Card */
+        if(SD_CardPresent() == FAIL)
+        {
+            return FAIL;
+        }
+
         /* read a sector */
         BytesRead = 0;
         SD_Clear_SD_Receive_Buffer_Big();
-        Pbuf = SD_Receive_Buffer_Big;
+        Pbuf = &SD_Receive_Buffer_Big[0];
         MISOCheck = YES;
+        if(BytesReadTotal != 0)
+        {
+            for (i=0; i<2; i++)
+            {
+                if(SPI_WriteRead(0xFF,Pbuf,MISOCheck))
+                {
+                    BytesReadTotal++;
+                }
+                MISOCheck = NO;
+                Pbuf++;
+            }
+            Pbuf = &SD_Receive_Buffer_Big[0];
+        }
         for (i=0; i<SDblockSize; i++)
         {
             if(SPI_WriteRead(0xFF,Pbuf,MISOCheck))
@@ -677,6 +725,7 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
             MISOCheck = NO;
             Pbuf++;
         }
+
         // read CRC
         SPIwrite(0xFF); // LSB
         SPIwrite(0xFF); // MSB
@@ -692,6 +741,10 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
     SD_CMDSPI_send_read(SD_SetCMD(CMD12,0),R1,R1_Buffer, NO);
     SD_Clear();
     SD_CS_INACTIVE();
+    if(ReadStatus == DONE && *Status == WAV_FAIL)
+    {
+        return FAIL;
+    }
     return PASS;
 }
 /*-----------------------------------------------------------------------------/

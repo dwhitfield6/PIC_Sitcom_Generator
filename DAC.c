@@ -26,6 +26,7 @@
 #include "USER.h"
 #include "MISC.h"
 #include "DAC.h"
+#include "SD.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -71,7 +72,7 @@ inline void DAC_Stop(void)
 /******************************************************************************/
 inline unsigned char DAC_ToggleWriteDACPage(void)
 {
-    unsigned int count = 0;
+    unsigned long count = 0;
 
     if(DAC_Page_Write == FIRST)
     {
@@ -84,8 +85,12 @@ inline unsigned char DAC_ToggleWriteDACPage(void)
     while(DAC_Page_Write_Finished[DAC_Page_Write] == TRUE); /* wait for read to finish on the page */
     {
         count++;
-        MSC_DelayUS(10);
-        if(count > 2000)
+        if(SD_CardPresent() == FAIL)
+        {
+            SD_POWER(OFF);
+            SD_State = NOT_INITIALIZED;
+        }
+        if(count > DAC_PAGE_FLIP_TIMEOUT)
         {
             return FAIL;
         }
@@ -105,10 +110,12 @@ inline unsigned char DAC_ToggleWriteDACPage(void)
 void InitDAC(void)
 {
     DAC_AudioOff();
+    DAC_TurnOffAmp();
+    DAC_MuteAmp();
     ACLKCONbits.APSTSCLR = 0x7; // Auxiliary Clock Output Divider is 1
     DAC1STATbits.ROEN = 1; /* Right Channel DAC Output Enabled */
     DAC1STATbits.RITYPE = 0; /* Right Channel Interrupt if FIFO is not Full */
-    IPC19bits.DAC1RIP = 5; // Interrupt priority is 5
+    IPC19bits.DAC1RIP = 6; // Interrupt priority is 5
     DAC1CONbits.AMPON = 0; /* Amplifier Disabled During Sleep and Idle Modes */
     DAC_SetClock(8000);
     DAC1CONbits.FORM = 1; /* Data Format is Signed */
@@ -123,7 +130,11 @@ void InitDAC(void)
 /******************************************************************************/
 void DAC_TurnOnAmp(void)
 {
+#ifdef SitCom_Generator_PROTOBOARD
     LATB |= AudioAmpStandby;
+#else
+    LATB &= ~AudioAmpStandby;
+#endif
 }
 
 /******************************************************************************/
@@ -149,7 +160,12 @@ void DAC_SetClock(double Speed)
 /******************************************************************************/
 void DAC_TurnOffAmp(void)
 {
+#ifdef SitCom_Generator_PROTOBOARD
     LATB &= ~AudioAmpStandby;
+#else
+    LATB |= AudioAmpStandby;
+#endif
+
 }
 
 /******************************************************************************/
@@ -198,7 +214,7 @@ void DAC_Voltage(unsigned int counts)
 void DAC_AudioOn(void)
 {
     DAC_TurnOnAmp();
-    MSC_DelayUS(10000);
+    MSC_DelayUS(1000000);
     DAC_UnMuteAmp();
     MSC_DelayUS(1000);
 }

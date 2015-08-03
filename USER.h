@@ -32,6 +32,8 @@
 /******************************************************************************/
 /* PCB board
  *
+ * Set optimazation to 0 for debug!!!
+ * 
  * This code is used with boards:
  * 1. SitCom_Generator_PROTOBOARD (use configuration "Proto_pic33FJ128gp802")
  * 2. SitCom_Generator_PCB_REVA   (use configuration "PCB_revA_pic33FJ128gp804")
@@ -56,9 +58,11 @@
 /******************************************************************************/
 /* SPI_FAST
  *
- * This is the SPI bus speed used during playback in kHz.
+ * This is the SPI bus speed used during playback in kHz. Need around 600kHz
+ * for random read (WAV_PlayFile_Random_Sector()) and 400 for continuous.
+ * (WAV_PlayFile_Continuous_Sector()).
 /******************************************************************************/
-#define SPI_FAST 400.0
+#define SPI_FAST 380.0
 
 /******************************************************************************/
 /* LOW_MEMORY
@@ -143,12 +147,12 @@
 #define AudioAmpStandby 0x0040 //RB6
 #else
 /* Connected to Audio Amp Diagnostics on PCB only */
-#define AudioAmpDiagTris	TRISBbits.TRISB5
-#define AudioAmpDiag 0x0020 //RB5
+#define AudioAmpDiagTris	TRISCbits.TRISC8
+#define AudioAmpDiag 0x0020 //RC8
 
 /* Connected to Audio Amp Standby */
-#define AudioAmpStandbyTris	TRISBbits.TRISB6
-#define AudioAmpStandby 0x0040 //RB6
+#define AudioAmpStandbyTris	TRISBbits.TRISB2
+#define AudioAmpStandby 0x0004 //RB2
 #endif
 
 #ifndef SitCom_Generator_PROTOBOARD

@@ -28,7 +28,14 @@
  *
  * This is the size of each page of the DAC buffer.
 /******************************************************************************/
-#define DAC_BUFFER_SIZE 1024
+#define DAC_BUFFER_SIZE 2048
+
+/******************************************************************************/
+/* DAC_PAGE_FLIP_TIMEOUT
+ *
+ * This is the amount of counts that the DAC will wait to flip the page.
+/******************************************************************************/
+#define DAC_PAGE_FLIP_TIMEOUT 50000
 
 /******************************************************************************/
 /* DAC_Error

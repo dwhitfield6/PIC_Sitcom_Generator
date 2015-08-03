@@ -70,6 +70,7 @@ void ADC_ReadVIN(void)
     int RawCounts = 0;
     double Voltage = 0.0;
 
+#ifndef SitCom_Generator_PROTOBOARD
     AD1CHS0bits.CH0SB = ADC_VIN_AN;
     AD1CHS0bits.CH0SA = ADC_VIN_AN;
     AD1CON1bits.SAMP = TRUE; // sample the input
@@ -80,6 +81,9 @@ void ADC_ReadVIN(void)
     RawCounts = ADC1BUF0;
     Voltage = ((double) RawCounts * 3.3) / (1<<12);
     VIN = (Voltage * (R10 + R11)) / R11;
+#else
+    VIN = 12.0;
+#endif
 }
 
 /******************************************************************************/
@@ -92,6 +96,7 @@ void ADC_ReadFiveVoltRail(void)
     int RawCounts = 0;
     double Voltage = 0.0;
 
+#ifndef SitCom_Generator_PROTOBOARD
     AD1CHS0bits.CH0SB = ADC_5IN_AN;
     AD1CHS0bits.CH0SA = ADC_5IN_AN;
     AD1CON1bits.SAMP = TRUE; // sample the input
@@ -101,7 +106,10 @@ void ADC_ReadFiveVoltRail(void)
     while(!AD1CON1bits.DONE);
     RawCounts = ADC1BUF0;
     Voltage = ((double) RawCounts * 3.3) / (1<<12);
-    VIN = (Voltage * (R12 + R13)) / R13;
+    FiveVoltRail = (Voltage * (R12 + R13)) / R13;
+#else
+    FiveVoltRail = 5.0;
+#endif
 }
 
 /*-----------------------------------------------------------------------------/

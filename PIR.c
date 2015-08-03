@@ -33,6 +33,8 @@
 /* Confirmation Sequence                                                      */
 /******************************************************************************/
 const unsigned char CONF_SEQUENCE[] = { 1,2,3,4,0 };
+unsigned char PIR_Init_attempts = 0;
+unsigned char PIR_STATUS = FAIL;
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -59,7 +61,6 @@ inline void PIR_MD_PinControl(unsigned char MD_state)
     else
     {
         PIR_MD_Tris         = OUTPUT; //pin is RST not MD
-        LATC |= PIR_MD;
     }
 }
 /******************************************************************************/
@@ -132,9 +133,21 @@ void InitPIR(void)
     INTCON2bits.INT1EP = 1; // trigger on negative edge
     IPC5bits.INT1IP = 2; // priority is 2
     RPINR0bits.INT1R = PIR_MD_RP;
+    PIR_Init_attempts = 0;
     /* disable hard reset until the pin is switched to MD function */
+
+    Initialize:
+    PIR_Init_attempts++;
+    if(PIR_Init_attempts > PIR_INIT_LIMIT)
+    {
+        PIR_STATUS = FAIL;
+        PIR_Interrupt(OFF);
+        return;
+    }
     PIR_Reset();        // Put the device into serial interface mode
     PIR_MD_PinControl(FALSE);
+    LATC |= PIR_MD;
+    MSC_DelayUS(1000); // Wait for data to be received
     PIR_Reset();        // Put the device into serial interface mode
     MSC_DelayUS(1000); // Wait for data to be received
 
@@ -165,7 +178,12 @@ void InitPIR(void)
 
     /* configure Sensitivity */
     Sendbuf[0] = 100; // range is 0-255 with 0 being most sensitive
-    PIR_WriteCommand('S', Receivebuf, Sendbuf, 1);
+    if(!PIR_WriteCommand('S', Receivebuf, Sendbuf, 1))
+    {
+            MSC_CleanBuffer(Receivebuf, 10);
+            goto Initialize;
+    }
+    PIR_STATUS = PASS;
     MSC_CleanBuffer(Receivebuf, 10);
 
 #else

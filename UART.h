@@ -21,6 +21,13 @@
 #include <stdbool.h>        /* For true/false definition */
 
 /******************************************************************************/
+/* PRINT_COLUMNS
+ *
+ * This is the amount of columns to print from the debug port.
+/******************************************************************************/
+#define PRINT_COLUMNS 8
+
+/******************************************************************************/
 /* DEBUG_UART_BAUD
  *
  * This is the BAUD rate of the debug interface.
@@ -50,6 +57,7 @@ extern volatile unsigned int UART_Rx_Buffer_Place_PIR;
 extern volatile unsigned int UART_Rx_Buffer_Place_DEBUG;
 extern volatile unsigned char RX_Response_PIR;
 extern volatile unsigned char RX_Response_DEBUG;
+extern unsigned char Print_Col;
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -80,5 +88,7 @@ void UART_PIR_SendStringConst(const unsigned char* data);
 void UART_DEBUG_SendStringConst(const unsigned char* data);
 void UART_PIR_CleanBuffer(void);
 void UART_DEBUG_CleanBuffer(void);
+void UART_Display_WAV(int value);
+void UART_DEBUG_SendStringConstCRLN(const unsigned char* data);
 
 #endif	/* UART_H */

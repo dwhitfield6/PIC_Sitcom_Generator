@@ -1,0 +1,3 @@
+build/PCB_revA_pic33FJ128gp804/debug/CONFIGURATION.o:  \
+CONFIGURATION.c  \
+ USER.h 
