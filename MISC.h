@@ -67,7 +67,7 @@
 #define MSC_RedLEDTOGGLE()  (LATB ^= RedLED)
 
 /********************Test Points********************/
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /******************************************************************************/
 /* MSC_TestPoint1ON
  *

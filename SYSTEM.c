@@ -38,7 +38,7 @@
 /******************************************************************************/
 void SYS_ConfigureOscillator(void)
 {
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     CLKDIVbits.PLLPRE = 0x0; /* N1 = 2 */
     PLLFBDbits.PLLDIV = 30; /* M = 32 */
     CLKDIVbits.PLLPOST = 0x1; /* N2 = 4 */

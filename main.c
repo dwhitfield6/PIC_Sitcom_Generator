@@ -30,8 +30,8 @@
  *                          Increased DAC_FIFO size.
  *                          Added UART module.
  *                          Added PIR functionality.
- *                          Fixed WAV playback bugs. (MFor best results use a
- *                            fast sd card with 64 k of allocation space with
+ *                          Fixed WAV playback bugs. (For best results use a
+ *                            fast SD card with 64 k of allocation space with
  *                            a song sampled at 16000Hz mono.)
  *                          Added RGB LED functions.
  *                          Added code to work with the new hardware (PCB_revA).
@@ -47,6 +47,9 @@
  *                          Added diagnostic to show the user when the SD card
  *                            is formatted properly but all WAV files are
  *                            invalid.
+ *                          Print message when there are no valid WAV files.
+ *                          Create Banner to display the firmware version and
+ *                            hardware version.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -96,7 +99,7 @@ int main (void)
 {
     unsigned char i;
     unsigned char playfile;
-    unsigned char No_SD_Card_count=0;
+    unsigned char SD_State_Old = 255;
 
     /* Initialize */
     SYS_ConfigureOscillator();
@@ -104,6 +107,9 @@ int main (void)
     Init_System();
     PWM_SetColor(OFF);
     RTCC_SetTime();
+
+    /* Display Banner */
+    UART_DisplayBanner();
 
     /* Play start up message out of debug port */
     UART_DEBUG_SendStringConstCRLN("Starting...");
@@ -115,7 +121,7 @@ int main (void)
     }
     else
     {
-        UART_DEBUG_SendStringConstCRLN("PIR sensor not woking");
+        UART_DEBUG_SendStringConstCRLN("PIR sensor not working");
     }
 
     /* Flash LEDS */
@@ -143,19 +149,24 @@ int main (void)
         /* SD card routine */
         if(SD_CardPresent())
         {
-            No_SD_Card_count=0;
             SD_POWER(ON);
             if(SD_State == NOT_INITIALIZED)
             {
-                UART_DEBUG_SendStringConstCRLN("Initializing SD Card");
+                if(SD_State_Old != SD_State)
+                {
+                    UART_DEBUG_SendStringConstCRLN("Initializing SD Card");
+                }                
                 InitSD();
             }
             else if(SD_State == INITIALIZED)
             {
-                UART_DEBUG_SendStringConstCRLN("Reading FAT32 partition");
+                if(SD_State_Old != SD_State)
+                {
+                    UART_DEBUG_SendStringConstCRLN("Searching the FAT32 partition for WAV files");
+                }
                 if(InitFAT())
                 {
-                    UART_DEBUG_SendStringConstCRLN("Ready to play WAV file");
+                    UART_DEBUG_SendStringConstCRLN("SD card is correctly formatted FAT32 and contains WAV files");
                     SD_State = WAV_READY;
                 }
             }
@@ -163,11 +174,15 @@ int main (void)
             {
                 if(Valid_Wav)
                 {
-                    /* there are WAV files to be played */
+                    /* there are WAV files to be played */ 
+                    if(SD_State_Old != SD_State)
+                    {
+                        UART_DEBUG_SendStringConstCRLN("Ready to play WAV");
+                    }
                     PWM_SetColor(GREEN);
                     if(Motion == TRUE || DoorOpened == TRUE)
                     {
-                        UART_DEBUG_SendStringConstCRLN("Motion Detected: Wav Playing");
+                        UART_DEBUG_SendStringConstCRLN("Motion Detected: Selecting random file for playback");
                         playfile = (unsigned char)TMR_RandomNum((long)WaveFilesNumLow,(long)WaveFilesNumHigh);
 
                         /* Check to see if the file is marked as valid */
@@ -210,32 +225,23 @@ int main (void)
                 else
                 {
                     /* there are no satisfactory WAV files on the card */
-                    if(Motion == TRUE || DoorOpened == TRUE)
+                    if(SD_State_Old != SD_State)
                     {
-                        PIR_Interrupt(OFF);
-                        MSC_RedLEDON();
-                        PWM_SetColor(WHITE);
-                        MSC_DelayUS(50000);
-                        Motion = FALSE;
-                        DoorOpened = FALSE;
-                        PIR_Interrupt(ON);                    
+                        UART_DEBUG_SendStringConstCRLN(" WAV files are corrupted");
                     }
-                    MSC_RedLEDOFF();
-                    PWM_SetColor(YELLOW);
+                    /* Reinitialize */
+                    SD_State = NOT_INITIALIZED;
                 }
             }
         }
         else
         {
             SD_State = NOT_INITIALIZED;
-            if(No_SD_Card_count == 0)
+            if(SD_State_Old != SD_State)
             {
                 UART_DEBUG_SendStringConstCRLN("No SD card found");
             }
-            if(No_SD_Card_count<240)
-            {
-                No_SD_Card_count++;
-            }
+            
             if(Motion == TRUE || DoorOpened == TRUE)
             {
                 PIR_Interrupt(OFF);
@@ -250,6 +256,7 @@ int main (void)
             SD_POWER(OFF);
             PWM_SetColor(RED);
         }
+        SD_State_Old = SD_State;
     }
 }
 /*-----------------------------------------------------------------------------/

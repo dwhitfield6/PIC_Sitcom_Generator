@@ -39,7 +39,7 @@
 #pragma config IESO = ON                // Internal External Switch Over Mode (Start-up device with FRC, then automatically switch to user-selected oscillator source when ready)
 
 // FOSC
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
 #pragma config POSCMD = HS              // Primary Oscillator Source (HS Oscillator Mode)
 #else
 #pragma config POSCMD = XT              // Primary Oscillator Source (XT Oscillator Mode)

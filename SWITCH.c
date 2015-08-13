@@ -63,7 +63,7 @@ inline void Door_Interrupt(unsigned char status)
 /******************************************************************************/
 void InitSWITCH(void)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     /* 
      * The Door Switch indicating door has been opened is triggered by INT2.
      * If the door switch is N/O (when the door is closed the the connection

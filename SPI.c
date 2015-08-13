@@ -78,7 +78,7 @@ void InitSPI(void)
     SPI_Disable();
 
     RPINR22bits.SDI2R = SPI_SD_MISO_RP; // SPI2 data input (MISO) is set to RP2
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     RPOR3bits.RP7R = 0x0A;    // RP7 = SDO aka MOSI
     RPOR4bits.RP8R = 0x0B;    // RP8 = SCK
 #else

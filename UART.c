@@ -69,7 +69,7 @@ inline void UART_PIR_TX_PIN(unsigned char status)
 /******************************************************************************/
 inline void UART_DEBUG_TX_PIN(unsigned char status)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     if(status)
     {
         DBG_TX_Tris         = OUTPUT;
@@ -135,7 +135,7 @@ void InitUART(void)
     U1STAbits.UTXEN = ON;       // Turn on transmit
     UART_PIR_RX_Interrupt(ON);
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     UART_DEBUG_CleanBuffer();
     IPC7bits.U2RXIP = 1; // Interrupt priority is 1
     RPINR19bits.U2RXR = DBG_RX_RP;
@@ -208,7 +208,7 @@ void UART_PIR_SendChar(unsigned char data)
 /******************************************************************************/
 void UART_DEBUG_SendChar(unsigned char data)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     U2TXREG = data;
     while(U2STAbits.TRMT);
     while(!U2STAbits.TRMT); //wait for the character to be transmitted.
@@ -238,7 +238,7 @@ void UART_PIR_SendCharConst(const unsigned char data)
 /******************************************************************************/
 void UART_DEBUG_SendCharConst(const unsigned char data)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     U2TXREG = data;
     while(U2STAbits.TRMT);
     while(!U2STAbits.TRMT); //wait for the character to be transmitted.
@@ -395,6 +395,21 @@ void UART_Display_WAV(int value)
     }
 }
 
+/******************************************************************************/
+/* UART_DisplayBanner
+ *
+ * The function prints out the banner.
+/******************************************************************************/
+void UART_DisplayBanner(void)
+{
+
+    UART_DEBUG_SendStringConstCRLN("Sitcom Generator");
+    UART_DEBUG_SendStringConst("Hardware Version: ");
+    UART_DEBUG_SendStringConstCRLN(PCB_Version);
+    UART_DEBUG_SendStringConst("Firmware Version: ");
+    UART_DEBUG_SendStringConstCRLN(FW_Version);
+    UART_DEBUG_SendStringConstCRLN("Copywrite by Marley Circuits\r\n");
+}
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

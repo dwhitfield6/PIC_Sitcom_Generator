@@ -71,7 +71,7 @@ inline void PIR_MD_PinControl(unsigned char MD_state)
 /******************************************************************************/
 inline void PIR_Interrupt(unsigned char status)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     if(status)
     {
         IFS1bits.INT1IF = 0; // clear flag
@@ -102,7 +102,7 @@ inline void PIR_Interrupt(unsigned char status)
 /******************************************************************************/
 inline unsigned char PIR_MD_READ(void)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     if(PORTA & PIR_MD2)
     {
         return TRUE;
@@ -128,7 +128,7 @@ void InitPIR(void)
     unsigned char Sendbuf[PIR_RESPONSE_SIZE];
     MSC_CleanBuffer(Receivebuf, PIR_RESPONSE_SIZE);
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     /* the PIR module MD pin indicating motion is triggered by INT1 */
     INTCON2bits.INT1EP = 1; // trigger on negative edge
     IPC5bits.INT1IP = 2; // priority is 2

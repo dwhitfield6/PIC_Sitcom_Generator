@@ -40,8 +40,15 @@
 #include "ADC.h"
 
 /******************************************************************************/
-/* User Global Variable Declaration                                           */
+/* Special Variables                                                          */
 /******************************************************************************/
+#ifdef PROTOBOARD
+const unsigned char PCB_Version[] = "Protoboard";
+#endif
+
+#ifdef PCB_REVA
+const unsigned char PCB_Version[] = "PCB revA";
+#endif
 
 /******************************************************************************/
 /* Inline Functions
@@ -63,7 +70,7 @@ void Init_App(void)
     
     AD1PCFGL              = 0xFFFF; /* All pins are digital */
     RedLEDTris          = OUTPUT;
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     AudioAmpMuteTris    = OUTPUT;
 #else
     SD_PowerTris        = OUTPUT;

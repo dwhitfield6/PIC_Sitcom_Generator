@@ -81,7 +81,7 @@ inline void TMR_EnableTimer4(unsigned char action)
 /******************************************************************************/
 void InitTIMERS(void)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     InitTIMER2();
     InitTIMER4();
 #else

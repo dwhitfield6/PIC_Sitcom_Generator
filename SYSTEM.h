@@ -33,7 +33,7 @@
  * For this system the clock is 64MHz and the internal PLL is used.
  *
 /******************************************************************************/
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
 #define FOSC        64000000L
 #else
 #define FOSC        80000000L

@@ -57,7 +57,7 @@ SDproperties SD;
 /******************************************************************************/
 inline void SD_POWER(unsigned char State)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     if(State)
     {
         LATC |= SD_Power;
@@ -1139,7 +1139,7 @@ unsigned char SD_WaitResponse(void)
 /******************************************************************************/
 unsigned char SD_CardPresent(void)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     //READ RC6
     if(PORTC & SD_INSERT)
     {

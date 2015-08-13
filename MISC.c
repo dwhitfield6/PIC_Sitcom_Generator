@@ -46,8 +46,8 @@
 /* MSC_DelayUS
  * Input the number in microseconds to be delayed.
  *
- * The function waists loops for the entered bumber of cycles.
- * The actual delay can be scewed when interrupts are enabled.
+ * The function waists loops for the entered number of cycles.
+ * The actual delay can be skewed when interrupts are enabled.
 /******************************************************************************/
 void MSC_DelayUS(long US)
 {
@@ -75,7 +75,7 @@ void MSC_DelayUS(long US)
         Nop();
         Nop();
         Nop();
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
         Nop();
         Nop();
 #endif

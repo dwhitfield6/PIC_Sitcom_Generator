@@ -130,7 +130,7 @@ void InitDAC(void)
 /******************************************************************************/
 void DAC_TurnOnAmp(void)
 {
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     LATB |= AudioAmpStandby;
 #else
     LATB &= ~AudioAmpStandby;
@@ -160,7 +160,7 @@ void DAC_SetClock(double Speed)
 /******************************************************************************/
 void DAC_TurnOffAmp(void)
 {
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     LATB &= ~AudioAmpStandby;
 #else
     LATB |= AudioAmpStandby;
@@ -175,7 +175,7 @@ void DAC_TurnOffAmp(void)
 /******************************************************************************/
 void DAC_MuteAmp(void)
 {
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     LATB &= ~AudioAmpMute;
 #else
     Nop();
@@ -189,7 +189,7 @@ void DAC_MuteAmp(void)
 /******************************************************************************/
 void DAC_UnMuteAmp(void)
 {
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
     LATB |= AudioAmpMute;
 #else
     Nop();

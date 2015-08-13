@@ -90,5 +90,6 @@ void UART_PIR_CleanBuffer(void);
 void UART_DEBUG_CleanBuffer(void);
 void UART_Display_WAV(int value);
 void UART_DEBUG_SendStringConstCRLN(const unsigned char* data);
+void UART_DisplayBanner(void);
 
 #endif	/* UART_H */

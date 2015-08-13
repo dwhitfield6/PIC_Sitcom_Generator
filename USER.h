@@ -32,21 +32,21 @@
 /******************************************************************************/
 /* PCB board
  *
- * Set optimazation to 0 for debug!!!
+ * Set optimization to 0 for debug!!!
  * 
  * This code is used with boards:
- * 1. SitCom_Generator_PROTOBOARD (use configuration "Proto_pic33FJ128gp802")
- * 2. SitCom_Generator_PCB_REVA   (use configuration "PCB_revA_pic33FJ128gp804")
+ * 1. PROTOBOARD (use configuration "Proto_pic33FJ128gp802")
+ * 2. PCB_REVA   (use configuration "PCB_revA_pic33FJ128gp804")
 /******************************************************************************/
-//#define SitCom_Generator_PROTOBOARD
-#define SitCom_Generator_PCB_REVA
+//#define PROTOBOARD
+#define PCB_REVA
 
 /******************************************************************************/
-/* Version
+/* Firmware Version
  *
  * This defines the Firmware version.
 /******************************************************************************/
-#define Version "1.0_DW0a"
+#define FW_Version "1.0_DW0a"
 
 /******************************************************************************/
 /* MAX_FILES
@@ -110,7 +110,7 @@
 #define RedLEDTris	TRISBbits.TRISB10
 #define RedLED 0x0400 //RB10
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /************* RGB LED over PWM *************/
 /* Connected to the RGB Red Led  */
 #define RGB_RedTris	TRISCbits.TRISC5
@@ -130,14 +130,14 @@
 #define DAC_RightPTris	TRISBbits.TRISB14
 #define DAC_RightP 0x1000 //RB12
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /* Connected to Audio Amp IN- */
 #define DAC_RightNTris	TRISBbits.TRISB13
 #define DAC_RightN 0x1000 //RB13
 #endif
 
 /************* Audio Amp over GPIO *************/
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
 /* Connected to Audio Amp mute on protoboard only */
 #define AudioAmpMuteTris	TRISBbits.TRISB5
 #define AudioAmpMute 0x0020 //RB5
@@ -155,7 +155,7 @@
 #define AudioAmpStandby 0x0004 //RB2
 #endif
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /************* Test Point *************/
 /* Connected to Test Point 1 on PCB only */
 #define TP1_Tris	TRISAbits.TRISA8
@@ -175,7 +175,7 @@
 #endif
 
 /************* Input Voltage over ADC *************/
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /* Connected from VIN to Voltage divider to ADC on PCB only */
 #define ADC_VINTris	TRISCbits.TRISC2
 #define ADC_VIN 0x0004 //RC2 used as AN8
@@ -188,7 +188,7 @@
 #endif
 
 /************* SD Card over SPI *************/
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
 /* Connected to SPI MISO used for the SD card */
 #define SPI_SD_MISOTris	TRISBbits.TRISB2
 #define SPI_SD_MISO 0x0004 //RB2 used as RP2
@@ -241,7 +241,7 @@
 #endif
 
 /************* PIR sensor over UART *************/
-#ifdef SitCom_Generator_PROTOBOARD
+#ifdef PROTOBOARD
 /* Connected to UART RX on PIR sensor */
 #define PIR_TX_Tris	TRISBbits.TRISB15
 #define PIR_TX 0x8000 //RB15 used as RP15
@@ -285,7 +285,7 @@
 #define PIR_MD2 0x0001 //RA0
 #endif
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /************* Debug UART *************/
 /* Connected to UART RX on Debug Port */
 #define DBG_TX_Tris	TRISCbits.TRISC8
@@ -298,13 +298,18 @@
 #define DBG_RX_RP 23
 #endif
 
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 /************* Optional Door Switch *************/
 /* Connected to Optional Door Switch */
 #define DOOR_SW_Tris	TRISCbits.TRISC9
 #define DOOR_SW 0x0200 //RC9 used as CN19
 #define DOOR_SW_RP 25
 #endif
+
+/******************************************************************************/
+/* Special Variables                                                          */
+/******************************************************************************/
+extern const unsigned char PCB_Version[];
 
 /******************************************************************************/
 /* Macro Functions                                                            */

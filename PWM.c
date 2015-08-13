@@ -93,7 +93,7 @@ inline void PWM_SetRGB(unsigned int Red, unsigned int Green, unsigned int Blue)
 /******************************************************************************/
 void InitPWM(void)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     
     RPOR10bits.RP21R    = 0b10100;    // RP19 = OC1 aka RED on RGB LED
     RPOR10bits.RP20R    = 0b10011;    // RP20 = OC1 aka GREEN on RGB LED
@@ -128,7 +128,7 @@ void InitPWM(void)
 /******************************************************************************/
 void PWM_SetColor(unsigned int Color)
 {
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
     switch (Color)
     {
         case RED:

@@ -186,7 +186,7 @@ void _ISR_NOPSV _U2RXInterrupt(void)
 /******************************************************************************/
 /* PIR Motion Detect interrupt
 /******************************************************************************/
-#ifndef SitCom_Generator_PROTOBOARD
+#ifndef PROTOBOARD
 void _ISR_NOPSV _INT1Interrupt(void)
 {
     Motion = TRUE;
