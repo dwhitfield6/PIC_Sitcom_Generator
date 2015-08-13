@@ -978,10 +978,10 @@ long MSC_Scale(long Input, long InputRangeLow, long InputRangeHigh, long OutputR
     long DiffInput;
     long DiffOutput;
     double tempScale;
-    DiffInput = InputRangeHigh - InputRangeLow;
-    DiffOutput = OutputRangeHigh - OutputRangeLow;
+    DiffInput = InputRangeHigh - InputRangeLow + 1;
+    DiffOutput = (OutputRangeHigh - OutputRangeLow + 1);
     tempScale = (double)(DiffOutput) / (double)(DiffInput);
-    return (long)(MSC_DB_Round( (double)(Input - InputRangeLow) * tempScale)) + OutputRangeLow;     
+    return (long)((((double)Input - (double)InputRangeLow) * tempScale) + (double)OutputRangeLow);     
 }
 
 /******************************************************************************/

@@ -62,7 +62,7 @@ inline void PWM_SetGreen(unsigned int Value)
 /******************************************************************************/
 /* PWM_SetBlue
  *
- * Sets the duty cycly for the Blue LED.
+ * Sets the duty cycle for the Blue LED.
 /******************************************************************************/
 inline void PWM_SetBlue(unsigned int Value)
 {

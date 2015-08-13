@@ -42,6 +42,11 @@
  *                          Added SD functions to use SD continuous read to
  *                            play WAV files.
  *                          Added debug UART.
+ *                          Fixed bugs in random number generator and audio
+ *                            playback.
+ *                          Added diagnostic to show the user when the SD card
+ *                            is formatted properly but all WAV files are
+ *                            invalid.
 /******************************************************************************/
 
 /******************************************************************************/
@@ -103,7 +108,7 @@ int main (void)
     /* Play start up message out of debug port */
     UART_DEBUG_SendStringConstCRLN("Starting...");
 
-    /* Dislay status of PIR sensor */
+    /* Display status of PIR sensor */
     if(PIR_STATUS)
     {
         UART_DEBUG_SendStringConstCRLN("PIR sensor initialized");
@@ -156,52 +161,73 @@ int main (void)
             }
             else if(SD_State == WAV_READY)
             {
-                PWM_SetColor(GREEN);
-                if(Motion == TRUE || DoorOpened == TRUE)
+                if(Valid_Wav)
                 {
-                    UART_DEBUG_SendStringConstCRLN("Motion Detected: Wav Playing");
-                    playfile = (unsigned char)TMR_RandomNum(0,(long)WaveFilesNumHigh);
-
-                    /* Check to see if the file is marked as valid */
-                    while(ValidWAVFiles[playfile] != PASS)
+                    /* there are WAV files to be played */
+                    PWM_SetColor(GREEN);
+                    if(Motion == TRUE || DoorOpened == TRUE)
                     {
-                        if(playfile >= WaveFilesNumHigh)
+                        UART_DEBUG_SendStringConstCRLN("Motion Detected: Wav Playing");
+                        playfile = (unsigned char)TMR_RandomNum((long)WaveFilesNumLow,(long)WaveFilesNumHigh);
+
+                        /* Check to see if the file is marked as valid */
+                        while(ValidWAVFiles[playfile] != PASS)
                         {
-                            playfile = 0;
+                            if(playfile >= WaveFilesNumHigh)
+                            {
+                                playfile = 0;
+                            }
+                            else
+                            {
+                                playfile++;
+                            }
+                        }
+
+                        PWM_SetColor(BLUE);
+                        PIR_Interrupt(OFF);
+                        UART_DEBUG_SendStringConst("Playing WAV file: ");
+                        UART_DEBUG_SendStringConstCRLN(&FileList[playfile].name);
+                        if(WAV_PlayFile_Random_Sector(playfile))
+                        {
+                            UART_DEBUG_SendStringConstCRLN("Wav played successfully");
                         }
                         else
                         {
-                            playfile++;
+                            UART_DEBUG_SendStringConstCRLN("Wav failed");
+                            if(SD_CardPresent() == FAIL)
+                            {
+                                SD_State = NOT_INITIALIZED;
+                                UART_DEBUG_SendStringConstCRLN("SD card removed");
+                            }
                         }
+                        Motion = FALSE;
+                        DoorOpened = FALSE;
+                        PIR_Interrupt(ON);
+                        PWM_SetColor(GREEN);
+                        MSC_RedLEDOFF();
                     }
-
-                    PWM_SetColor(BLUE);
-                    PIR_Interrupt(OFF);
-                    UART_DEBUG_SendStringConst("Playing WAV file: ");
-                    UART_DEBUG_SendStringConstCRLN(&FileList[playfile].name);
-                    if(WAV_PlayFile_Continuous_Sector(playfile))
+                }
+                else
+                {
+                    /* there are no satisfactory WAV files on the card */
+                    if(Motion == TRUE || DoorOpened == TRUE)
                     {
-                        UART_DEBUG_SendStringConstCRLN("Wav played successfully");
+                        PIR_Interrupt(OFF);
+                        MSC_RedLEDON();
+                        PWM_SetColor(WHITE);
+                        MSC_DelayUS(50000);
+                        Motion = FALSE;
+                        DoorOpened = FALSE;
+                        PIR_Interrupt(ON);                    
                     }
-                    else
-                    {
-                        UART_DEBUG_SendStringConstCRLN("Wav failed");
-                        if(SD_CardPresent() == FAIL)
-                        {
-                            SD_State = NOT_INITIALIZED;
-                            UART_DEBUG_SendStringConstCRLN("SD card removed");
-                        }
-                    }
-                    Motion = FALSE;
-                    DoorOpened = FALSE;
-                    PIR_Interrupt(ON);
-                    PWM_SetColor(GREEN);
                     MSC_RedLEDOFF();
+                    PWM_SetColor(YELLOW);
                 }
             }
         }
         else
         {
+            SD_State = NOT_INITIALIZED;
             if(No_SD_Card_count == 0)
             {
                 UART_DEBUG_SendStringConstCRLN("No SD card found");
@@ -210,13 +236,14 @@ int main (void)
             {
                 No_SD_Card_count++;
             }
-            if(Motion == TRUE)
+            if(Motion == TRUE || DoorOpened == TRUE)
             {
                 PIR_Interrupt(OFF);
                 MSC_RedLEDON();
                 PWM_SetColor(WHITE);
                 MSC_DelayUS(50000);
                 Motion = FALSE;
+                DoorOpened = FALSE;
                 PIR_Interrupt(ON);
             }
             MSC_RedLEDOFF();

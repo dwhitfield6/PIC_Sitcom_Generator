@@ -28,7 +28,7 @@
  *
  * This is the size of each page of the DAC buffer.
 /******************************************************************************/
-#define DAC_BUFFER_SIZE 2048
+#define DAC_BUFFER_SIZE 1024
 
 /******************************************************************************/
 /* DAC_PAGE_FLIP_TIMEOUT

@@ -71,7 +71,7 @@ typedef struct sd
  *
  * This is the maximum attempts that we attempt to get a response from the card
 /******************************************************************************/
-#define SD_TIMEOUT_MAX 255
+#define SD_TIMEOUT_MAX 1000
 
 /******************************************************************************/
 /* Defines                                                                    */
@@ -168,7 +168,7 @@ extern unsigned char R1_Buffer[1];
 extern unsigned char R2_Buffer[2];
 extern unsigned char R3_Buffer[5];
 extern unsigned char R6_Buffer[6];
-extern unsigned char SD_Timeout;
+extern unsigned long SD_Timeout;
 extern unsigned char SD_CardType;
 extern SDcommand Global_message;
 extern SDcommand* PGlobal_message;

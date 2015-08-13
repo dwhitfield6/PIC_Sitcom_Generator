@@ -37,9 +37,9 @@
 /******************************************************************************/
 /* Defines                                                                    */
 /******************************************************************************/
-#define WAV_FINISHED 129
-#define WAV_CONTINUE 110
-#define WAV_FAIL 118
+#define WAV_FINISHED 15
+#define WAV_CONTINUE 16
+#define WAV_FAIL 17
 
 /******************************************************************************/
 /* Macro Functions                                                            */
@@ -51,6 +51,8 @@
 extern unsigned char ValidWAVFiles[MAX_FILES];
 extern unsigned char WAV_DONE;
 extern unsigned char WaveFilesNumHigh;
+extern unsigned char WaveFilesNumLow;
+extern unsigned char Valid_Wav;
 
 /******************************************************************************/
 /* Function prototypes                                                        */

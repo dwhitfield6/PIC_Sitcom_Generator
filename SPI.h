@@ -23,9 +23,9 @@
 /******************************************************************************/
 /* SPI_TIMEOUT_COUNTS
  *
- * This is the conts that the spi module will wait for a response.
+ * This is the counts that the SPI module will wait for a response.
 /******************************************************************************/
-#define SPI_TIMEOUT_COUNTS 50000
+#define SPI_TIMEOUT_COUNTS 500000L
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/

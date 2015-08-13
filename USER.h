@@ -53,7 +53,7 @@
  *
  * This is the number of files that we are able to read.
 /******************************************************************************/
-#define MAX_FILES 10
+#define MAX_FILES 20
 
 /******************************************************************************/
 /* SPI_FAST
@@ -62,7 +62,7 @@
  * for random read (WAV_PlayFile_Random_Sector()) and 400 for continuous.
  * (WAV_PlayFile_Continuous_Sector()).
 /******************************************************************************/
-#define SPI_FAST 380.0
+#define SPI_FAST 400.0
 
 /******************************************************************************/
 /* LOW_MEMORY

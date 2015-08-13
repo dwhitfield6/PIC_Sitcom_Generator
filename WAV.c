@@ -37,10 +37,12 @@
 unsigned char ValidWAVFiles[MAX_FILES];
 unsigned char WAV_DONE = FALSE;
 unsigned char WaveFilesNumHigh = 0;
+unsigned char WaveFilesNumLow = 0;
 unsigned long SamplesRead = 0;
 unsigned char playing = FALSE;
 unsigned int DAC_Buffer_Count = 0;
 unsigned int SD_Buffer_Count = 0;
+unsigned char Valid_Wav = FALSE;
 
 /******************************************************************************/
 /* Inline Functions
@@ -173,6 +175,7 @@ unsigned char WAV_CheckFiles(void)
     unsigned char found = FALSE;
 
     WaveFilesNumHigh = 0;
+    WaveFilesNumLow = 255;
     for (i=0; i<MAX_FILES; i++)
     {
         firstSector = FAT_GetFirstSector (FileList[i].firstCluster);
@@ -184,6 +187,10 @@ unsigned char WAV_CheckFiles(void)
             {
                 ValidWAVFiles[i] = PASS;
                 found = TRUE;
+                if(WaveFilesNumLow == 255)
+                {
+                    WaveFilesNumLow = i;
+                }
                 WaveFilesNumHigh = i;
             }
             else
@@ -196,6 +203,16 @@ unsigned char WAV_CheckFiles(void)
         {
             ValidWAVFiles[i] = FAIL;
         }
+    }
+    if(found == FALSE)
+    {
+        WaveFilesNumHigh = 0;
+        WaveFilesNumLow  = 0;
+        Valid_Wav = FALSE;
+    }
+    else
+    {
+        Valid_Wav = TRUE;
     }
     return found;
 }
@@ -255,10 +272,12 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
     SD_Buffer_Count = 44;
     WAV_DONE = FALSE;
     playing = FALSE;
+    SamplesRead = 0;
     while(1)
     {
         if(DAC_ERROR)
         {
+           Nop();
            goto Finish;
         }
         if(FileList[file].WAV_DATA.BitsPerSample == 8)
@@ -276,6 +295,10 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
         SamplesRead++;
         if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
         {
+            DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+            DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+            DAC_Buffer_Count = 0;
+            DAC_ToggleWriteDACPage();
             goto Finish;
         }
         if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
@@ -289,6 +312,7 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
             DAC_Buffer_Count = 0;
             if(!DAC_ToggleWriteDACPage())
             {
+                Nop();
                 goto Finish;
             }
             if(playing == FALSE)
@@ -311,13 +335,15 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
         SD_Buffer_Count = 0;
         if(!FAT_ReadSector(firstSector + j))
         {
+            Nop();
             goto Finish;
         }
         while(1)
         {
             if(DAC_ERROR)
             {
-               goto Finish;
+                Nop();
+                goto Finish;
             }
             if(FileList[file].WAV_DATA.BitsPerSample == 8)
             {
@@ -334,10 +360,15 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
             SamplesRead ++;
             if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
             {
+                DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+                DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                DAC_Buffer_Count = 0;
+                DAC_ToggleWriteDACPage();
                 goto Finish;
             }
             if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
             {
+                Nop();
                 break;
             }
             if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
@@ -347,6 +378,7 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
                 DAC_Buffer_Count = 0;
                 if(!DAC_ToggleWriteDACPage())
                 {
+                    Nop();
                     goto Finish;
                 }
                 if(playing == FALSE)
@@ -376,13 +408,15 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
             SD_Buffer_Count = 0;
             if(!FAT_ReadSector(firstSector + j))
             {
+                Nop();
                 goto Finish;
             }
             while(1)
             {
                 if(DAC_ERROR)
                 {
-                   goto Finish;
+                    Nop();
+                    goto Finish;
                 }
                 if(FileList[file].WAV_DATA.BitsPerSample == 8)
                 {
@@ -399,10 +433,15 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
                 SamplesRead++;
                 if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
                 {
+                    DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+                    DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+                    DAC_Buffer_Count = 0;
+                    DAC_ToggleWriteDACPage();
                     goto Finish;
                 }
                 if(SD_Buffer_Count >= FAT_BS.bytesPerSector)
                 {
+                    Nop();
                     break;
                 }
                 if(DAC_Buffer_Count >= DAC_BUFFER_SIZE)
@@ -412,6 +451,7 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file)
                     DAC_Buffer_Count = 0;
                     if(!DAC_ToggleWriteDACPage())
                     {
+                        Nop();
                         goto Finish;
                     }
                     if(playing == FALSE)
@@ -482,10 +522,12 @@ unsigned char WAV_PlayFile_Continuous_Sector(unsigned char file)
     firstSector = FAT_GetFirstSector (cluster);
     if(!WAV_MultipleBlockRead(firstSector,firstSector + FAT_BS.sectorPerCluster, file, &First, &WavStatus))
     {
+        Nop();
         goto Finish;
     }
     if(WavStatus == FAIL)
     {
+        Nop();
         goto Finish;
     }
 
@@ -497,10 +539,12 @@ unsigned char WAV_PlayFile_Continuous_Sector(unsigned char file)
         firstSector = FAT_GetFirstSector (cluster);
         if(!WAV_MultipleBlockRead(firstSector,firstSector + FAT_BS.sectorPerCluster, file, &First, &WavStatus))
         {
+            Nop();
             goto Finish;
         }
         if(WavStatus == FAIL || WavStatus == WAV_FINISHED)
         {
+            Nop();
             goto Finish;
         }
     }
@@ -541,6 +585,7 @@ unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, u
         WAV_DONE = FALSE;
         playing = FALSE;
         *first = FALSE;
+        SamplesRead = 0;
     }
     while(1)
     {
@@ -565,6 +610,10 @@ unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, u
         if(SamplesRead >= FileList[file].WAV_DATA.NumSamples)
         {
             /* whole file was read */
+            DAC_Buffer_Elements[DAC_Page_Write] = DAC_Buffer_Count;
+            DAC_Page_Write_Finished[DAC_Page_Write] = TRUE;
+            DAC_Buffer_Count = 0;
+            DAC_ToggleWriteDACPage();
             *status = WAV_FINISHED;
             return DONE;
         }

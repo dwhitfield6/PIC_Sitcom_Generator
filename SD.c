@@ -40,7 +40,7 @@ unsigned char R1_Buffer[1];
 unsigned char R2_Buffer[2];
 unsigned char R3_Buffer[5];
 unsigned char R6_Buffer[6];
-unsigned char SD_Timeout = 0;
+unsigned long SD_Timeout = 0;
 unsigned char SD_CardType = NOT_INITIALIZED;
 SDcommand Global_message;
 SDcommand* PGlobal_message;
@@ -542,13 +542,15 @@ unsigned char SD_readBlock(unsigned long blockIndex)
     Global_message.Argument = block;
 
     SD_CMDSPI_send_read(PGlobal_message,R1,R1_Buffer,NO);
+    
     SD_Timeout = 0;
     while(R1_Buffer[0] != 0)
-    {        
+    {       
         while(!SPI_WriteRead(0xFF,R1_Buffer,YES))
         {
             if(SD_CardPresent() == FAIL)
             {
+                Nop();
                 return FAIL;
             }
             SD_Timeout++;
@@ -571,6 +573,7 @@ unsigned char SD_readBlock(unsigned long blockIndex)
         {
             if(SD_CardPresent() == FAIL)
             {
+                Nop();
                 return FAIL;
             }
             SD_Timeout++;
@@ -600,7 +603,7 @@ unsigned char SD_readBlock(unsigned long blockIndex)
 
     SD_Clear();
     SD_CS_INACTIVE();
-    if(BytesRead == SDblockSize)
+    if(BytesRead >= (SDblockSize - 2))
     {
         return PASS;
     }
