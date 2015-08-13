@@ -34,11 +34,11 @@
  *                            fast sd card with 64 k of allocation space with
  *                            a song sampled at 16000Hz mono.)
  *                          Added RGB LED functions.
- *                          Added code to work withteh new hardware (PCB_revA).
+ *                          Added code to work with the new hardware (PCB_revA).
  *                          Added debug UART, ADC, and timer functionality.
  *                          Added random number generator to randomly choose a
- *                            wav file to play.
- *                          Addd code to read the 5 volt rail.
+ *                            WAV file to play.
+ *                          Added code to read the 5 volt rail.
  *                          Added SD functions to use SD continuous read to
  *                            play WAV files.
  *                          Added debug UART.
