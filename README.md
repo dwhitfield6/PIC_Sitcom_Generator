@@ -1,11 +1,9 @@
-# PIC_IR_RF_Bluetooth_Home_Automation
+# PIC_Sitcom_Generator
 
-This projects uses the PIC18f26k20. 
+This projects uses the dspic33fj128gp80x.
 
-It uses an IR sensor, IR LED, Bluetooth module, and 315MHz RF transmitter to
-allow for seamless home automation with the Westek RF relays:
-Westek Wkfrk100Lc 
+This system reads WAV audio files from an SD card and plays them when motion is detected. The motion detector is a PIR sensor.
+The board contains a high power audio amplifier and some other hardware which increases the user experience.
 
-The PCBs used with this project are:
-
-1. IR_to_RF_w_bluetooth_revA
+The system was designed to playback sounds commonly heard on sitcom tv shows like booing, laughing, and clapping. This gives
+the user an experience that puts their lives in the middle of a tv sitcom.
