@@ -27,6 +27,7 @@
 #include "SYSTEM.h"
 #include "PWM.h"
 #include "TIMERS.h"
+#include "DMA.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -42,21 +43,23 @@ unsigned int Blue_Duty = 300;
 /******************************************************************************/
 /* PWM_SetRed
  *
- * Sets the duty cycly for the Red LED.
+ * Sets the duty cycle for the Red LED.
 /******************************************************************************/
 inline void PWM_SetRed(unsigned int Value)
 {
     Red_Duty = Value;
+    DMA_RedDuty = Red_Duty;
 }
 
 /******************************************************************************/
 /* PWM_SetGreen
  *
- * Sets the duty cycly for the Green LED.
+ * Sets the duty cycle for the Green LED.
 /******************************************************************************/
 inline void PWM_SetGreen(unsigned int Value)
 {
     Green_Duty = Value;
+    DMA_GreenDuty = Green_Duty;
 }
 
 /******************************************************************************/
@@ -67,6 +70,7 @@ inline void PWM_SetGreen(unsigned int Value)
 inline void PWM_SetBlue(unsigned int Value)
 {
     Blue_Duty = Value;
+    DMA_BlueDuty = Blue_Duty;
 }
 
 /******************************************************************************/
@@ -95,6 +99,10 @@ void InitPWM(void)
 {
 #ifndef PROTOBOARD
     
+    /* Red led is OC1 */
+    /* Green led is OC2 */
+    /* Blue led is OC3 */
+    
     RPOR10bits.RP21R    = 0b10100;    // RP19 = OC1 aka RED on RGB LED
     RPOR10bits.RP20R    = 0b10011;    // RP20 = OC1 aka GREEN on RGB LED
     RPOR9bits.RP19R     = 0b10010;    // RP21 = OC1 aka BLUE on RGB LED
@@ -103,9 +111,9 @@ void InitPWM(void)
     OC1CONbits.OCM = 0b000; // Disable Output Compare Module
     OC2CONbits.OCM = 0b000; // Disable Output Compare Module
     OC3CONbits.OCM = 0b000; // Disable Output Compare Module
-    OC1R = 0; // Write the duty cycle for the first PWM pulse
-    OC2R = 0; // Write the duty cycle for the first PWM pulse
-    OC3R = 0; // Write the duty cycle for the first PWM pulse
+    OC1R = 0; // Write the duty cycle for the first PWM pulse of Red LED
+    OC2R = 0; // Write the duty cycle for the first PWM pulse of Green LED
+    OC3R = 0; // Write the duty cycle for the first PWM pulse of Blue LED
     OC1RS = 200; // Write the duty cycle for the second PWM pulse
     OC2RS = 200; // Write the duty cycle for the second PWM pulse
     OC3RS = 200; // Write the duty cycle for the second PWM pulse
@@ -160,6 +168,8 @@ void PWM_SetColor(unsigned int Color)
     Nop();
 #endif
 }
+
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

@@ -38,6 +38,7 @@
 #include "PIR.h"
 #include "PWM.h"
 #include "SWITCH.h"
+#include "DMA.h"
 
 /******************************************************************************/
 /* Global Variables                                                           */
@@ -221,6 +222,30 @@ void _ISR_NOPSV _T2Interrupt( void )
     OC2RS = Green_Duty; // Write Duty Cycle value for next PWM cycle
     OC3RS = Blue_Duty; // Write Duty Cycle value for next PWM cycle
     IFS0bits.T2IF = 0; // Clear Timer 2 interrupt flag
+}
+
+/******************************************************************************/
+/* DMA channel 0 interrupt
+/******************************************************************************/
+void _ISR_NOPSV _DMA0Interrupt(void)
+{
+    IFS0bits.DMA0IF = 0; // Clear the DMA0 Interrupt Flag
+}
+
+/******************************************************************************/
+/* DMA channel 1 interrupt
+/******************************************************************************/
+void _ISR_NOPSV _DMA1Interrupt(void)
+{
+    IFS0bits.DMA1IF = 0; // Clear the DMA0 Interrupt Flag
+}
+
+/******************************************************************************/
+/* DMA channel 2 interrupt
+/******************************************************************************/
+void _ISR_NOPSV _DMA2Interrupt(void)
+{
+    IFS1bits.DMA2IF = 0; // Clear the DMA0 Interrupt Flag
 }
 
 /*-----------------------------------------------------------------------------/

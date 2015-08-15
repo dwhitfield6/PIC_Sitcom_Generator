@@ -12,4 +12,5 @@ SD.h  \
 UART.h  \
  PIR.h  \
 PWM.h  \
-SWITCH.h 
+SWITCH.h  \
+DMA.h 

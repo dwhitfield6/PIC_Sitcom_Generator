@@ -54,6 +54,23 @@ inline void TMR_EnableTimer2(unsigned char action)
 }
 
 /******************************************************************************/
+/* TMR_InterruptTimer2
+ *
+ * Controls the Timer2 interrupt.
+/******************************************************************************/
+inline void TMR_InterruptTimer2(unsigned char action)
+{
+    if (action)
+    {
+        IEC0bits.T2IE = 1; // Enable Timer 2 interrupt
+    }
+    else
+    {
+        IEC0bits.T2IE = 0; // disenable Timer 2 interrupt
+    }
+}
+
+/******************************************************************************/
 /* TMR_EnableTimer4
  *
  * Controls the Timer4 module.
@@ -97,6 +114,7 @@ void InitTIMERS(void)
 void InitTIMER2(void)
 {
     TMR_EnableTimer2(OFF);
+    TMR_InterruptTimer2(OFF);
     T2CONbits.TCS = 0; // Select internal instruction cycle clock
     T2CONbits.TGATE = 0; // Disable Gated Timer mode
     T2CONbits.TCKPS = 0b10; // Select 1:64 Prescaler
@@ -104,7 +122,11 @@ void InitTIMER2(void)
     PR2 = 1000; // Load the period value
     IPC1bits.T2IP = 0x01; // Set Timer 2 Interrupt Priority Level
     IFS0bits.T2IF = 0; // Clear Timer 2 Interrupt Flag
-    IEC0bits.T2IE = 1; // Enable Timer 2 interrupt
+#ifdef DMA_RGB
+    DMA_StartRGB();    
+#else
+    TMR_InterruptTimer2(ON);
+#endif
     TMR_EnableTimer2(ON);
 }
 

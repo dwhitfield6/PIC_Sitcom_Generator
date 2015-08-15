@@ -6,6 +6,7 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
+ * 08/14/15     1.1_DW0a    Added DMA implementation for RGB LED PWM.
  * 08/14/15     1.1         First release. Version change only.
  * 08/13/15     1.0_DW0a    Initial project make.
  *                          Ported over fileio example from microchip.
