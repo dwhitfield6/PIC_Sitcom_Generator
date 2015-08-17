@@ -63,5 +63,6 @@ unsigned char WAV_PlayFile_Random_Sector(unsigned char file);
 unsigned char WAV_PlayFile_Continuous_Sector(unsigned char file);
 unsigned char WAV_Continuous_Cluster(unsigned char file, unsigned char *first, unsigned char *status );
 unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned char File, unsigned char *First, unsigned char *Status);
+void WAV_TestAllFiles(void);
 
 #endif	/* WAV_H */

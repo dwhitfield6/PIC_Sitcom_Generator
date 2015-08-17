@@ -114,9 +114,9 @@ void InitPWM(void)
     OC1R = 0; // Write the duty cycle for the first PWM pulse of Red LED
     OC2R = 0; // Write the duty cycle for the first PWM pulse of Green LED
     OC3R = 0; // Write the duty cycle for the first PWM pulse of Blue LED
-    OC1RS = 200; // Write the duty cycle for the second PWM pulse
-    OC2RS = 200; // Write the duty cycle for the second PWM pulse
-    OC3RS = 200; // Write the duty cycle for the second PWM pulse
+    OC1RS = 0; // Write the duty cycle for the second PWM pulse
+    OC2RS = 0; // Write the duty cycle for the second PWM pulse
+    OC3RS = 0; // Write the duty cycle for the second PWM pulse
     OC1CONbits.OCTSEL = 0; // Select Timer 2 as output compare time base
     OC1CONbits.OCM = 0b110; // Select the Output Compare mode
     OC2CONbits.OCTSEL = 0; // Select Timer 2 as output compare time base
@@ -124,6 +124,12 @@ void InitPWM(void)
     OC3CONbits.OCTSEL = 0; // Select Timer 2 as output compare time base
     OC3CONbits.OCM = 0b110; // Select the Output Compare mode
 
+    #ifdef DMA_RGB
+        DMA_StartRGB();    
+    #else
+        TMR_InterruptTimer2(ON);
+    #endif
+    
 #else
     Nop();
 #endif

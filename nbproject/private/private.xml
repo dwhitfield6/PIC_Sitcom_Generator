@@ -1,8 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?><project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1">
         <file>
             <url>SD.c</url>
             <line>673</line>
         </file>
     </editor-bookmarks>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0">
+        <file>
+            <url>SD.c</url>
+            <bookmark id="0">
+                <name/>
+                <line>676</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/TIMERS.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SD.h</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/main.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SD.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SPI.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/WAV.h</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/WAV.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SPI.h</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/MISC.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/UART.h</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/USER.h</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/UART.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/PWM.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/FAT.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/USER.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/DAC.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/PIR.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SWITCH.c</file>
+            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/INTERRUPTS.c</file>
+        </group>
+    </open-files>
 </project-private>

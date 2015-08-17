@@ -796,6 +796,41 @@ unsigned char WAV_MultipleBlockRead(long StartIndex, long StopIndex, unsigned ch
     }
     return PASS;
 }
+
+/******************************************************************************/
+/* WAV_TestAllFiles
+ *
+ * This function playsback all audio files on the SD card.
+/******************************************************************************/
+void WAV_TestAllFiles(void)
+{
+    unsigned char i;
+    
+    UART_DEBUG_SendStringConstCRLN("WAV File Testing");
+    for(i=WaveFilesNumLow; i <=WaveFilesNumHigh; i++)
+    {
+        if(ValidWAVFiles[i] == PASS)
+        {
+            UART_DEBUG_SendStringConst("Playing WAV file: ");
+            UART_DEBUG_SendStringConstCRLN(&FileList[i].name);
+            if(WAV_PlayFile_Random_Sector(i))
+            {
+                UART_DEBUG_SendStringConstCRLN("Wav played successfully");
+            }
+            else
+            {
+                UART_DEBUG_SendStringConstCRLN("Wav failed");
+            }
+            if(SD_CardPresent() == FAIL)
+            {
+                SD_State = NOT_INITIALIZED;
+                UART_DEBUG_SendStringConstCRLN("SD card removed");
+            }
+        }
+    }
+
+}
+
 /*-----------------------------------------------------------------------------/
  End of File
 /-----------------------------------------------------------------------------*/

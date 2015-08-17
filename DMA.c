@@ -52,6 +52,9 @@ unsigned int DMA_BlueDuty __attribute__((space(dma))) = 0;
 /******************************************************************************/
 void DMA_StartRGB(void)
 {
+    DMA_Channel0();
+    DMA_Channel1();
+    DMA_Channel2();
     DMA_StartCH0();
     DMA_StartCH1();
     DMA_StartCH2();
@@ -104,10 +107,10 @@ void DMA_Channel0(void)
 {
     DMA0CONbits.AMODE = 0b00;   // Register indirect with post increment
     DMA0CONbits.MODE = 0b00;    // Continuous, Ping-Pong mode Disabled
-    DMA0CONbits.DIR = 0;        // Peripheral to RAM
+    DMA0CONbits.DIR = 1;        // Peripheral to RAM
     DMA0PAD = (int)&OC1RS;      // Address of the secondary output compare register
     DMA0REQ = 7;                // Select Timer2 interrupt as DMA request source
-    DMA0CNT = 1;              // Number of words to buffer.
+    DMA0CNT = 0;                // Number of words to buffer.
     DMA0STA = __builtin_dmaoffset(&DMA_RedDuty);
 }
 
@@ -121,10 +124,10 @@ void DMA_Channel1(void)
 {
     DMA1CONbits.AMODE = 0b00;   // Register indirect with post increment
     DMA1CONbits.MODE = 0b00;    // Continuous, Ping-Pong mode Disabled
-    DMA1CONbits.DIR = 0;        // Peripheral to RAM
+    DMA1CONbits.DIR = 1;        // Peripheral to RAM
     DMA1PAD = (int)&OC2RS;      // Address of the secondary output compare register
     DMA1REQ = 7;                // Select Timer2 interrupt as DMA request source
-    DMA1CNT = 1;              // Number of words to buffer.
+    DMA1CNT = 0;              // Number of words to buffer.
     DMA1STA = __builtin_dmaoffset(&DMA_GreenDuty);
 }
 
@@ -138,10 +141,10 @@ void DMA_Channel2(void)
 {
     DMA2CONbits.AMODE = 0b00;   // Register indirect with post increment
     DMA2CONbits.MODE = 0b00;    // Continuous, Ping-Pong mode Disabled
-    DMA2CONbits.DIR = 0;        // Peripheral to RAM
+    DMA2CONbits.DIR = 1;        // Peripheral to RAM
     DMA2PAD = (int)&OC3RS;      // Address of the secondary output compare register
     DMA2REQ = 7;                // Select Timer2 interrupt as DMA request source
-    DMA2CNT = 1;              // Number of words to buffer.
+    DMA2CNT = 0;              // Number of words to buffer.
     DMA2STA = __builtin_dmaoffset(&DMA_BlueDuty);
 }
 

@@ -122,11 +122,6 @@ void InitTIMER2(void)
     PR2 = 1000; // Load the period value
     IPC1bits.T2IP = 0x01; // Set Timer 2 Interrupt Priority Level
     IFS0bits.T2IF = 0; // Clear Timer 2 Interrupt Flag
-#ifdef DMA_RGB
-    DMA_StartRGB();    
-#else
-    TMR_InterruptTimer2(ON);
-#endif
     TMR_EnableTimer2(ON);
 }
 

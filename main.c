@@ -7,6 +7,11 @@
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
  * 08/14/15     1.1_DW0a    Added DMA implementation for RGB LED PWM.
+ *                          Commented out RGB DMA because the DMA module can
+ *                            only write to 2 of the 3 needed output compare
+ *                            modules.
+ *                          Added function to listen to all WAV files on the SD
+ *                            card to test.
  * 08/14/15     1.1         First release. Version change only.
  * 08/13/15     1.0_DW0a    Initial project make.
  *                          Ported over fileio example from microchip.

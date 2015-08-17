@@ -164,12 +164,12 @@ Program Memory  [Origin = 0x200, Length = 0x15600]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x15f4          0x20ee  (8430)
-.const                      0x17f4              0x27e0          0x3bd0  (15312)
-.text                       0x3fd4              0x5600          0x8100  (33024)
-.dinit                      0x95d4               0x14c           0x1f2  (498)
-.text                       0x9720               0x4d4           0x73e  (1854)
+.const                      0x17f4              0x2838          0x3c54  (15444)
+.text                       0x402c              0x57ca          0x83af  (33711)
+.dinit                      0x97f6               0x14c           0x1f2  (498)
+.text                       0x9942               0x390           0x558  (1368)
 
-                     Total program memory used (bytes):         0xe6ee  (59118) 45%
+                     Total program memory used (bytes):         0xe83b  (59451) 45%
 
 
 Data Memory  [Origin = 0x800, Length = 0x4000]
@@ -194,9 +194,9 @@ section                    address      alignment gaps    total length  (dec)
 .bss._sibuf                 0x2672                   0             0x2  (2)
 .bss._sobuf                 0x2674                   0             0x2  (2)
 .data.__C30_UART            0x2676                   0             0x2  (2)
-_03B5BF0055ce90ad           0x47fa                   0             0x2  (2)
-_03B5BEA055ce90ad           0x47fc                   0             0x2  (2)
-_03B5BE4055ce90ad           0x47fe                   0             0x2  (2)
+_03645F0055d24cd7           0x47fa                   0             0x2  (2)
+_03645EA055d24cd7           0x47fc                   0             0x2  (2)
+_03645E4055d24cd7           0x47fe                   0             0x2  (2)
 
                         Total data memory used (bytes):         0x1e7e  (7806) 47%
 
@@ -428,344 +428,346 @@ External Symbols in Program Memory (by address):
                   0x00175e                  ___muldi3
                   0x0017b0                  ___umuldi3
                   0x0017f4                  _Start_Clip
-                  0x003fc0                  _CONF_SEQUENCE
-                  0x003fca                  _PCB_Version
-                  0x003fd4                  _MSC_DelayUS
-                  0x004022                  _MSC_DelayNOP
-                  0x00403c                  _IsLetter
-                  0x00406c                  _MSC_IsNumber
-                  0x00408c                  _MSC_IsCharacter
-                  0x0040aa                  _MSC_IsAlphaNumeric
-                  0x0040d6                  _MSC_IsAlphaNumericString
-                  0x004100                  _MSC_CleanBuffer
-                  0x004126                  _MSC_CleanBufferInt
-                  0x004150                  _MSC_Round
-                  0x00417c                  _MSC_BufferCopy
-                  0x0041ee                  _MSC_StringMatch
-                  0x004232                  _MSC_StringMatchCaseInsensitive
-                  0x004292                  _MSC_StringContains
-                  0x004348                  _MSC_StringContainsCaseInsensitive
-                  0x00440e                  _MSC_LowercaseString
-                  0x004448                  _MSC_LowercaseChar
-                  0x004470                  _MSC_ReverseByte
-                  0x0044d8                  _MSC_ReverseInt
-                  0x004578                  _MSC_ReverseLong
-                  0x004ba6                  _MSC_GetNumber
-                  0x004eb4                  _MSC_GetNumberUnsigned
-                  0x005198                  _MSC_StringAddEqual
-                  0x0052d8                  _MSC_GetStringAfterComma
-                  0x0053ce                  _MSC_DB_Round
-                  0x005402                  _MSC_LG_Round
-                  0x00551c                  _MSC_Scale
-                  0x0055c8                  _MSC_HEXtoBCD
-                  0x00562e                  _MSC_BCDtoHEX
-                  0x005682                  _MSC_BufferMatch
-                  0x0056b6                  _MSC_TestFunctionPointer
-                  0x0056be                  _MSC_EndianInt
-                  0x0056dc                  _MSC_EndianIntArray
-                  0x005702                  _MSC_EndianLong
-                  0x00573c                  _MSC_EndianLongArray
-                  0x0057a2                  _WAV_ParseHeader
-                  0x005cb8                  _WAV_CheckFiles
-                  0x005dc6                  _WAV_PlayFile_Random_Sector
-                  0x0064be                  _WAV_PlayFile_Continuous_Sector
-                  0x00664e                  _WAV_Continuous_Cluster
-                  0x006882                  _WAV_MultipleBlockRead
-                  0x006b0a                  _SD_POWER
-                  0x006b28                  _SD_CS_ACTIVE
-                  0x006b56                  _SD_CS_INACTIVE
-                  0x006b84                  _InitSD
-                  0x006da2                  _SD_Set_CardType
-                  0x006dae                  _SD_Get_CardType
-                  0x006dbc                  _SD_Clear_SD_Receive_Buffer_Big
-                  0x006dca                  _SD_Clear_SD_Receive_Buffer_Small
-                  0x006dd8                  _SD_DeleteCard
-                  0x006e16                  _SD_Properties
-                  0x00703e                  _SD_readStatus
-                  0x007064                  _SD_readRegister
-                  0x00716a                  _SD_readBlock
-                  0x0072ec                  _SD_readMultipleBlock
-                  0x0074ba                  _SD_writeBlock
-                  0x0075d8                  _SD_TestCRC
-                  0x0075f2                  _SDtoSPI
-                  0x007670                  _SD_CMDSPI_send
-                  0x00772e                  _SD_SetCMD
-                  0x00775a                  _SD_ACMDSPI_send_read
-                  0x007792                  _SD_CMDSPI_send_read
-                  0x007886                  _SDaddCRC
-                  0x0078ca                  _CRC7_40bits
-                  0x0079ca                  _SD_RESET
-                  0x007a22                  _SD_Clear
-                  0x007a66                  _SD_WaitResponse
-                  0x007ab2                  _SD_CardPresent
-                  0x007aca                  _InitFAT
-                  0x007b1e                  _FAT_DiscoverFiles
-                  0x007b3a                  _FAT_ConvertFileName
-                  0x007c6c                  _FAT_FindFiles
-                  0x008090                  _FAT_ReadSector
-                  0x0080a4                  _FAT_GetBootSectorData
-                  0x008218                  _FAT_GetSetFreeCluster
-                  0x0082b6                  _FAT_GetSetNextCluster
-                  0x0083ea                  _FAT_GetFirstSector
-                  0x008428                  _FAT_SectorCopy
-                  0x008456                  _FAT_Copy
-                  0x008486                  _SPI_Enable
-                  0x008492                  _SPI_Disable
-                  0x00849e                  _InitSPI
-                  0x0084e2                  _SPI_SetSpeed
-                  0x008864                  _SPI_ReadActivityMISO
-                  0x008884                  _SPI_WriteRead
-                  0x00894e                  _SPIwrite
-                  0x00895e                  _UART_PIR_TX_PIN
-                  0x00897e                  _UART_DEBUG_TX_PIN
-                  0x00899e                  _UART_PIR_RX_Interrupt
-                  0x0089b2                  _UART_DEBUG_RX_Interrupt
-                  0x0089c6                  _InitUART
-                  0x008a18                  _UART_PIR_SetClock
-                  0x008a70                  _UART_DEBUG_SetClock
-                  0x008ac8                  _UART_PIR_SendChar
-                  0x008aea                  _UART_DEBUG_SendChar
-                  0x008b0c                  _UART_PIR_SendCharConst
-                  0x008b2e                  _UART_DEBUG_SendCharConst
-                  0x008b50                  _UART_PIR_SendString
-                  0x008b6c                  _UART_DEBUG_SendString
-                  0x008b88                  _UART_PIR_SendStringConst
-                  0x008ba4                  _UART_DEBUG_SendStringConst
-                  0x008bc0                  _UART_DEBUG_SendStringConstCRLN
-                  0x008be4                  _UART_PIR_CleanBuffer
-                  0x008c0c                  _UART_DEBUG_CleanBuffer
-                  0x008c34                  _UART_DEBUG_TestSpeed
-                  0x008c3c                  _UART_Display_WAV
-                  0x008c86                  _UART_DisplayBanner
-                  0x008cae                  _PIR_MD_PinControl
-                  0x008cc2                  _PIR_Interrupt
-                  0x008cd8                  _PIR_MD_READ
-                  0x008cf0                  _InitPIR
-                  0x008e06                  _PIR_ReadCommand
-                  0x008e4a                  _PIR_WriteCommand
-                  0x008ef6                  _PIR_ConfirmationCommand
-                  0x008f6a                  _PIR_Sleep
-                  0x008f88                  _PIR_Reset
-                  0x008fb2                  _main
-                  0x009262                  _InitRTCC
-                  0x009290                  _RTCC_ClearTime
-                  0x0092c2                  _RTCC_SetTime
-                  0x0092fa                  _RTCC_Access
-                  0x009316                  _RTCC_Read
-                  0x0093ba                  _RTCC_Write
-                  0x009454                  _DAC_Run
-                  0x00945c                  _DAC_Stop
-                  0x009464                  _DAC_ToggleWriteDACPage
-                  0x0094c6                  _InitDAC
-                  0x0094fa                  _DAC_TurnOnAmp
-                  0x009508                  _DAC_SetClock
-                  0x009562                  _DAC_TurnOffAmp
-                  0x00956e                  _DAC_MuteAmp
-                  0x009576                  _DAC_UnMuteAmp
-                  0x00957e                  _DAC_Voltage
-                  0x00958a                  _DAC_AudioOn
-                  0x0095a4                  _DAC_AudioOff
-                  0x0095ae                  _DAC_Play_Startup
-                  0x009720                  _PWM_SetRed
-                  0x009730                  _PWM_SetGreen
-                  0x009740                  _PWM_SetBlue
-                  0x009750                  _PWM_SetRGB
-                  0x009768                  _InitPWM
-                  0x0097ea                  _PWM_SetColor
-                  0x009866                  _InitADC
-                  0x009884                  _ADC_ReadVIN
-                  0x00990a                  _ADC_ReadFiveVoltRail
-                  0x009990                  _TMR_EnableTimer2
-                  0x0099a4                  _TMR_InterruptTimer2
-                  0x0099b8                  _TMR_EnableTimer4
-                  0x0099cc                  _InitTIMERS
-                  0x0099d6                  _InitTIMER2
-                  0x009a0c                  _InitTIMER4
-                  0x009a26                  _TMR_RandomNum
-                  0x009a5a                  _DMA_StartRGB
-                  0x009a66                  _DMA_StartCH0
-                  0x009a72                  _DMA_StartCH1
-                  0x009a7e                  _DMA_StartCH2
-                  0x009a8a                  _DMA_Channel0
-                  0x009ab2                  _DMA_Channel1
-                  0x009ada                  _DMA_Channel2
-                  0x009b02                  _Init_App
-                  0x009b52                  _Init_System
-                  0x009b98                  _Door_Interrupt
-                  0x009bac                  _InitSWITCH
-                  0x009bc8                  _SYS_ConfigureOscillator
+                  0x004018                  _CONF_SEQUENCE
+                  0x004022                  _PCB_Version
+                  0x00402c                  _MSC_DelayUS
+                  0x00407a                  _MSC_DelayNOP
+                  0x004094                  _IsLetter
+                  0x0040c4                  _MSC_IsNumber
+                  0x0040e4                  _MSC_IsCharacter
+                  0x004102                  _MSC_IsAlphaNumeric
+                  0x00412e                  _MSC_IsAlphaNumericString
+                  0x004158                  _MSC_CleanBuffer
+                  0x00417e                  _MSC_CleanBufferInt
+                  0x0041a8                  _MSC_Round
+                  0x0041d4                  _MSC_BufferCopy
+                  0x004246                  _MSC_StringMatch
+                  0x00428a                  _MSC_StringMatchCaseInsensitive
+                  0x0042ea                  _MSC_StringContains
+                  0x0043a0                  _MSC_StringContainsCaseInsensitive
+                  0x004466                  _MSC_LowercaseString
+                  0x0044a0                  _MSC_LowercaseChar
+                  0x0044c8                  _MSC_ReverseByte
+                  0x004530                  _MSC_ReverseInt
+                  0x0045d0                  _MSC_ReverseLong
+                  0x004bfe                  _MSC_GetNumber
+                  0x004f0c                  _MSC_GetNumberUnsigned
+                  0x0051f0                  _MSC_StringAddEqual
+                  0x005330                  _MSC_GetStringAfterComma
+                  0x005426                  _MSC_DB_Round
+                  0x00545a                  _MSC_LG_Round
+                  0x005574                  _MSC_Scale
+                  0x005620                  _MSC_HEXtoBCD
+                  0x005686                  _MSC_BCDtoHEX
+                  0x0056da                  _MSC_BufferMatch
+                  0x00570e                  _MSC_TestFunctionPointer
+                  0x005716                  _MSC_EndianInt
+                  0x005734                  _MSC_EndianIntArray
+                  0x00575a                  _MSC_EndianLong
+                  0x005794                  _MSC_EndianLongArray
+                  0x0057fa                  _WAV_ParseHeader
+                  0x005d10                  _WAV_CheckFiles
+                  0x005e1e                  _WAV_PlayFile_Random_Sector
+                  0x006516                  _WAV_PlayFile_Continuous_Sector
+                  0x0066a6                  _WAV_Continuous_Cluster
+                  0x0068da                  _WAV_MultipleBlockRead
+                  0x006b62                  _WAV_TestAllFiles
+                  0x006be0                  _SD_POWER
+                  0x006bfe                  _SD_CS_ACTIVE
+                  0x006c2c                  _SD_CS_INACTIVE
+                  0x006c5a                  _InitSD
+                  0x006e78                  _SD_Set_CardType
+                  0x006e84                  _SD_Get_CardType
+                  0x006e92                  _SD_Clear_SD_Receive_Buffer_Big
+                  0x006ea0                  _SD_Clear_SD_Receive_Buffer_Small
+                  0x006eae                  _SD_DeleteCard
+                  0x006eec                  _SD_Properties
+                  0x007114                  _SD_readStatus
+                  0x00713a                  _SD_readRegister
+                  0x007240                  _SD_readBlock
+                  0x0073c2                  _SD_readMultipleBlock
+                  0x007590                  _SD_writeBlock
+                  0x0076ae                  _SD_TestCRC
+                  0x0076c8                  _SDtoSPI
+                  0x007746                  _SD_CMDSPI_send
+                  0x007804                  _SD_SetCMD
+                  0x007830                  _SD_ACMDSPI_send_read
+                  0x007868                  _SD_CMDSPI_send_read
+                  0x00795c                  _SDaddCRC
+                  0x0079a0                  _CRC7_40bits
+                  0x007aa0                  _SD_RESET
+                  0x007af8                  _SD_Clear
+                  0x007b3c                  _SD_WaitResponse
+                  0x007b88                  _SD_CardPresent
+                  0x007ba0                  _InitFAT
+                  0x007bf4                  _FAT_DiscoverFiles
+                  0x007c10                  _FAT_ConvertFileName
+                  0x007d42                  _FAT_FindFiles
+                  0x008166                  _FAT_ReadSector
+                  0x00817a                  _FAT_GetBootSectorData
+                  0x0082ee                  _FAT_GetSetFreeCluster
+                  0x00838c                  _FAT_GetSetNextCluster
+                  0x0084c0                  _FAT_GetFirstSector
+                  0x0084fe                  _FAT_SectorCopy
+                  0x00852c                  _FAT_Copy
+                  0x00855c                  _SPI_Enable
+                  0x008568                  _SPI_Disable
+                  0x008574                  _InitSPI
+                  0x0085b8                  _SPI_SetSpeed
+                  0x00893a                  _SPI_ReadActivityMISO
+                  0x00895a                  _SPI_WriteRead
+                  0x008a24                  _SPIwrite
+                  0x008a34                  _UART_PIR_TX_PIN
+                  0x008a54                  _UART_DEBUG_TX_PIN
+                  0x008a74                  _UART_PIR_RX_Interrupt
+                  0x008a88                  _UART_DEBUG_RX_Interrupt
+                  0x008a9c                  _InitUART
+                  0x008aee                  _UART_PIR_SetClock
+                  0x008b46                  _UART_DEBUG_SetClock
+                  0x008b9e                  _UART_PIR_SendChar
+                  0x008bc0                  _UART_DEBUG_SendChar
+                  0x008be2                  _UART_PIR_SendCharConst
+                  0x008c04                  _UART_DEBUG_SendCharConst
+                  0x008c26                  _UART_PIR_SendString
+                  0x008c42                  _UART_DEBUG_SendString
+                  0x008c5e                  _UART_PIR_SendStringConst
+                  0x008c7a                  _UART_DEBUG_SendStringConst
+                  0x008c96                  _UART_DEBUG_SendStringConstCRLN
+                  0x008cba                  _UART_PIR_CleanBuffer
+                  0x008ce2                  _UART_DEBUG_CleanBuffer
+                  0x008d0a                  _UART_DEBUG_TestSpeed
+                  0x008d12                  _UART_Display_WAV
+                  0x008d5c                  _UART_DisplayBanner
+                  0x008d84                  _PIR_MD_PinControl
+                  0x008d98                  _PIR_Interrupt
+                  0x008dae                  _PIR_MD_READ
+                  0x008dc6                  _InitPIR
+                  0x008edc                  _PIR_ReadCommand
+                  0x008f20                  _PIR_WriteCommand
+                  0x008fcc                  _PIR_ConfirmationCommand
+                  0x009040                  _PIR_Sleep
+                  0x00905e                  _PIR_Reset
+                  0x009088                  _main
+                  0x009338                  _InitRTCC
+                  0x009366                  _RTCC_ClearTime
+                  0x009398                  _RTCC_SetTime
+                  0x0093d0                  _RTCC_Access
+                  0x0093ec                  _RTCC_Read
+                  0x009490                  _RTCC_Write
+                  0x00952a                  _DAC_Run
+                  0x009532                  _DAC_Stop
+                  0x00953a                  _DAC_ToggleWriteDACPage
+                  0x00959c                  _InitDAC
+                  0x0095d0                  _DAC_TurnOnAmp
+                  0x0095de                  _DAC_SetClock
+                  0x009638                  _DAC_TurnOffAmp
+                  0x009644                  _DAC_MuteAmp
+                  0x00964c                  _DAC_UnMuteAmp
+                  0x009654                  _DAC_Voltage
+                  0x009660                  _DAC_AudioOn
+                  0x00967a                  _DAC_AudioOff
+                  0x009684                  _DAC_Play_Startup
+                  0x0096aa                  _PWM_SetRed
+                  0x0096ba                  _PWM_SetGreen
+                  0x0096ca                  _PWM_SetBlue
+                  0x0096da                  _PWM_SetRGB
+                  0x0096f2                  _InitPWM
+                  0x00977a                  _PWM_SetColor
+                  0x009942                  _InitADC
+                  0x009960                  _ADC_ReadVIN
+                  0x0099e6                  _ADC_ReadFiveVoltRail
+                  0x009a6c                  _TMR_EnableTimer2
+                  0x009a80                  _TMR_InterruptTimer2
+                  0x009a94                  _TMR_EnableTimer4
+                  0x009aa8                  _InitTIMERS
+                  0x009ab2                  _InitTIMER2
+                  0x009ae4                  _InitTIMER4
+                  0x009afe                  _TMR_RandomNum
+                  0x009b32                  _DMA_StartRGB
+                  0x009b44                  _DMA_StartCH0
+                  0x009b50                  _DMA_StartCH1
+                  0x009b5c                  _DMA_StartCH2
+                  0x009b68                  _DMA_Channel0
+                  0x009b90                  _DMA_Channel1
+                  0x009bb8                  _DMA_Channel2
+                  0x009be0                  _Init_App
+                  0x009c30                  _Init_System
+                  0x009c76                  _Door_Interrupt
+                  0x009c8a                  _InitSWITCH
+                  0x009ca6                  _SYS_ConfigureOscillator
                   0xf80000                  __FBS.sec
                   0xf80002                  __FSS.sec
                   0xf80004                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
-                  0x00990a                  _ADC_ReadFiveVoltRail
-                  0x009884                  _ADC_ReadVIN
-                  0x003fc0                  _CONF_SEQUENCE
-                  0x0078ca                  _CRC7_40bits
-                  0x0095a4                  _DAC_AudioOff
-                  0x00958a                  _DAC_AudioOn
-                  0x00956e                  _DAC_MuteAmp
-                  0x0095ae                  _DAC_Play_Startup
-                  0x009454                  _DAC_Run
-                  0x009508                  _DAC_SetClock
-                  0x00945c                  _DAC_Stop
-                  0x009464                  _DAC_ToggleWriteDACPage
-                  0x009562                  _DAC_TurnOffAmp
-                  0x0094fa                  _DAC_TurnOnAmp
-                  0x009576                  _DAC_UnMuteAmp
-                  0x00957e                  _DAC_Voltage
-                  0x009a8a                  _DMA_Channel0
-                  0x009ab2                  _DMA_Channel1
-                  0x009ada                  _DMA_Channel2
-                  0x009a66                  _DMA_StartCH0
-                  0x009a72                  _DMA_StartCH1
-                  0x009a7e                  _DMA_StartCH2
-                  0x009a5a                  _DMA_StartRGB
-                  0x009b98                  _Door_Interrupt
-                  0x007b3a                  _FAT_ConvertFileName
-                  0x008456                  _FAT_Copy
-                  0x007b1e                  _FAT_DiscoverFiles
-                  0x007c6c                  _FAT_FindFiles
-                  0x0080a4                  _FAT_GetBootSectorData
-                  0x0083ea                  _FAT_GetFirstSector
-                  0x008218                  _FAT_GetSetFreeCluster
-                  0x0082b6                  _FAT_GetSetNextCluster
-                  0x008090                  _FAT_ReadSector
-                  0x008428                  _FAT_SectorCopy
-                  0x009866                  _InitADC
-                  0x0094c6                  _InitDAC
-                  0x007aca                  _InitFAT
-                  0x008cf0                  _InitPIR
-                  0x009768                  _InitPWM
-                  0x009262                  _InitRTCC
-                  0x006b84                  _InitSD
-                  0x00849e                  _InitSPI
-                  0x009bac                  _InitSWITCH
-                  0x0099d6                  _InitTIMER2
-                  0x009a0c                  _InitTIMER4
-                  0x0099cc                  _InitTIMERS
-                  0x0089c6                  _InitUART
-                  0x009b02                  _Init_App
-                  0x009b52                  _Init_System
-                  0x00403c                  _IsLetter
-                  0x00562e                  _MSC_BCDtoHEX
-                  0x00417c                  _MSC_BufferCopy
-                  0x005682                  _MSC_BufferMatch
-                  0x004100                  _MSC_CleanBuffer
-                  0x004126                  _MSC_CleanBufferInt
-                  0x0053ce                  _MSC_DB_Round
-                  0x004022                  _MSC_DelayNOP
-                  0x003fd4                  _MSC_DelayUS
-                  0x0056be                  _MSC_EndianInt
-                  0x0056dc                  _MSC_EndianIntArray
-                  0x005702                  _MSC_EndianLong
-                  0x00573c                  _MSC_EndianLongArray
-                  0x004ba6                  _MSC_GetNumber
-                  0x004eb4                  _MSC_GetNumberUnsigned
-                  0x0052d8                  _MSC_GetStringAfterComma
-                  0x0055c8                  _MSC_HEXtoBCD
-                  0x0040aa                  _MSC_IsAlphaNumeric
-                  0x0040d6                  _MSC_IsAlphaNumericString
-                  0x00408c                  _MSC_IsCharacter
-                  0x00406c                  _MSC_IsNumber
-                  0x005402                  _MSC_LG_Round
-                  0x004448                  _MSC_LowercaseChar
-                  0x00440e                  _MSC_LowercaseString
-                  0x004470                  _MSC_ReverseByte
-                  0x0044d8                  _MSC_ReverseInt
-                  0x004578                  _MSC_ReverseLong
-                  0x004150                  _MSC_Round
-                  0x00551c                  _MSC_Scale
-                  0x005198                  _MSC_StringAddEqual
-                  0x004292                  _MSC_StringContains
-                  0x004348                  _MSC_StringContainsCaseInsensitive
-                  0x0041ee                  _MSC_StringMatch
-                  0x004232                  _MSC_StringMatchCaseInsensitive
-                  0x0056b6                  _MSC_TestFunctionPointer
-                  0x003fca                  _PCB_Version
-                  0x008ef6                  _PIR_ConfirmationCommand
-                  0x008cc2                  _PIR_Interrupt
-                  0x008cae                  _PIR_MD_PinControl
-                  0x008cd8                  _PIR_MD_READ
-                  0x008e06                  _PIR_ReadCommand
-                  0x008f88                  _PIR_Reset
-                  0x008f6a                  _PIR_Sleep
-                  0x008e4a                  _PIR_WriteCommand
-                  0x009740                  _PWM_SetBlue
-                  0x0097ea                  _PWM_SetColor
-                  0x009730                  _PWM_SetGreen
-                  0x009750                  _PWM_SetRGB
-                  0x009720                  _PWM_SetRed
-                  0x0092fa                  _RTCC_Access
-                  0x009290                  _RTCC_ClearTime
-                  0x009316                  _RTCC_Read
-                  0x0092c2                  _RTCC_SetTime
-                  0x0093ba                  _RTCC_Write
-                  0x00775a                  _SD_ACMDSPI_send_read
-                  0x007670                  _SD_CMDSPI_send
-                  0x007792                  _SD_CMDSPI_send_read
-                  0x006b28                  _SD_CS_ACTIVE
-                  0x006b56                  _SD_CS_INACTIVE
-                  0x007ab2                  _SD_CardPresent
-                  0x007a22                  _SD_Clear
-                  0x006dbc                  _SD_Clear_SD_Receive_Buffer_Big
-                  0x006dca                  _SD_Clear_SD_Receive_Buffer_Small
-                  0x006dd8                  _SD_DeleteCard
-                  0x006dae                  _SD_Get_CardType
-                  0x006b0a                  _SD_POWER
-                  0x006e16                  _SD_Properties
-                  0x0079ca                  _SD_RESET
-                  0x00772e                  _SD_SetCMD
-                  0x006da2                  _SD_Set_CardType
-                  0x0075d8                  _SD_TestCRC
-                  0x007a66                  _SD_WaitResponse
-                  0x00716a                  _SD_readBlock
-                  0x0072ec                  _SD_readMultipleBlock
-                  0x007064                  _SD_readRegister
-                  0x00703e                  _SD_readStatus
-                  0x0074ba                  _SD_writeBlock
-                  0x007886                  _SDaddCRC
-                  0x0075f2                  _SDtoSPI
-                  0x008492                  _SPI_Disable
-                  0x008486                  _SPI_Enable
-                  0x008864                  _SPI_ReadActivityMISO
-                  0x0084e2                  _SPI_SetSpeed
-                  0x008884                  _SPI_WriteRead
-                  0x00894e                  _SPIwrite
-                  0x009bc8                  _SYS_ConfigureOscillator
+                  0x0099e6                  _ADC_ReadFiveVoltRail
+                  0x009960                  _ADC_ReadVIN
+                  0x004018                  _CONF_SEQUENCE
+                  0x0079a0                  _CRC7_40bits
+                  0x00967a                  _DAC_AudioOff
+                  0x009660                  _DAC_AudioOn
+                  0x009644                  _DAC_MuteAmp
+                  0x009684                  _DAC_Play_Startup
+                  0x00952a                  _DAC_Run
+                  0x0095de                  _DAC_SetClock
+                  0x009532                  _DAC_Stop
+                  0x00953a                  _DAC_ToggleWriteDACPage
+                  0x009638                  _DAC_TurnOffAmp
+                  0x0095d0                  _DAC_TurnOnAmp
+                  0x00964c                  _DAC_UnMuteAmp
+                  0x009654                  _DAC_Voltage
+                  0x009b68                  _DMA_Channel0
+                  0x009b90                  _DMA_Channel1
+                  0x009bb8                  _DMA_Channel2
+                  0x009b44                  _DMA_StartCH0
+                  0x009b50                  _DMA_StartCH1
+                  0x009b5c                  _DMA_StartCH2
+                  0x009b32                  _DMA_StartRGB
+                  0x009c76                  _Door_Interrupt
+                  0x007c10                  _FAT_ConvertFileName
+                  0x00852c                  _FAT_Copy
+                  0x007bf4                  _FAT_DiscoverFiles
+                  0x007d42                  _FAT_FindFiles
+                  0x00817a                  _FAT_GetBootSectorData
+                  0x0084c0                  _FAT_GetFirstSector
+                  0x0082ee                  _FAT_GetSetFreeCluster
+                  0x00838c                  _FAT_GetSetNextCluster
+                  0x008166                  _FAT_ReadSector
+                  0x0084fe                  _FAT_SectorCopy
+                  0x009942                  _InitADC
+                  0x00959c                  _InitDAC
+                  0x007ba0                  _InitFAT
+                  0x008dc6                  _InitPIR
+                  0x0096f2                  _InitPWM
+                  0x009338                  _InitRTCC
+                  0x006c5a                  _InitSD
+                  0x008574                  _InitSPI
+                  0x009c8a                  _InitSWITCH
+                  0x009ab2                  _InitTIMER2
+                  0x009ae4                  _InitTIMER4
+                  0x009aa8                  _InitTIMERS
+                  0x008a9c                  _InitUART
+                  0x009be0                  _Init_App
+                  0x009c30                  _Init_System
+                  0x004094                  _IsLetter
+                  0x005686                  _MSC_BCDtoHEX
+                  0x0041d4                  _MSC_BufferCopy
+                  0x0056da                  _MSC_BufferMatch
+                  0x004158                  _MSC_CleanBuffer
+                  0x00417e                  _MSC_CleanBufferInt
+                  0x005426                  _MSC_DB_Round
+                  0x00407a                  _MSC_DelayNOP
+                  0x00402c                  _MSC_DelayUS
+                  0x005716                  _MSC_EndianInt
+                  0x005734                  _MSC_EndianIntArray
+                  0x00575a                  _MSC_EndianLong
+                  0x005794                  _MSC_EndianLongArray
+                  0x004bfe                  _MSC_GetNumber
+                  0x004f0c                  _MSC_GetNumberUnsigned
+                  0x005330                  _MSC_GetStringAfterComma
+                  0x005620                  _MSC_HEXtoBCD
+                  0x004102                  _MSC_IsAlphaNumeric
+                  0x00412e                  _MSC_IsAlphaNumericString
+                  0x0040e4                  _MSC_IsCharacter
+                  0x0040c4                  _MSC_IsNumber
+                  0x00545a                  _MSC_LG_Round
+                  0x0044a0                  _MSC_LowercaseChar
+                  0x004466                  _MSC_LowercaseString
+                  0x0044c8                  _MSC_ReverseByte
+                  0x004530                  _MSC_ReverseInt
+                  0x0045d0                  _MSC_ReverseLong
+                  0x0041a8                  _MSC_Round
+                  0x005574                  _MSC_Scale
+                  0x0051f0                  _MSC_StringAddEqual
+                  0x0042ea                  _MSC_StringContains
+                  0x0043a0                  _MSC_StringContainsCaseInsensitive
+                  0x004246                  _MSC_StringMatch
+                  0x00428a                  _MSC_StringMatchCaseInsensitive
+                  0x00570e                  _MSC_TestFunctionPointer
+                  0x004022                  _PCB_Version
+                  0x008fcc                  _PIR_ConfirmationCommand
+                  0x008d98                  _PIR_Interrupt
+                  0x008d84                  _PIR_MD_PinControl
+                  0x008dae                  _PIR_MD_READ
+                  0x008edc                  _PIR_ReadCommand
+                  0x00905e                  _PIR_Reset
+                  0x009040                  _PIR_Sleep
+                  0x008f20                  _PIR_WriteCommand
+                  0x0096ca                  _PWM_SetBlue
+                  0x00977a                  _PWM_SetColor
+                  0x0096ba                  _PWM_SetGreen
+                  0x0096da                  _PWM_SetRGB
+                  0x0096aa                  _PWM_SetRed
+                  0x0093d0                  _RTCC_Access
+                  0x009366                  _RTCC_ClearTime
+                  0x0093ec                  _RTCC_Read
+                  0x009398                  _RTCC_SetTime
+                  0x009490                  _RTCC_Write
+                  0x007830                  _SD_ACMDSPI_send_read
+                  0x007746                  _SD_CMDSPI_send
+                  0x007868                  _SD_CMDSPI_send_read
+                  0x006bfe                  _SD_CS_ACTIVE
+                  0x006c2c                  _SD_CS_INACTIVE
+                  0x007b88                  _SD_CardPresent
+                  0x007af8                  _SD_Clear
+                  0x006e92                  _SD_Clear_SD_Receive_Buffer_Big
+                  0x006ea0                  _SD_Clear_SD_Receive_Buffer_Small
+                  0x006eae                  _SD_DeleteCard
+                  0x006e84                  _SD_Get_CardType
+                  0x006be0                  _SD_POWER
+                  0x006eec                  _SD_Properties
+                  0x007aa0                  _SD_RESET
+                  0x007804                  _SD_SetCMD
+                  0x006e78                  _SD_Set_CardType
+                  0x0076ae                  _SD_TestCRC
+                  0x007b3c                  _SD_WaitResponse
+                  0x007240                  _SD_readBlock
+                  0x0073c2                  _SD_readMultipleBlock
+                  0x00713a                  _SD_readRegister
+                  0x007114                  _SD_readStatus
+                  0x007590                  _SD_writeBlock
+                  0x00795c                  _SDaddCRC
+                  0x0076c8                  _SDtoSPI
+                  0x008568                  _SPI_Disable
+                  0x00855c                  _SPI_Enable
+                  0x00893a                  _SPI_ReadActivityMISO
+                  0x0085b8                  _SPI_SetSpeed
+                  0x00895a                  _SPI_WriteRead
+                  0x008a24                  _SPIwrite
+                  0x009ca6                  _SYS_ConfigureOscillator
                   0x0017f4                  _Start_Clip
-                  0x009990                  _TMR_EnableTimer2
-                  0x0099b8                  _TMR_EnableTimer4
-                  0x0099a4                  _TMR_InterruptTimer2
-                  0x009a26                  _TMR_RandomNum
-                  0x008c0c                  _UART_DEBUG_CleanBuffer
-                  0x0089b2                  _UART_DEBUG_RX_Interrupt
-                  0x008aea                  _UART_DEBUG_SendChar
-                  0x008b2e                  _UART_DEBUG_SendCharConst
-                  0x008b6c                  _UART_DEBUG_SendString
-                  0x008ba4                  _UART_DEBUG_SendStringConst
-                  0x008bc0                  _UART_DEBUG_SendStringConstCRLN
-                  0x008a70                  _UART_DEBUG_SetClock
-                  0x00897e                  _UART_DEBUG_TX_PIN
-                  0x008c34                  _UART_DEBUG_TestSpeed
-                  0x008c86                  _UART_DisplayBanner
-                  0x008c3c                  _UART_Display_WAV
-                  0x008be4                  _UART_PIR_CleanBuffer
-                  0x00899e                  _UART_PIR_RX_Interrupt
-                  0x008ac8                  _UART_PIR_SendChar
-                  0x008b0c                  _UART_PIR_SendCharConst
-                  0x008b50                  _UART_PIR_SendString
-                  0x008b88                  _UART_PIR_SendStringConst
-                  0x008a18                  _UART_PIR_SetClock
-                  0x00895e                  _UART_PIR_TX_PIN
-                  0x005cb8                  _WAV_CheckFiles
-                  0x00664e                  _WAV_Continuous_Cluster
-                  0x006882                  _WAV_MultipleBlockRead
-                  0x0057a2                  _WAV_ParseHeader
-                  0x0064be                  _WAV_PlayFile_Continuous_Sector
-                  0x005dc6                  _WAV_PlayFile_Random_Sector
+                  0x009a6c                  _TMR_EnableTimer2
+                  0x009a94                  _TMR_EnableTimer4
+                  0x009a80                  _TMR_InterruptTimer2
+                  0x009afe                  _TMR_RandomNum
+                  0x008ce2                  _UART_DEBUG_CleanBuffer
+                  0x008a88                  _UART_DEBUG_RX_Interrupt
+                  0x008bc0                  _UART_DEBUG_SendChar
+                  0x008c04                  _UART_DEBUG_SendCharConst
+                  0x008c42                  _UART_DEBUG_SendString
+                  0x008c7a                  _UART_DEBUG_SendStringConst
+                  0x008c96                  _UART_DEBUG_SendStringConstCRLN
+                  0x008b46                  _UART_DEBUG_SetClock
+                  0x008a54                  _UART_DEBUG_TX_PIN
+                  0x008d0a                  _UART_DEBUG_TestSpeed
+                  0x008d5c                  _UART_DisplayBanner
+                  0x008d12                  _UART_Display_WAV
+                  0x008cba                  _UART_PIR_CleanBuffer
+                  0x008a74                  _UART_PIR_RX_Interrupt
+                  0x008b9e                  _UART_PIR_SendChar
+                  0x008be2                  _UART_PIR_SendCharConst
+                  0x008c26                  _UART_PIR_SendString
+                  0x008c5e                  _UART_PIR_SendStringConst
+                  0x008aee                  _UART_PIR_SetClock
+                  0x008a34                  _UART_PIR_TX_PIN
+                  0x005d10                  _WAV_CheckFiles
+                  0x0066a6                  _WAV_Continuous_Cluster
+                  0x0068da                  _WAV_MultipleBlockRead
+                  0x0057fa                  _WAV_ParseHeader
+                  0x006516                  _WAV_PlayFile_Continuous_Sector
+                  0x005e1e                  _WAV_PlayFile_Random_Sector
+                  0x006b62                  _WAV_TestAllFiles
                   0x00029a                  __DAC1RInterrupt
                   0x0004ae                  __DMA0Interrupt
                   0x0004be                  __DMA1Interrupt
@@ -826,7 +828,7 @@ External Symbols in Program Memory (by name):
                   0x000a36                  _expf
                   0x000bce                  _ldexpf
                   0x000c12                  _logf
-                  0x008fb2                  _main
+                  0x009088                  _main
                   0x000830                  _powf
 
 Memory Configuration
@@ -1091,30 +1093,30 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0xd876
+.debug_info       0x000000       0xd8cb
  *(.debug_info)
- .debug_info      0x000000        0x49f build/PCB_revA_pic33FJ128gp804/production/main.o
- .debug_info      0x00049f        0xf33 build/PCB_revA_pic33FJ128gp804/production/MISC.o
- .debug_info      0x0013d2        0xc28 build/PCB_revA_pic33FJ128gp804/production/SPI.o
- .debug_info      0x001ffa       0x106e build/PCB_revA_pic33FJ128gp804/production/FAT.o
- .debug_info      0x003068        0xadf build/PCB_revA_pic33FJ128gp804/production/DAC.o
- .debug_info      0x003b47        0x52e build/PCB_revA_pic33FJ128gp804/production/RTCC.o
- .debug_info      0x004075        0xee0 build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_info      0x004f55        0xefe build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_info      0x005e53       0x1dcc build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_info      0x007c1f        0xcaf build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_info      0x0088ce        0x9bd build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_info      0x00928b        0x6ea build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_info      0x009975        0x127 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_info      0x009a9c        0x9e5 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_info      0x00a481        0x90c build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_info      0x00ad8d        0x640 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_info      0x00b3cd        0x5cc build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_info      0x00b999       0x1001 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_info      0x00c99a        0xedc build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_info      0x000000        0x49a build/PCB_revA_pic33FJ128gp804/production/main.o
+ .debug_info      0x00049a        0xf2e build/PCB_revA_pic33FJ128gp804/production/MISC.o
+ .debug_info      0x0013c8        0xc23 build/PCB_revA_pic33FJ128gp804/production/SPI.o
+ .debug_info      0x001feb       0x1069 build/PCB_revA_pic33FJ128gp804/production/FAT.o
+ .debug_info      0x003054        0xada build/PCB_revA_pic33FJ128gp804/production/DAC.o
+ .debug_info      0x003b2e        0x529 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
+ .debug_info      0x004057        0xedb build/PCB_revA_pic33FJ128gp804/production/SD.o
+ .debug_info      0x004f32        0xfa6 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_info      0x005ed8       0x1dc7 build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_info      0x007c9f        0xcaa build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_info      0x008949        0x9dc build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_info      0x009325        0x6e5 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_info      0x009a0a        0x122 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_info      0x009b2c        0x9c3 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_info      0x00a4ef        0x907 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_info      0x00adf6        0x63b build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_info      0x00b431        0x5c7 build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_info      0x00b9f8        0xffc build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_info      0x00c9f4        0xed7 build/PCB_revA_pic33FJ128gp804/production/DMA.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000       0x179c
+.debug_abbrev     0x000000       0x17d0
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0xbe build/PCB_revA_pic33FJ128gp804/production/main.o
  .debug_abbrev    0x0000be        0x152 build/PCB_revA_pic33FJ128gp804/production/MISC.o
@@ -1123,20 +1125,20 @@ __FUID3
  .debug_abbrev    0x000561        0x154 build/PCB_revA_pic33FJ128gp804/production/DAC.o
  .debug_abbrev    0x0006b5        0x165 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
  .debug_abbrev    0x00081a        0x204 build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_abbrev    0x000a1e        0x1bc build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_abbrev    0x000bda        0x1d3 build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_abbrev    0x000dad        0x1fc build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_abbrev    0x000fa9        0x115 build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_abbrev    0x0010be         0xde build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_abbrev    0x00119c         0x1f build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_abbrev    0x0011bb        0x12b build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_abbrev    0x0012e6        0x120 build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_abbrev    0x001406         0xa7 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_abbrev    0x0014ad         0xb8 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_abbrev    0x001565        0x148 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_abbrev    0x0016ad         0xef build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_abbrev    0x000a1e        0x205 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_abbrev    0x000c23        0x1d3 build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_abbrev    0x000df6        0x1fc build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_abbrev    0x000ff2        0x116 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_abbrev    0x001108         0xde build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_abbrev    0x0011e6         0x1f build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_abbrev    0x001205        0x115 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_abbrev    0x00131a        0x120 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_abbrev    0x00143a         0xa7 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_abbrev    0x0014e1         0xb8 build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_abbrev    0x001599        0x148 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_abbrev    0x0016e1         0xef build/PCB_revA_pic33FJ128gp804/production/DMA.o
 
-.debug_line       0x000000       0x9a50
+.debug_line       0x000000       0x9ae7
  *(.debug_line)
  .debug_line      0x000000        0x3df build/PCB_revA_pic33FJ128gp804/production/main.o
  .debug_line      0x0003df       0x26a6 build/PCB_revA_pic33FJ128gp804/production/MISC.o
@@ -1145,20 +1147,20 @@ __FUID3
  .debug_line      0x003c7e        0x3c3 build/PCB_revA_pic33FJ128gp804/production/DAC.o
  .debug_line      0x004041        0x46c build/PCB_revA_pic33FJ128gp804/production/RTCC.o
  .debug_line      0x0044ad       0x1af0 build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_line      0x005f9d       0x1968 build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_line      0x007905        0x70d build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_line      0x008012        0x633 build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_line      0x008645        0x33d build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_line      0x008982        0x104 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_line      0x008a86         0x24 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_line      0x008aaa        0x266 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_line      0x008d10        0x264 build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_line      0x008f74         0xea build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_line      0x00905e        0x244 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_line      0x0092a2        0x4b2 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_line      0x009754        0x2fc build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_line      0x005f9d       0x19e7 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_line      0x007984        0x70d build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_line      0x008091        0x633 build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_line      0x0086c4        0x345 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_line      0x008a09        0x104 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_line      0x008b0d         0x24 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_line      0x008b31        0x25e build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_line      0x008d8f        0x264 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_line      0x008ff3         0xea build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_line      0x0090dd        0x244 build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_line      0x009321        0x4b2 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_line      0x0097d3        0x314 build/PCB_revA_pic33FJ128gp804/production/DMA.o
 
-.debug_frame      0x000000        0xc84
+.debug_frame      0x000000        0xc94
  *(.debug_frame)
  .debug_frame     0x000000         0x24 build/PCB_revA_pic33FJ128gp804/production/main.o
  .debug_frame     0x000024        0x244 build/PCB_revA_pic33FJ128gp804/production/MISC.o
@@ -1167,19 +1169,19 @@ __FUID3
  .debug_frame     0x0003b0         0xe4 build/PCB_revA_pic33FJ128gp804/production/DAC.o
  .debug_frame     0x000494         0x74 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
  .debug_frame     0x000508        0x1c4 build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_frame     0x0006cc         0x74 build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_frame     0x000740        0x188 build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_frame     0x0008c8         0xa4 build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_frame     0x00096c         0x74 build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_frame     0x0009e0         0x34 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_frame     0x000a14         0x9c build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_frame     0x000ab0         0x44 build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_frame     0x000af4         0x24 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_frame     0x000b18         0x34 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_frame     0x000b4c         0xb4 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_frame     0x000c00         0x84 build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_frame     0x0006cc         0x84 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_frame     0x000750        0x188 build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_frame     0x0008d8         0xa4 build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_frame     0x00097c         0x74 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_frame     0x0009f0         0x34 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_frame     0x000a24         0x9c build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_frame     0x000ac0         0x44 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_frame     0x000b04         0x24 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_frame     0x000b28         0x34 build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_frame     0x000b5c         0xb4 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_frame     0x000c10         0x84 build/PCB_revA_pic33FJ128gp804/production/DMA.o
 
-.debug_str        0x000000        0xab6
+.debug_str        0x000000        0xabf
  *(.debug_str)
  .debug_str       0x000000         0x61 build/PCB_revA_pic33FJ128gp804/production/main.o
  .debug_str       0x000061         0x82 build/PCB_revA_pic33FJ128gp804/production/MISC.o
@@ -1188,17 +1190,17 @@ __FUID3
  .debug_str       0x000233         0xa0 build/PCB_revA_pic33FJ128gp804/production/DAC.o
  .debug_str       0x0002d3         0x18 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
  .debug_str       0x0002eb        0x108 build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_str       0x0003f3        0x16d build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_str       0x000560        0x130 build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_str       0x000690         0x92 build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_str       0x000722         0x89 build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_str       0x0007ab         0x29 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_str       0x0007d4         0x36 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_str       0x00080a         0x50 build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_str       0x00085a         0x21 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_str       0x00087b         0x27 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_str       0x0008a2        0x197 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_str       0x000a39         0x7d build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_str       0x0003f3        0x176 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_str       0x000569        0x130 build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_str       0x000699         0x92 build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_str       0x00072b         0x89 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_str       0x0007b4         0x29 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_str       0x0007dd         0x36 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_str       0x000813         0x50 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_str       0x000863         0x21 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_str       0x000884         0x27 build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_str       0x0008ab        0x197 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_str       0x000a42         0x7d build/PCB_revA_pic33FJ128gp804/production/DMA.o
 
 .debug_loc
  *(.debug_loc)
@@ -1207,7 +1209,7 @@ __FUID3
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000       0x1370
+                  0x000000       0x1385
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x1b build/PCB_revA_pic33FJ128gp804/production/main.o
@@ -1224,27 +1226,27 @@ __FUID3
  .debug_pubnames
                   0x0007bf        0x2d7 build/PCB_revA_pic33FJ128gp804/production/SD.o
  .debug_pubnames
-                  0x000a96        0x14b build/PCB_revA_pic33FJ128gp804/production/WAV.o
+                  0x000a96        0x160 build/PCB_revA_pic33FJ128gp804/production/WAV.o
  .debug_pubnames
-                  0x000be1        0x2c1 build/PCB_revA_pic33FJ128gp804/production/UART.o
+                  0x000bf6        0x2c1 build/PCB_revA_pic33FJ128gp804/production/UART.o
  .debug_pubnames
-                  0x000ea2         0xf9 build/PCB_revA_pic33FJ128gp804/production/PIR.o
+                  0x000eb7         0xf9 build/PCB_revA_pic33FJ128gp804/production/PIR.o
  .debug_pubnames
-                  0x000f9b         0x98 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+                  0x000fb0         0x98 build/PCB_revA_pic33FJ128gp804/production/PWM.o
  .debug_pubnames
-                  0x001033         0x43 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+                  0x001048         0x43 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
  .debug_pubnames
-                  0x001076         0x93 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x00108b         0x93 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
  .debug_pubnames
-                  0x001109         0x60 build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x00111e         0x60 build/PCB_revA_pic33FJ128gp804/production/ADC.o
  .debug_pubnames
-                  0x001169         0x2e build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x00117e         0x2e build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
  .debug_pubnames
-                  0x001197         0x3f build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x0011ac         0x3f build/PCB_revA_pic33FJ128gp804/production/USER.o
  .debug_pubnames
-                  0x0011d6         0xde build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+                  0x0011eb         0xde build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
  .debug_pubnames
-                  0x0012b4         0xbc build/PCB_revA_pic33FJ128gp804/production/DMA.o
+                  0x0012c9         0xbc build/PCB_revA_pic33FJ128gp804/production/DMA.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -2707,21 +2709,21 @@ __c30_signature
  __c30_signature
                   0x000f08          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(umuldi3.eo)
 
-_03B5BE4055ce90ad
+_03645E4055d24cd7
                     0x47fe          0x2
- _03B5BE4055ce90ad
+ _03645E4055d24cd7
                     0x47fe          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fe                  _DMA_RedDuty
 
-_03B5BEA055ce90ad
+_03645EA055d24cd7
                     0x47fc          0x2
- _03B5BEA055ce90ad
+ _03645EA055d24cd7
                     0x47fc          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fc                  _DMA_GreenDuty
 
-_03B5BF0055ce90ad
+_03645F0055d24cd7
                     0x47fa          0x2
- _03B5BF0055ce90ad
+ _03645F0055d24cd7
                     0x47fa          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fa                  _DMA_BlueDuty
 
@@ -2875,200 +2877,202 @@ _03B5BF0055ce90ad
 .config_IESO      0xf80006          0x2
  .config_IESO     0xf80006          0x2 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
 
-.const              0x97f4       0x27e0 load address 0x0017f4  
+.const              0x97f4       0x2838 load address 0x0017f4  
  .const             0x97f4       0x25f4 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
                     0x97f4                  _Start_Clip
  .const             0xbde8        0x16e build/PCB_revA_pic33FJ128gp804/production/main.o
  .const             0xbf56         0x6a build/PCB_revA_pic33FJ128gp804/production/UART.o
- .const             0xbfc0          0xa build/PCB_revA_pic33FJ128gp804/production/PIR.o
-                    0xbfc0                  _CONF_SEQUENCE
- .const             0xbfca          0xa build/PCB_revA_pic33FJ128gp804/production/USER.o
-                    0xbfca                  _PCB_Version
+ .const             0xbfc0         0x58 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .const             0xc018          0xa build/PCB_revA_pic33FJ128gp804/production/PIR.o
+                    0xc018                  _CONF_SEQUENCE
+ .const             0xc022          0xa build/PCB_revA_pic33FJ128gp804/production/USER.o
+                    0xc022                  _PCB_Version
 
-.text             0x003fd4       0x5600
- .text            0x003fd4       0x17ce build/PCB_revA_pic33FJ128gp804/production/MISC.o
-                  0x003fd4                  _MSC_DelayUS
-                  0x004022                  _MSC_DelayNOP
-                  0x00403c                  _IsLetter
-                  0x00406c                  _MSC_IsNumber
-                  0x00408c                  _MSC_IsCharacter
-                  0x0040aa                  _MSC_IsAlphaNumeric
-                  0x0040d6                  _MSC_IsAlphaNumericString
-                  0x004100                  _MSC_CleanBuffer
-                  0x004126                  _MSC_CleanBufferInt
-                  0x004150                  _MSC_Round
-                  0x00417c                  _MSC_BufferCopy
-                  0x0041ee                  _MSC_StringMatch
-                  0x004232                  _MSC_StringMatchCaseInsensitive
-                  0x004292                  _MSC_StringContains
-                  0x004348                  _MSC_StringContainsCaseInsensitive
-                  0x00440e                  _MSC_LowercaseString
-                  0x004448                  _MSC_LowercaseChar
-                  0x004470                  _MSC_ReverseByte
-                  0x0044d8                  _MSC_ReverseInt
-                  0x004578                  _MSC_ReverseLong
-                  0x004ba6                  _MSC_GetNumber
-                  0x004eb4                  _MSC_GetNumberUnsigned
-                  0x005198                  _MSC_StringAddEqual
-                  0x0052d8                  _MSC_GetStringAfterComma
-                  0x0053ce                  _MSC_DB_Round
-                  0x005402                  _MSC_LG_Round
-                  0x00551c                  _MSC_Scale
-                  0x0055c8                  _MSC_HEXtoBCD
-                  0x00562e                  _MSC_BCDtoHEX
-                  0x005682                  _MSC_BufferMatch
-                  0x0056b6                  _MSC_TestFunctionPointer
-                  0x0056be                  _MSC_EndianInt
-                  0x0056dc                  _MSC_EndianIntArray
-                  0x005702                  _MSC_EndianLong
-                  0x00573c                  _MSC_EndianLongArray
- .text            0x0057a2       0x1368 build/PCB_revA_pic33FJ128gp804/production/WAV.o
-                  0x0057a2                  _WAV_ParseHeader
-                  0x005cb8                  _WAV_CheckFiles
-                  0x005dc6                  _WAV_PlayFile_Random_Sector
-                  0x0064be                  _WAV_PlayFile_Continuous_Sector
-                  0x00664e                  _WAV_Continuous_Cluster
-                  0x006882                  _WAV_MultipleBlockRead
- .text            0x006b0a        0xfc0 build/PCB_revA_pic33FJ128gp804/production/SD.o
-                  0x006b0a                  _SD_POWER
-                  0x006b28                  _SD_CS_ACTIVE
-                  0x006b56                  _SD_CS_INACTIVE
-                  0x006b84                  _InitSD
-                  0x006da2                  _SD_Set_CardType
-                  0x006dae                  _SD_Get_CardType
-                  0x006dbc                  _SD_Clear_SD_Receive_Buffer_Big
-                  0x006dca                  _SD_Clear_SD_Receive_Buffer_Small
-                  0x006dd8                  _SD_DeleteCard
-                  0x006e16                  _SD_Properties
-                  0x00703e                  _SD_readStatus
-                  0x007064                  _SD_readRegister
-                  0x00716a                  _SD_readBlock
-                  0x0072ec                  _SD_readMultipleBlock
-                  0x0074ba                  _SD_writeBlock
-                  0x0075d8                  _SD_TestCRC
-                  0x0075f2                  _SDtoSPI
-                  0x007670                  _SD_CMDSPI_send
-                  0x00772e                  _SD_SetCMD
-                  0x00775a                  _SD_ACMDSPI_send_read
-                  0x007792                  _SD_CMDSPI_send_read
-                  0x007886                  _SDaddCRC
-                  0x0078ca                  _CRC7_40bits
-                  0x0079ca                  _SD_RESET
-                  0x007a22                  _SD_Clear
-                  0x007a66                  _SD_WaitResponse
-                  0x007ab2                  _SD_CardPresent
- .text            0x007aca        0x9bc build/PCB_revA_pic33FJ128gp804/production/FAT.o
-                  0x007aca                  _InitFAT
-                  0x007b1e                  _FAT_DiscoverFiles
-                  0x007b3a                  _FAT_ConvertFileName
-                  0x007c6c                  _FAT_FindFiles
-                  0x008090                  _FAT_ReadSector
-                  0x0080a4                  _FAT_GetBootSectorData
-                  0x008218                  _FAT_GetSetFreeCluster
-                  0x0082b6                  _FAT_GetSetNextCluster
-                  0x0083ea                  _FAT_GetFirstSector
-                  0x008428                  _FAT_SectorCopy
-                  0x008456                  _FAT_Copy
- .text            0x008486        0x4d8 build/PCB_revA_pic33FJ128gp804/production/SPI.o
-                  0x008486                  _SPI_Enable
-                  0x008492                  _SPI_Disable
-                  0x00849e                  _InitSPI
-                  0x0084e2                  _SPI_SetSpeed
-                  0x008864                  _SPI_ReadActivityMISO
-                  0x008884                  _SPI_WriteRead
-                  0x00894e                  _SPIwrite
- .text            0x00895e        0x350 build/PCB_revA_pic33FJ128gp804/production/UART.o
-                  0x00895e                  _UART_PIR_TX_PIN
-                  0x00897e                  _UART_DEBUG_TX_PIN
-                  0x00899e                  _UART_PIR_RX_Interrupt
-                  0x0089b2                  _UART_DEBUG_RX_Interrupt
-                  0x0089c6                  _InitUART
-                  0x008a18                  _UART_PIR_SetClock
-                  0x008a70                  _UART_DEBUG_SetClock
-                  0x008ac8                  _UART_PIR_SendChar
-                  0x008aea                  _UART_DEBUG_SendChar
-                  0x008b0c                  _UART_PIR_SendCharConst
-                  0x008b2e                  _UART_DEBUG_SendCharConst
-                  0x008b50                  _UART_PIR_SendString
-                  0x008b6c                  _UART_DEBUG_SendString
-                  0x008b88                  _UART_PIR_SendStringConst
-                  0x008ba4                  _UART_DEBUG_SendStringConst
-                  0x008bc0                  _UART_DEBUG_SendStringConstCRLN
-                  0x008be4                  _UART_PIR_CleanBuffer
-                  0x008c0c                  _UART_DEBUG_CleanBuffer
-                  0x008c34                  _UART_DEBUG_TestSpeed
-                  0x008c3c                  _UART_Display_WAV
-                  0x008c86                  _UART_DisplayBanner
- .text            0x008cae        0x304 build/PCB_revA_pic33FJ128gp804/production/PIR.o
-                  0x008cae                  _PIR_MD_PinControl
-                  0x008cc2                  _PIR_Interrupt
-                  0x008cd8                  _PIR_MD_READ
-                  0x008cf0                  _InitPIR
-                  0x008e06                  _PIR_ReadCommand
-                  0x008e4a                  _PIR_WriteCommand
-                  0x008ef6                  _PIR_ConfirmationCommand
-                  0x008f6a                  _PIR_Sleep
-                  0x008f88                  _PIR_Reset
- .text            0x008fb2        0x2b0 build/PCB_revA_pic33FJ128gp804/production/main.o
-                  0x008fb2                  _main
- .text            0x009262        0x1f2 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
-                  0x009262                  _InitRTCC
-                  0x009290                  _RTCC_ClearTime
-                  0x0092c2                  _RTCC_SetTime
-                  0x0092fa                  _RTCC_Access
-                  0x009316                  _RTCC_Read
-                  0x0093ba                  _RTCC_Write
- .text            0x009454        0x180 build/PCB_revA_pic33FJ128gp804/production/DAC.o
-                  0x009454                  _DAC_Run
-                  0x00945c                  _DAC_Stop
-                  0x009464                  _DAC_ToggleWriteDACPage
-                  0x0094c6                  _InitDAC
-                  0x0094fa                  _DAC_TurnOnAmp
-                  0x009508                  _DAC_SetClock
-                  0x009562                  _DAC_TurnOffAmp
-                  0x00956e                  _DAC_MuteAmp
-                  0x009576                  _DAC_UnMuteAmp
-                  0x00957e                  _DAC_Voltage
-                  0x00958a                  _DAC_AudioOn
-                  0x0095a4                  _DAC_AudioOff
-                  0x0095ae                  _DAC_Play_Startup
+.text             0x00402c       0x57ca
+ .text            0x00402c       0x17ce build/PCB_revA_pic33FJ128gp804/production/MISC.o
+                  0x00402c                  _MSC_DelayUS
+                  0x00407a                  _MSC_DelayNOP
+                  0x004094                  _IsLetter
+                  0x0040c4                  _MSC_IsNumber
+                  0x0040e4                  _MSC_IsCharacter
+                  0x004102                  _MSC_IsAlphaNumeric
+                  0x00412e                  _MSC_IsAlphaNumericString
+                  0x004158                  _MSC_CleanBuffer
+                  0x00417e                  _MSC_CleanBufferInt
+                  0x0041a8                  _MSC_Round
+                  0x0041d4                  _MSC_BufferCopy
+                  0x004246                  _MSC_StringMatch
+                  0x00428a                  _MSC_StringMatchCaseInsensitive
+                  0x0042ea                  _MSC_StringContains
+                  0x0043a0                  _MSC_StringContainsCaseInsensitive
+                  0x004466                  _MSC_LowercaseString
+                  0x0044a0                  _MSC_LowercaseChar
+                  0x0044c8                  _MSC_ReverseByte
+                  0x004530                  _MSC_ReverseInt
+                  0x0045d0                  _MSC_ReverseLong
+                  0x004bfe                  _MSC_GetNumber
+                  0x004f0c                  _MSC_GetNumberUnsigned
+                  0x0051f0                  _MSC_StringAddEqual
+                  0x005330                  _MSC_GetStringAfterComma
+                  0x005426                  _MSC_DB_Round
+                  0x00545a                  _MSC_LG_Round
+                  0x005574                  _MSC_Scale
+                  0x005620                  _MSC_HEXtoBCD
+                  0x005686                  _MSC_BCDtoHEX
+                  0x0056da                  _MSC_BufferMatch
+                  0x00570e                  _MSC_TestFunctionPointer
+                  0x005716                  _MSC_EndianInt
+                  0x005734                  _MSC_EndianIntArray
+                  0x00575a                  _MSC_EndianLong
+                  0x005794                  _MSC_EndianLongArray
+ .text            0x0057fa       0x13e6 build/PCB_revA_pic33FJ128gp804/production/WAV.o
+                  0x0057fa                  _WAV_ParseHeader
+                  0x005d10                  _WAV_CheckFiles
+                  0x005e1e                  _WAV_PlayFile_Random_Sector
+                  0x006516                  _WAV_PlayFile_Continuous_Sector
+                  0x0066a6                  _WAV_Continuous_Cluster
+                  0x0068da                  _WAV_MultipleBlockRead
+                  0x006b62                  _WAV_TestAllFiles
+ .text            0x006be0        0xfc0 build/PCB_revA_pic33FJ128gp804/production/SD.o
+                  0x006be0                  _SD_POWER
+                  0x006bfe                  _SD_CS_ACTIVE
+                  0x006c2c                  _SD_CS_INACTIVE
+                  0x006c5a                  _InitSD
+                  0x006e78                  _SD_Set_CardType
+                  0x006e84                  _SD_Get_CardType
+                  0x006e92                  _SD_Clear_SD_Receive_Buffer_Big
+                  0x006ea0                  _SD_Clear_SD_Receive_Buffer_Small
+                  0x006eae                  _SD_DeleteCard
+                  0x006eec                  _SD_Properties
+                  0x007114                  _SD_readStatus
+                  0x00713a                  _SD_readRegister
+                  0x007240                  _SD_readBlock
+                  0x0073c2                  _SD_readMultipleBlock
+                  0x007590                  _SD_writeBlock
+                  0x0076ae                  _SD_TestCRC
+                  0x0076c8                  _SDtoSPI
+                  0x007746                  _SD_CMDSPI_send
+                  0x007804                  _SD_SetCMD
+                  0x007830                  _SD_ACMDSPI_send_read
+                  0x007868                  _SD_CMDSPI_send_read
+                  0x00795c                  _SDaddCRC
+                  0x0079a0                  _CRC7_40bits
+                  0x007aa0                  _SD_RESET
+                  0x007af8                  _SD_Clear
+                  0x007b3c                  _SD_WaitResponse
+                  0x007b88                  _SD_CardPresent
+ .text            0x007ba0        0x9bc build/PCB_revA_pic33FJ128gp804/production/FAT.o
+                  0x007ba0                  _InitFAT
+                  0x007bf4                  _FAT_DiscoverFiles
+                  0x007c10                  _FAT_ConvertFileName
+                  0x007d42                  _FAT_FindFiles
+                  0x008166                  _FAT_ReadSector
+                  0x00817a                  _FAT_GetBootSectorData
+                  0x0082ee                  _FAT_GetSetFreeCluster
+                  0x00838c                  _FAT_GetSetNextCluster
+                  0x0084c0                  _FAT_GetFirstSector
+                  0x0084fe                  _FAT_SectorCopy
+                  0x00852c                  _FAT_Copy
+ .text            0x00855c        0x4d8 build/PCB_revA_pic33FJ128gp804/production/SPI.o
+                  0x00855c                  _SPI_Enable
+                  0x008568                  _SPI_Disable
+                  0x008574                  _InitSPI
+                  0x0085b8                  _SPI_SetSpeed
+                  0x00893a                  _SPI_ReadActivityMISO
+                  0x00895a                  _SPI_WriteRead
+                  0x008a24                  _SPIwrite
+ .text            0x008a34        0x350 build/PCB_revA_pic33FJ128gp804/production/UART.o
+                  0x008a34                  _UART_PIR_TX_PIN
+                  0x008a54                  _UART_DEBUG_TX_PIN
+                  0x008a74                  _UART_PIR_RX_Interrupt
+                  0x008a88                  _UART_DEBUG_RX_Interrupt
+                  0x008a9c                  _InitUART
+                  0x008aee                  _UART_PIR_SetClock
+                  0x008b46                  _UART_DEBUG_SetClock
+                  0x008b9e                  _UART_PIR_SendChar
+                  0x008bc0                  _UART_DEBUG_SendChar
+                  0x008be2                  _UART_PIR_SendCharConst
+                  0x008c04                  _UART_DEBUG_SendCharConst
+                  0x008c26                  _UART_PIR_SendString
+                  0x008c42                  _UART_DEBUG_SendString
+                  0x008c5e                  _UART_PIR_SendStringConst
+                  0x008c7a                  _UART_DEBUG_SendStringConst
+                  0x008c96                  _UART_DEBUG_SendStringConstCRLN
+                  0x008cba                  _UART_PIR_CleanBuffer
+                  0x008ce2                  _UART_DEBUG_CleanBuffer
+                  0x008d0a                  _UART_DEBUG_TestSpeed
+                  0x008d12                  _UART_Display_WAV
+                  0x008d5c                  _UART_DisplayBanner
+ .text            0x008d84        0x304 build/PCB_revA_pic33FJ128gp804/production/PIR.o
+                  0x008d84                  _PIR_MD_PinControl
+                  0x008d98                  _PIR_Interrupt
+                  0x008dae                  _PIR_MD_READ
+                  0x008dc6                  _InitPIR
+                  0x008edc                  _PIR_ReadCommand
+                  0x008f20                  _PIR_WriteCommand
+                  0x008fcc                  _PIR_ConfirmationCommand
+                  0x009040                  _PIR_Sleep
+                  0x00905e                  _PIR_Reset
+ .text            0x009088        0x2b0 build/PCB_revA_pic33FJ128gp804/production/main.o
+                  0x009088                  _main
+ .text            0x009338        0x1f2 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
+                  0x009338                  _InitRTCC
+                  0x009366                  _RTCC_ClearTime
+                  0x009398                  _RTCC_SetTime
+                  0x0093d0                  _RTCC_Access
+                  0x0093ec                  _RTCC_Read
+                  0x009490                  _RTCC_Write
+ .text            0x00952a        0x180 build/PCB_revA_pic33FJ128gp804/production/DAC.o
+                  0x00952a                  _DAC_Run
+                  0x009532                  _DAC_Stop
+                  0x00953a                  _DAC_ToggleWriteDACPage
+                  0x00959c                  _InitDAC
+                  0x0095d0                  _DAC_TurnOnAmp
+                  0x0095de                  _DAC_SetClock
+                  0x009638                  _DAC_TurnOffAmp
+                  0x009644                  _DAC_MuteAmp
+                  0x00964c                  _DAC_UnMuteAmp
+                  0x009654                  _DAC_Voltage
+                  0x009660                  _DAC_AudioOn
+                  0x00967a                  _DAC_AudioOff
+                  0x009684                  _DAC_Play_Startup
+ .text            0x0096aa        0x14c build/PCB_revA_pic33FJ128gp804/production/PWM.o
+                  0x0096aa                  _PWM_SetRed
+                  0x0096ba                  _PWM_SetGreen
+                  0x0096ca                  _PWM_SetBlue
+                  0x0096da                  _PWM_SetRGB
+                  0x0096f2                  _InitPWM
+                  0x00977a                  _PWM_SetColor
 
-.dinit            0x0095d4        0x14c
- .dinit           0x0095d4        0x14c data_init
+.dinit            0x0097f6        0x14c
+ .dinit           0x0097f6        0x14c data_init
 
-.text             0x009720        0x4d4
- .text            0x009720        0x146 build/PCB_revA_pic33FJ128gp804/production/PWM.o
-                  0x009720                  _PWM_SetRed
-                  0x009730                  _PWM_SetGreen
-                  0x009740                  _PWM_SetBlue
-                  0x009750                  _PWM_SetRGB
-                  0x009768                  _InitPWM
-                  0x0097ea                  _PWM_SetColor
- .text            0x009866        0x12a build/PCB_revA_pic33FJ128gp804/production/ADC.o
-                  0x009866                  _InitADC
-                  0x009884                  _ADC_ReadVIN
-                  0x00990a                  _ADC_ReadFiveVoltRail
- .text            0x009990         0xca build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
-                  0x009990                  _TMR_EnableTimer2
-                  0x0099a4                  _TMR_InterruptTimer2
-                  0x0099b8                  _TMR_EnableTimer4
-                  0x0099cc                  _InitTIMERS
-                  0x0099d6                  _InitTIMER2
-                  0x009a0c                  _InitTIMER4
-                  0x009a26                  _TMR_RandomNum
- .text            0x009a5a         0xa8 build/PCB_revA_pic33FJ128gp804/production/DMA.o
-                  0x009a5a                  _DMA_StartRGB
-                  0x009a66                  _DMA_StartCH0
-                  0x009a72                  _DMA_StartCH1
-                  0x009a7e                  _DMA_StartCH2
-                  0x009a8a                  _DMA_Channel0
-                  0x009ab2                  _DMA_Channel1
-                  0x009ada                  _DMA_Channel2
- .text            0x009b02         0x96 build/PCB_revA_pic33FJ128gp804/production/USER.o
-                  0x009b02                  _Init_App
-                  0x009b52                  _Init_System
- .text            0x009b98         0x30 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
-                  0x009b98                  _Door_Interrupt
-                  0x009bac                  _InitSWITCH
- .text            0x009bc8         0x2c build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
-                  0x009bc8                  _SYS_ConfigureOscillator
+.text             0x009942        0x390
+ .text            0x009942        0x12a build/PCB_revA_pic33FJ128gp804/production/ADC.o
+                  0x009942                  _InitADC
+                  0x009960                  _ADC_ReadVIN
+                  0x0099e6                  _ADC_ReadFiveVoltRail
+ .text            0x009a6c         0xc6 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+                  0x009a6c                  _TMR_EnableTimer2
+                  0x009a80                  _TMR_InterruptTimer2
+                  0x009a94                  _TMR_EnableTimer4
+                  0x009aa8                  _InitTIMERS
+                  0x009ab2                  _InitTIMER2
+                  0x009ae4                  _InitTIMER4
+                  0x009afe                  _TMR_RandomNum
+ .text            0x009b32         0xae build/PCB_revA_pic33FJ128gp804/production/DMA.o
+                  0x009b32                  _DMA_StartRGB
+                  0x009b44                  _DMA_StartCH0
+                  0x009b50                  _DMA_StartCH1
+                  0x009b5c                  _DMA_StartCH2
+                  0x009b68                  _DMA_Channel0
+                  0x009b90                  _DMA_Channel1
+                  0x009bb8                  _DMA_Channel2
+ .text            0x009be0         0x96 build/PCB_revA_pic33FJ128gp804/production/USER.o
+                  0x009be0                  _Init_App
+                  0x009c30                  _Init_System
+ .text            0x009c76         0x30 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+                  0x009c76                  _Door_Interrupt
+                  0x009c8a                  _InitSWITCH
+ .text            0x009ca6         0x2c build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+                  0x009ca6                  _SYS_ConfigureOscillator

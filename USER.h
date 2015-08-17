@@ -68,9 +68,10 @@
 /* DMA_RGB
  *
  * This allows the PWM modules associated with the RGB LED to not slow down
- *  the processor by using DMA.
+ *  the processor by using DMA. The problem with this is that only 2 channels
+ *  of the Output compare module are accessible by the DMA controller.
 /******************************************************************************/
-#define DMA_RGB
+//#define DMA_RGB
 
 /******************************************************************************/
 /* LOW_MEMORY

@@ -6,6 +6,8 @@
  * Date         Revision    Comments
  * MM/DD/YY
  * --------     ---------   ----------------------------------------------------
+ * 07/02/15     1.1_DW0a    Lowered the sensitivity and range 
+ *                            to prevent false triggers.
  * 07/02/15     1.0_DW0a    Initial coding.
  * /******************************************************************************/
 
@@ -172,12 +174,12 @@ void InitPIR(void)
     MSC_CleanBuffer(Receivebuf, 10);
 
     /* configure Range */
-    Sendbuf[0] = 3; // range is 0-7 with 0 being most sensitive
+    Sendbuf[0] = 5; // range is 0-7 with 0 being most sensitive
     PIR_WriteCommand('R', Receivebuf, Sendbuf, 1);
     MSC_CleanBuffer(Receivebuf, 10);
 
     /* configure Sensitivity */
-    Sendbuf[0] = 100; // range is 0-255 with 0 being most sensitive
+    Sendbuf[0] = 200; // range is 0-255 with 0 being most sensitive
     if(!PIR_WriteCommand('S', Receivebuf, Sendbuf, 1))
     {
             MSC_CleanBuffer(Receivebuf, 10);
