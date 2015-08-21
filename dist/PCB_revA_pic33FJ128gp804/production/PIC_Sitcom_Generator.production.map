@@ -194,9 +194,9 @@ section                    address      alignment gaps    total length  (dec)
 .bss._sibuf                 0x2672                   0             0x2  (2)
 .bss._sobuf                 0x2674                   0             0x2  (2)
 .data.__C30_UART            0x2676                   0             0x2  (2)
-_03645F0055d24cd7           0x47fa                   0             0x2  (2)
-_03645EA055d24cd7           0x47fc                   0             0x2  (2)
-_03645E4055d24cd7           0x47fe                   0             0x2  (2)
+_03837F0055d79bc6           0x47fa                   0             0x2  (2)
+_03837EA055d79bc6           0x47fc                   0             0x2  (2)
+_03837E4055d79bc6           0x47fe                   0             0x2  (2)
 
                         Total data memory used (bytes):         0x1e7e  (7806) 47%
 
@@ -1093,27 +1093,27 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0xd8cb
+.debug_info       0x000000       0xd92a
  *(.debug_info)
- .debug_info      0x000000        0x49a build/PCB_revA_pic33FJ128gp804/production/main.o
- .debug_info      0x00049a        0xf2e build/PCB_revA_pic33FJ128gp804/production/MISC.o
- .debug_info      0x0013c8        0xc23 build/PCB_revA_pic33FJ128gp804/production/SPI.o
- .debug_info      0x001feb       0x1069 build/PCB_revA_pic33FJ128gp804/production/FAT.o
- .debug_info      0x003054        0xada build/PCB_revA_pic33FJ128gp804/production/DAC.o
- .debug_info      0x003b2e        0x529 build/PCB_revA_pic33FJ128gp804/production/RTCC.o
- .debug_info      0x004057        0xedb build/PCB_revA_pic33FJ128gp804/production/SD.o
- .debug_info      0x004f32        0xfa6 build/PCB_revA_pic33FJ128gp804/production/WAV.o
- .debug_info      0x005ed8       0x1dc7 build/PCB_revA_pic33FJ128gp804/production/UART.o
- .debug_info      0x007c9f        0xcaa build/PCB_revA_pic33FJ128gp804/production/PIR.o
- .debug_info      0x008949        0x9dc build/PCB_revA_pic33FJ128gp804/production/PWM.o
- .debug_info      0x009325        0x6e5 build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
- .debug_info      0x009a0a        0x122 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
- .debug_info      0x009b2c        0x9c3 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
- .debug_info      0x00a4ef        0x907 build/PCB_revA_pic33FJ128gp804/production/ADC.o
- .debug_info      0x00adf6        0x63b build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
- .debug_info      0x00b431        0x5c7 build/PCB_revA_pic33FJ128gp804/production/USER.o
- .debug_info      0x00b9f8        0xffc build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
- .debug_info      0x00c9f4        0xed7 build/PCB_revA_pic33FJ128gp804/production/DMA.o
+ .debug_info      0x000000        0x49f build/PCB_revA_pic33FJ128gp804/production/main.o
+ .debug_info      0x00049f        0xf33 build/PCB_revA_pic33FJ128gp804/production/MISC.o
+ .debug_info      0x0013d2        0xc28 build/PCB_revA_pic33FJ128gp804/production/SPI.o
+ .debug_info      0x001ffa       0x106e build/PCB_revA_pic33FJ128gp804/production/FAT.o
+ .debug_info      0x003068        0xadf build/PCB_revA_pic33FJ128gp804/production/DAC.o
+ .debug_info      0x003b47        0x52e build/PCB_revA_pic33FJ128gp804/production/RTCC.o
+ .debug_info      0x004075        0xee0 build/PCB_revA_pic33FJ128gp804/production/SD.o
+ .debug_info      0x004f55        0xfab build/PCB_revA_pic33FJ128gp804/production/WAV.o
+ .debug_info      0x005f00       0x1dcc build/PCB_revA_pic33FJ128gp804/production/UART.o
+ .debug_info      0x007ccc        0xcaf build/PCB_revA_pic33FJ128gp804/production/PIR.o
+ .debug_info      0x00897b        0x9e1 build/PCB_revA_pic33FJ128gp804/production/PWM.o
+ .debug_info      0x00935c        0x6ea build/PCB_revA_pic33FJ128gp804/production/SWITCH.o
+ .debug_info      0x009a46        0x127 build/PCB_revA_pic33FJ128gp804/production/CONFIGURATION.o
+ .debug_info      0x009b6d        0x9c8 build/PCB_revA_pic33FJ128gp804/production/TIMERS.o
+ .debug_info      0x00a535        0x90c build/PCB_revA_pic33FJ128gp804/production/ADC.o
+ .debug_info      0x00ae41        0x640 build/PCB_revA_pic33FJ128gp804/production/SYSTEM.o
+ .debug_info      0x00b481        0x5cc build/PCB_revA_pic33FJ128gp804/production/USER.o
+ .debug_info      0x00ba4d       0x1001 build/PCB_revA_pic33FJ128gp804/production/INTERRUPTS.o
+ .debug_info      0x00ca4e        0xedc build/PCB_revA_pic33FJ128gp804/production/DMA.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000       0x17d0
@@ -2709,21 +2709,21 @@ __c30_signature
  __c30_signature
                   0x000f08          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(umuldi3.eo)
 
-_03645E4055d24cd7
+_03837E4055d79bc6
                     0x47fe          0x2
- _03645E4055d24cd7
+ _03837E4055d79bc6
                     0x47fe          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fe                  _DMA_RedDuty
 
-_03645EA055d24cd7
+_03837EA055d79bc6
                     0x47fc          0x2
- _03645EA055d24cd7
+ _03837EA055d79bc6
                     0x47fc          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fc                  _DMA_GreenDuty
 
-_03645F0055d24cd7
+_03837F0055d79bc6
                     0x47fa          0x2
- _03645F0055d24cd7
+ _03837F0055d79bc6
                     0x47fa          0x2 build/PCB_revA_pic33FJ128gp804/production/DMA.o
                     0x47fa                  _DMA_BlueDuty
 

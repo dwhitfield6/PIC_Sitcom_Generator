@@ -18,25 +18,13 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/TIMERS.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SD.h</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/main.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SD.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SPI.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/WAV.h</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/WAV.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SPI.h</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/MISC.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/UART.h</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/USER.h</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/UART.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/PWM.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/FAT.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/USER.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/DAC.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/PIR.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/SWITCH.c</file>
-            <file>file:/C:/Users/David/Documents/GitHub/PIC_Sitcom_Generator/INTERRUPTS.c</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/main.c</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/TIMERS.c</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/DMA.h</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/DMA.c</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/FAT.h</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/PWM.c</file>
+            <file>file:/C:/Users/dwhitfield/Documents/GitHub/PIC_Sitcom_Generator/USER.h</file>
         </group>
     </open-files>
 </project-private>
