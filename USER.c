@@ -68,7 +68,7 @@ void Init_App(void)
     LATA = 0;
     LATB = 0;
     
-    AD1PCFGL              = 0xFFFF; /* All pins are digital */
+    AD1PCFGL            = 0xFFFF; /* All pins are digital */
     RedLEDTris          = OUTPUT;
 #ifdef PROTOBOARD
     AudioAmpMuteTris    = OUTPUT;
